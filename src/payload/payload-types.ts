@@ -1292,7 +1292,7 @@ export interface PayloadHeroBlock {
   description: string;
   video: string | MuxVideo;
   videoPoster: string | PayloadImagesCollection;
-  buttonLinks: PayloadButtonLinkArrayField;
+  buttonLinks?: PayloadButtonLinkArrayField;
   id?: string | null;
   blockName?: string | null;
   blockType: 'hero';
