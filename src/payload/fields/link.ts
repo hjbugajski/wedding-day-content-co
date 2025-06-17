@@ -111,6 +111,10 @@ export const linkFields: Field[] = [
     type: 'text',
     required: true,
   },
+  {
+    name: 'description',
+    type: 'textarea',
+  },
   ...fields,
 ];
 

@@ -22,6 +22,7 @@ export type PayloadUserRolesField = ('admin' | 'editor' | 'public')[];
  */
 export type PayloadLinkArrayField = {
   text: string;
+  description?: string | null;
   type: 'internal' | 'external';
   relationship?: (string | null) | PayloadPagesCollection;
   anchor?: string | null;
@@ -130,14 +131,16 @@ export type SupportedTimezones =
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "PayloadButtonLinkArrayField".
  */
-export type PayloadButtonLinkArrayField = {
-  variant: PayloadButtonVariantField;
-  size: PayloadButtonSizeField;
-  icon?: PayloadIconField;
-  iconPosition?: PayloadButtonIconPositionField;
-  link: PayloadLinkGroupField;
-  id?: string | null;
-}[];
+export type PayloadButtonLinkArrayField =
+  | {
+      variant: PayloadButtonVariantField;
+      size: PayloadButtonSizeField;
+      icon?: PayloadIconField;
+      iconPosition?: PayloadButtonIconPositionField;
+      link: PayloadLinkGroupField;
+      id?: string | null;
+    }[]
+  | null;
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "PayloadBackgroundField".
@@ -352,6 +355,7 @@ export interface PayloadImagesCollection {
  */
 export interface PayloadLinkGroupField {
   text: string;
+  description?: string | null;
   type: 'internal' | 'external';
   relationship?: (string | null) | PayloadPagesCollection;
   anchor?: string | null;
@@ -898,6 +902,7 @@ export interface ImagesSelect<T extends boolean = true> {
  */
 export interface PayloadLinkGroupFieldSelect<T extends boolean = true> {
   text?: T;
+  description?: T;
   type?: T;
   relationship?: T;
   anchor?: T;
@@ -1177,7 +1182,15 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface PayloadNavigationGlobal {
   id: string;
-  links?: PayloadLinkArrayField;
+  navigationItems?:
+    | {
+        navigationType: 'standalone' | 'group';
+        link?: PayloadLinkGroupField;
+        groupText?: string | null;
+        links?: PayloadLinkArrayField;
+        id?: string | null;
+      }[]
+    | null;
   callToAction: PayloadButtonLinkGroupField;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1231,7 +1244,15 @@ export interface PayloadFooterGlobal {
  * via the `definition` "navigation_select".
  */
 export interface NavigationSelect<T extends boolean = true> {
-  links?: T | PayloadLinkArrayFieldSelect<T>;
+  navigationItems?:
+    | T
+    | {
+        navigationType?: T;
+        link?: T | PayloadLinkGroupFieldSelect<T>;
+        groupText?: T;
+        links?: T | PayloadLinkArrayFieldSelect<T>;
+        id?: T;
+      };
   callToAction?: T | PayloadButtonLinkGroupFieldSelect<T>;
   updatedAt?: T;
   createdAt?: T;
@@ -1243,6 +1264,7 @@ export interface NavigationSelect<T extends boolean = true> {
  */
 export interface PayloadLinkArrayFieldSelect<T extends boolean = true> {
   text?: T;
+  description?: T;
   type?: T;
   relationship?: T;
   anchor?: T;
