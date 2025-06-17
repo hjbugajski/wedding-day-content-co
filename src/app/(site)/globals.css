@@ -121,10 +121,6 @@
     -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 60%, transparent 100%);
     mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 60%, transparent 100%);
   }
-
-  .subheading {
-    @apply font-semibold tracking-[0.08em] uppercase;
-  }
 }
 
 @utility t-shadow-sm {
@@ -195,4 +191,8 @@
 
 @utility items-last-baseline {
   align-items: last baseline;
+}
+
+@utility subheading {
+  @apply font-semibold tracking-[0.08em] uppercase;
 }
