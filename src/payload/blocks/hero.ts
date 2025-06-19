@@ -1,7 +1,6 @@
-import type { Block, Field } from 'payload';
+import type { Block } from 'payload';
 
 import { buttonLinkArray } from '@/payload/fields/buttonLink';
-import { deepMerge } from '@/payload/utils/deep-merge';
 
 export const Hero: Block = {
   slug: 'hero',
@@ -40,9 +39,6 @@ export const Hero: Block = {
         },
       ],
     },
-    deepMerge<Field>(buttonLinkArray, {
-      required: true,
-      minRows: 1,
-    }),
+    buttonLinkArray,
   ],
 };

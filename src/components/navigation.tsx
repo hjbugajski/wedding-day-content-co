@@ -34,10 +34,19 @@ import { useEffect, useRef, useState } from 'react';
 import { FocusScope } from '@radix-ui/react-focus-scope';
 import Link from 'next/link';
 
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
 import { PayloadButtonLink } from '@/components/ui/payload-button-link';
 import { PayloadLink } from '@/components/ui/payload-link';
 import { Icons } from '@/icons';
 import type { PayloadNavigationGlobal } from '@/payload/payload-types';
+import { cn } from '@/utils/cn';
+import { slugify } from '@/utils/slugify';
 
 function createFocusGuard() {
   const element = document.createElement('span');
@@ -54,7 +63,7 @@ function createFocusGuard() {
 
 let count = 0;
 
-export function Navigation({ callToAction, links }: PayloadNavigationGlobal) {
+export function Navigation({ callToAction, navigationItems }: PayloadNavigationGlobal) {
   const [open, setOpen] = useState(false);
 
   const ref = useRef<HTMLUListElement>(null);
@@ -119,23 +128,54 @@ export function Navigation({ callToAction, links }: PayloadNavigationGlobal) {
         data-state={open ? 'open' : 'closed'}
         className="data-[state=open]:fixed data-[state=open]:inset-0 data-[state=open]:z-40 data-[state=open]:bg-neutral-50/25 data-[state=open]:backdrop-blur-md"
       />
-      <nav ref={ref} role={open ? 'dialog' : 'navigation'} className="fixed inset-x-2 top-2 z-50">
-        <FocusScope
-          loop={open}
-          trapped={open}
-          onMountAutoFocus={(e) => e.preventDefault()}
-          className="outline-hidden"
+      <FocusScope
+        loop={open}
+        trapped={open}
+        onMountAutoFocus={(e) => e.preventDefault()}
+        className="outline-hidden"
+      >
+        <NavigationMenu
+          ref={ref}
+          role={open ? 'dialog' : 'navigation'}
+          className="fixed inset-x-2 top-2 z-50"
+          viewport={false}
         >
-          <ul className="z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4 rounded-xs bg-neutral-50/75 pr-1 pl-4 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg md-lg:px-4 xl:px-6">
+          <NavigationMenuList className="z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4 rounded-xs bg-neutral-50/75 pr-1 pl-4 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg md-lg:px-4 xl:px-6">
             <li className="flex flex-1">
-              <Link href="/" onClick={closeMenu} className="subheading text-sm">
+              <Link href="/" onClick={closeMenu} className="text-sm subheading">
                 Wedding Day Content Co.
               </Link>
             </li>
-            {links?.map((link) => (
-              <li key={link.id} className="hidden md-lg:block">
-                <PayloadLink {...link} className="subheading text-sm" />
-              </li>
+            {navigationItems?.map(({ groupText, id, link, links, navigationType }) => (
+              <NavigationMenuItem key={id} className="hidden md-lg:flex">
+                {navigationType === 'standalone' && link ? (
+                  <PayloadLink {...link} className="text-sm subheading" />
+                ) : null}
+                {navigationType === 'group' && links ? (
+                  <>
+                    <NavigationMenuTrigger>{groupText}</NavigationMenuTrigger>
+                    <NavigationMenuContent className="dark max-w-96 min-w-3xs">
+                      <ul className="flex w-full flex-col p-2">
+                        {links.map((link) => (
+                          <li key={link.id || slugify(link.text)}>
+                            <PayloadLink
+                              {...link}
+                              className="block w-full p-3 text-sm subheading transition hover:bg-neutral-800/90 hover:no-underline"
+                              onClick={closeMenu}
+                            >
+                              {link.description ? (
+                                <div className="mt-1 text-xs text-neutral-400 normal-case">
+                                  {link.description}
+                                </div>
+                              ) : null}
+                            </PayloadLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </>
+                ) : null}
+              </NavigationMenuItem>
             ))}
             {callToAction.link.text ? (
               <li className="hidden md-lg:block">
@@ -145,30 +185,47 @@ export function Navigation({ callToAction, links }: PayloadNavigationGlobal) {
             <button
               onClick={toggleMenu}
               aria-label={open ? 'Close navigation' : 'Open navigation'}
-              className="inline-flex size-10 items-center justify-center rounded-xs transition focus-visible:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden md-lg:hidden"
+              className={cn(
+                'inline-flex size-10 items-center justify-center rounded-xs transition md-lg:hidden',
+                'focus-visible:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
+              )}
             >
               {open ? <Icons name="x" /> : <Icons name="menu" />}
             </button>
-          </ul>
+          </NavigationMenuList>
           <dialog
             aria-live="polite"
             aria-hidden={!open}
             open={open}
             data-state={open ? 'open' : 'closed'}
-            className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] rounded-xs bg-neutral-50/75 p-4 pt-2 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg"
+            className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] rounded-xs bg-neutral-50/75 p-4 pt-2 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:fade-out data-[state=closed]:slide-out-to-top-4 data-[state=open]:animate-in data-[state=open]:duration-300 data-[state=open]:fade-in data-[state=open]:slide-in-from-top-2"
           >
             <ul className="flex w-full flex-col gap-2">
-              {links?.map((link) => (
-                <li key={link.id}>
-                  <PayloadLink
-                    {...link}
-                    onClick={closeMenu}
-                    className="subheading inline-flex h-10 w-full items-center justify-between gap-2"
-                  >
-                    <Icons name="arrowRight" />
-                  </PayloadLink>
-                </li>
-              ))}
+              {navigationItems?.map(({ id, link, links, navigationType }) =>
+                navigationType === 'standalone' && link ? (
+                  <li key={id || slugify(link.text)}>
+                    <PayloadLink
+                      {...link}
+                      onClick={closeMenu}
+                      className="inline-flex h-10 w-full items-center justify-between gap-2 subheading"
+                    >
+                      <Icons name="arrowRight" />
+                    </PayloadLink>
+                  </li>
+                ) : (
+                  links?.map((link) => (
+                    <li key={link.id || slugify(link.text)}>
+                      <PayloadLink
+                        {...link}
+                        onClick={closeMenu}
+                        className="inline-flex h-10 w-full items-center justify-between gap-2 subheading"
+                      >
+                        <Icons name="arrowRight" />
+                      </PayloadLink>
+                    </li>
+                  ))
+                ),
+              )}
               {callToAction.link.text ? (
                 <li className="mt-2 flex">
                   <PayloadButtonLink
@@ -181,8 +238,8 @@ export function Navigation({ callToAction, links }: PayloadNavigationGlobal) {
               ) : null}
             </ul>
           </dialog>
-        </FocusScope>
-      </nav>
+        </NavigationMenu>
+      </FocusScope>
     </>
   );
 }

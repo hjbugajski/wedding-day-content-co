@@ -8,7 +8,6 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs';
 import {
   AlignFeature,
   BoldFeature,
-  FixedToolbarFeature,
   HeadingFeature,
   HorizontalRuleFeature,
   IndentFeature,
@@ -109,7 +108,6 @@ export default buildConfig({
       IndentFeature(),
       HorizontalRuleFeature(),
       LinkFeature({ fields: richTextFields }),
-      FixedToolbarFeature(),
       InlineToolbarFeature(),
     ],
   }),
