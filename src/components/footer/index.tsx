@@ -33,7 +33,7 @@ export function Footer({ contact, faqs, linkGroups, marquee }: PayloadFooterGlob
               <ul className="grid grid-cols-1 gap-8 @xs:grid-cols-2 @sm:grid-cols-3">
                 {linkGroups.map(({ heading, id, links }) => (
                   <li key={id} className="flex flex-col gap-2">
-                    <h2 className="subheading font-sans text-sm leading-normal! text-neutral-400">
+                    <h2 className="font-sans text-sm leading-normal! subheading text-neutral-400">
                       {heading}
                     </h2>
                     <ul className="flex flex-col gap-1">
