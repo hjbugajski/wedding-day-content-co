@@ -21,6 +21,7 @@ import { GalleryBlock } from '@/components/blocks/gallery';
 import { HeroBlock } from '@/components/blocks/hero';
 import { MediaStackBlock } from '@/components/blocks/media-stack';
 import { MessagesMarqueeBlock } from '@/components/blocks/messages-marquee';
+import { PackagesBlock } from '@/components/blocks/packages';
 import { QuotesBlock } from '@/components/blocks/quotes';
 import { SectionBlock } from '@/components/blocks/section';
 import { StepperBlock } from '@/components/blocks/stepper';
@@ -39,6 +40,7 @@ import type {
   PayloadHeroBlock,
   PayloadMediaStackBlock,
   PayloadMessagesMarqueeBlock,
+  PayloadPackagesBlock,
   PayloadQuotesBlock,
   PayloadSectionBlock,
   PayloadStepperBlock,
@@ -75,6 +77,7 @@ type NodeType =
       | PayloadHeroBlock
       | PayloadMediaStackBlock
       | PayloadMessagesMarqueeBlock
+      | PayloadPackagesBlock
       | PayloadQuotesBlock
       | PayloadSectionBlock
       | PayloadStepperBlock
@@ -132,6 +135,7 @@ const jsxConverters: JSXConvertersFunction<NodeType> = () => ({
     hero: ({ node }) => <HeroBlock {...node.fields} />,
     mediaStack: ({ node }) => <MediaStackBlock {...node.fields} />,
     messagesMarquee: ({ node }) => <MessagesMarqueeBlock {...node.fields} />,
+    packages: ({ node }) => <PackagesBlock {...node.fields} />,
     quotes: ({ node }) => <QuotesBlock {...node.fields} />,
     section: ({ node }) => <SectionBlock {...node.fields} />,
     stepper: ({ node }) => <StepperBlock {...node.fields} />,
@@ -243,7 +247,12 @@ function convertLexicalToJsx({
 }
 
 export function RichText({ data, overrideClasses }: Props) {
-  if (!data?.root?.children?.length) {
+  if (
+    !data?.root?.children?.length ||
+    // @ts-expect-error - valid types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    (data.root.children.length === 1 && !data.root.children[0].children?.length)
+  ) {
     return null;
   }
 
