@@ -3,6 +3,10 @@ import type { Field, GlobalConfig } from 'payload';
 
 import { Role, hasRole } from '@/payload/access';
 import { linkArray } from '@/payload/fields/link';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 import { revalidateGlobalAfterChange } from '@/payload/hooks/revalidate-global';
 import { deepMerge } from '@/payload/utils/deep-merge';
 
@@ -25,6 +29,10 @@ export const Footer: GlobalConfig = {
       editor: lexicalEditor({
         features: ({ rootFeatures }) => rootFeatures,
       }),
+      hooks: {
+        beforeChange: [cleanEmptyLexicalBeforeChange],
+        afterRead: [cleanEmptyLexicalAfterRead],
+      },
     },
     {
       name: 'faqs',

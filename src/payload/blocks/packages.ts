@@ -17,6 +17,10 @@ import {
 import type { Block } from 'payload';
 
 import { richTextFields } from '@/payload/fields/link';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 
 export const Packages: Block = {
   slug: 'packages',
@@ -69,6 +73,10 @@ export const Packages: Block = {
                   UnorderedListFeature(),
                 ],
               }),
+              hooks: {
+                beforeChange: [cleanEmptyLexicalBeforeChange],
+                afterRead: [cleanEmptyLexicalAfterRead],
+              },
             },
             {
               name: 'details',
@@ -91,6 +99,10 @@ export const Packages: Block = {
                 ],
               }),
               required: true,
+              hooks: {
+                beforeChange: [cleanEmptyLexicalBeforeChange],
+                afterRead: [cleanEmptyLexicalAfterRead],
+              },
             },
             {
               name: 'price',
@@ -119,6 +131,10 @@ export const Packages: Block = {
               UnorderedListFeature(),
             ],
           }),
+          hooks: {
+            beforeChange: [cleanEmptyLexicalBeforeChange],
+            afterRead: [cleanEmptyLexicalAfterRead],
+          },
         },
       ],
     },
@@ -147,6 +163,10 @@ export const Packages: Block = {
               UnorderedListFeature(),
             ],
           }),
+          hooks: {
+            beforeChange: [cleanEmptyLexicalBeforeChange],
+            afterRead: [cleanEmptyLexicalAfterRead],
+          },
         },
         {
           name: 'addOns',
@@ -190,6 +210,10 @@ export const Packages: Block = {
                 ],
               }),
               required: true,
+              hooks: {
+                beforeChange: [cleanEmptyLexicalBeforeChange],
+                afterRead: [cleanEmptyLexicalAfterRead],
+              },
             },
             {
               name: 'price',

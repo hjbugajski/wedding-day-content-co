@@ -247,12 +247,7 @@ function convertLexicalToJsx({
 }
 
 export function RichText({ data, overrideClasses }: Props) {
-  if (
-    !data?.root?.children?.length ||
-    // @ts-expect-error - valid types
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    (data.root.children.length === 1 && !data.root.children[0].children?.length)
-  ) {
+  if (!data?.root?.children?.length) {
     return null;
   }
 

@@ -1,6 +1,11 @@
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import type { Block } from 'payload';
 
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
+
 export const Stepper: Block = {
   slug: 'stepper',
   interfaceName: 'PayloadStepperBlock',
@@ -33,6 +38,10 @@ export const Stepper: Block = {
           editor: lexicalEditor({
             features: ({ rootFeatures }) => rootFeatures,
           }),
+          hooks: {
+            beforeChange: [cleanEmptyLexicalBeforeChange],
+            afterRead: [cleanEmptyLexicalAfterRead],
+          },
         },
       ],
     },

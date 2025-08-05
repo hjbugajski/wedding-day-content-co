@@ -2,6 +2,10 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import type { CollectionConfig } from 'payload';
 
 import { Role, hasRole, hasRoleOrPublished } from '@/payload/access';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 
 export const Faqs: CollectionConfig<'faqs'> = {
   slug: 'faqs',
@@ -37,6 +41,10 @@ export const Faqs: CollectionConfig<'faqs'> = {
       editor: lexicalEditor({
         features: ({ rootFeatures }) => rootFeatures,
       }),
+      hooks: {
+        beforeChange: [cleanEmptyLexicalBeforeChange],
+        afterRead: [cleanEmptyLexicalAfterRead],
+      },
     },
   ],
 };

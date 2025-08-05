@@ -9,6 +9,10 @@ import { Radio } from '@/payload/blocks/form-fields/radio';
 import { Select } from '@/payload/blocks/form-fields/select';
 import { Text } from '@/payload/blocks/form-fields/text';
 import { Textarea } from '@/payload/blocks/form-fields/textarea';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 
 export const Forms: CollectionConfig<'forms'> = {
   slug: 'forms',
@@ -42,6 +46,10 @@ export const Forms: CollectionConfig<'forms'> = {
       editor: lexicalEditor({
         features: ({ rootFeatures }) => rootFeatures,
       }),
+      hooks: {
+        beforeChange: [cleanEmptyLexicalBeforeChange],
+        afterRead: [cleanEmptyLexicalAfterRead],
+      },
     },
     {
       name: 'submitButtonLabel',

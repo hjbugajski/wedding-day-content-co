@@ -9,6 +9,10 @@ import { Packages } from '@/payload/blocks/packages';
 import { Quotes } from '@/payload/blocks/quotes';
 import { Stepper } from '@/payload/blocks/stepper';
 import { background } from '@/payload/fields/background';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 import { deepMerge } from '@/payload/utils/deep-merge';
 
 const richTextField = (columns: '1' | '2'): Field => ({
@@ -25,6 +29,10 @@ const richTextField = (columns: '1' | '2'): Field => ({
       }),
     ],
   }),
+  hooks: {
+    beforeChange: [cleanEmptyLexicalBeforeChange],
+    afterRead: [cleanEmptyLexicalAfterRead],
+  },
 });
 
 export const Section: Block = {
