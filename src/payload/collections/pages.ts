@@ -13,6 +13,7 @@ import { Form } from '@/payload/blocks/form';
 import { Gallery } from '@/payload/blocks/gallery';
 import { Hero } from '@/payload/blocks/hero';
 import { MediaStack } from '@/payload/blocks/media-stack';
+import { Packages } from '@/payload/blocks/packages';
 import { Section } from '@/payload/blocks/section';
 import { Stepper } from '@/payload/blocks/stepper';
 import type { PayloadPagesCollection } from '@/payload/payload-types';
@@ -163,7 +164,7 @@ export const Pages: CollectionConfig<'pages'> = {
         features: ({ rootFeatures }) => [
           ...rootFeatures,
           BlocksFeature({
-            blocks: [Hero, Section, Form, Gallery, Stepper, MediaStack, ButtonLink],
+            blocks: [Hero, Section, Form, Gallery, Stepper, MediaStack, ButtonLink, Packages],
           }),
         ],
       }),

@@ -5,6 +5,7 @@ import { ButtonLink } from '@/payload/blocks/button-link';
 import { Gallery } from '@/payload/blocks/gallery';
 import { MediaStack } from '@/payload/blocks/media-stack';
 import { MessagesMarquee } from '@/payload/blocks/messages-marquee';
+import { Packages } from '@/payload/blocks/packages';
 import { Quotes } from '@/payload/blocks/quotes';
 import { Stepper } from '@/payload/blocks/stepper';
 import { background } from '@/payload/fields/background';
@@ -19,7 +20,7 @@ const richTextField = (columns: '1' | '2'): Field => ({
       BlocksFeature({
         blocks:
           columns === '1'
-            ? [ButtonLink, Gallery, MediaStack, MessagesMarquee, Quotes, Stepper]
+            ? [ButtonLink, Gallery, MediaStack, MessagesMarquee, Packages, Quotes, Stepper]
             : [ButtonLink, MediaStack],
       }),
     ],
