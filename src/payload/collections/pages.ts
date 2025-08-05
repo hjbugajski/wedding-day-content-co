@@ -16,6 +16,10 @@ import { MediaStack } from '@/payload/blocks/media-stack';
 import { Packages } from '@/payload/blocks/packages';
 import { Section } from '@/payload/blocks/section';
 import { Stepper } from '@/payload/blocks/stepper';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 import type { PayloadPagesCollection } from '@/payload/payload-types';
 import { generatePreviewPath } from '@/payload/utils/generate-preview-path';
 import { slugify } from '@/utils/slugify';
@@ -168,6 +172,10 @@ export const Pages: CollectionConfig<'pages'> = {
           }),
         ],
       }),
+      hooks: {
+        beforeChange: [cleanEmptyLexicalBeforeChange],
+        afterRead: [cleanEmptyLexicalAfterRead],
+      },
     },
     {
       name: 'slug',

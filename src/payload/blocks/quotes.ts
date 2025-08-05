@@ -1,6 +1,11 @@
 import { ParagraphFeature, lexicalEditor } from '@payloadcms/richtext-lexical';
 import type { Block } from 'payload';
 
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
+
 export const Quotes: Block = {
   slug: 'quotes',
   interfaceName: 'PayloadQuotesBlock',
@@ -33,6 +38,10 @@ export const Quotes: Block = {
           editor: lexicalEditor({
             features: () => [ParagraphFeature()],
           }),
+          hooks: {
+            beforeChange: [cleanEmptyLexicalBeforeChange],
+            afterRead: [cleanEmptyLexicalAfterRead],
+          },
         },
       ],
     },

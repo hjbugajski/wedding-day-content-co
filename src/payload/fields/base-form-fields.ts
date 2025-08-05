@@ -16,6 +16,10 @@ import type { Field } from 'payload';
 
 import { richTextFields } from '@/payload/fields/link';
 import { required } from '@/payload/fields/required';
+import {
+  cleanEmptyLexicalAfterRead,
+  cleanEmptyLexicalBeforeChange,
+} from '@/payload/hooks/clean-empty-lexical';
 import { slugify } from '@/utils/slugify';
 
 export const baseFormFields = (
@@ -114,5 +118,9 @@ export const baseFormFields = (
         InlineToolbarFeature(),
       ],
     }),
+    hooks: {
+      beforeChange: [cleanEmptyLexicalBeforeChange],
+      afterRead: [cleanEmptyLexicalAfterRead],
+    },
   },
 ];
