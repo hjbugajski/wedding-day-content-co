@@ -2,7 +2,7 @@ import { MigrateUpArgs, MigrateDownArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   DROP INDEX "navigation_call_to_action_link_call_to_action_link_relationship_idx";
+   DROP INDEX IF EXISTS "navigation_call_to_action_link_call_to_action_link_relationship_idx";
   ALTER TABLE "forms" ADD COLUMN "email_settings_subject_template" varchar;
   ALTER TABLE "forms" ADD COLUMN "email_settings_subject_field" varchar;
   ALTER TABLE "forms" ADD COLUMN "email_settings_name_field" varchar;
