@@ -14,7 +14,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_forms_v" ADD COLUMN "version_email_settings_email_field" varchar;
   ALTER TABLE "_forms_v" ADD COLUMN "version_email_settings_phone_field" varchar;
   ALTER TABLE "form_submissions_data" ADD COLUMN "name" varchar;
-  CREATE INDEX "navigation_call_to_action_link_call_to_action_link_relat_idx" ON "navigation" USING btree ("call_to_action_link_relationship_id");`)
+  CREATE INDEX IF NOT EXISTS "navigation_call_to_action_link_call_to_action_link_relat_idx" ON "navigation" USING btree ("call_to_action_link_relationship_id");`)
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
