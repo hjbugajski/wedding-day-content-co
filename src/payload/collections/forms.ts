@@ -86,13 +86,11 @@ export const Forms: CollectionConfig<'forms'> = {
       name: 'emailSettings',
       type: 'group',
       label: 'Email Configuration',
-      required: true,
       fields: [
         {
           name: 'subjectTemplate',
           type: 'text',
           label: 'Subject Template',
-          required: true,
           admin: {
             description: 'Use {{subjectField}} to include the subject field value in the subject',
           },

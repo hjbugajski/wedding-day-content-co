@@ -408,7 +408,7 @@ export interface PayloadFormSubmissionsCollection {
     label: string;
     value: string;
     blockType: string;
-    name: string;
+    name?: string | null;
     id?: string | null;
   }[];
   updatedAt: string;
@@ -447,11 +447,11 @@ export interface PayloadFormsCollection {
     | PayloadEmailBlock
     | PayloadPhoneNumberBlock
   )[];
-  emailSettings: {
+  emailSettings?: {
     /**
      * Use {{subjectField}} to include the subject field value in the subject
      */
-    subjectTemplate: string;
+    subjectTemplate?: string | null;
     /**
      * Enter the field name to include in the email subject line. Check the form fields above for available names.
      */
