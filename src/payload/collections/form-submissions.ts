@@ -53,19 +53,20 @@ const sendFormSubmissionEmail: CollectionAfterOperationHook<'form-submissions'> 
       }
 
       const emailSettings = form.emailSettings;
-      let subjectValue = '';
+      let subject: string | undefined;
 
-      if (emailSettings.subjectField) {
+      if (emailSettings?.subjectTemplate && emailSettings?.subjectField) {
         const subjectField = result.data.find((d) => d.name === emailSettings.subjectField);
+        const subjectValue = subjectField?.value || '';
 
-        subjectValue = subjectField?.value || '';
+        subject = emailSettings.subjectTemplate.replace('{{subjectField}}', subjectValue);
       }
 
       const resend = new Resend(env.RESEND_API_KEY);
       const { error } = await resend.emails.send({
         from: `Wedding Day Content Co. <${env.RESEND_FROM_ADDRESS_PAYLOAD}>`,
         to: env.RESEND_TO_ADDRESS_DEFAULT,
-        subject: form.emailSettings.subjectTemplate.replace('{{subjectField}}', subjectValue),
+        subject: subject || `New ${form.title} Submission`,
         react: FormSubmissionEmailTemplate({ data: result.data, form }),
         headers: {
           'X-Entity-Ref-ID': nanoid(32),
@@ -102,7 +103,7 @@ const setClient: CollectionAfterChangeHook<PayloadFormSubmissionsCollection> = a
     form = doc.form;
   }
 
-  const { emailField, nameField, phoneField } = form.emailSettings;
+  const { emailField, nameField, phoneField } = form.emailSettings || {};
 
   let email: string | undefined;
   let name: string | undefined;
@@ -247,7 +248,6 @@ export const FormSubmissions: CollectionConfig<'form-submissions'> = {
         {
           name: 'name',
           type: 'text',
-          required: true,
           admin: {
             readOnly: true,
           },
