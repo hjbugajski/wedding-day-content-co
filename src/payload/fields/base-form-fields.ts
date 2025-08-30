@@ -39,20 +39,6 @@ export const baseFormFields = (
         },
       },
       {
-        name: 'name',
-        type: 'text',
-        required: true,
-        unique: true,
-        admin: {
-          readOnly: true,
-          hidden: true,
-        },
-        hooks: {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-          beforeValidate: [({ siblingData }) => slugify(siblingData?.label)],
-        },
-      },
-      {
         name: 'width',
         type: 'select',
         admin: {
@@ -121,6 +107,19 @@ export const baseFormFields = (
     hooks: {
       beforeChange: [cleanEmptyLexicalBeforeChange],
       afterRead: [cleanEmptyLexicalAfterRead],
+    },
+  },
+  {
+    name: 'name',
+    type: 'text',
+    required: true,
+    unique: true,
+    admin: {
+      readOnly: true,
+    },
+    hooks: {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      beforeValidate: [({ siblingData }) => slugify(siblingData?.label)],
     },
   },
 ];
