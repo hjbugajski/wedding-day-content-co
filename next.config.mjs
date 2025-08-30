@@ -17,6 +17,7 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {},
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });

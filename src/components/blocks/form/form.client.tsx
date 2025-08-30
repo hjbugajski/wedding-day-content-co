@@ -79,6 +79,7 @@ export function FormClient({
           blockType: f.blockType,
           label: f.label,
           value: getFieldConfig(f).format(f, values[f.name]),
+          name: f.name,
         }));
 
         await submitForm(id, payload);

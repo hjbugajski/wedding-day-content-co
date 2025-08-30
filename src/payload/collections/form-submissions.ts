@@ -15,7 +15,6 @@ import type {
   PayloadFormSubmissionsCollection,
   PayloadFormsCollection,
 } from '@/payload/payload-types';
-import { slugify } from '@/utils/slugify';
 
 const formRelationshipValidation: RelationshipFieldSingleValidation = async (
   value,
@@ -53,12 +52,24 @@ const sendFormSubmissionEmail: CollectionAfterOperationHook<'form-submissions'> 
         form = result.form;
       }
 
+      const emailSettings = form.emailSettings;
+      let subjectValue = '';
+
+      if (emailSettings.subjectField) {
+        const subjectField = result.data.find((d) => d.name === emailSettings.subjectField);
+
+        subjectValue = subjectField?.value || '';
+      }
+
       const resend = new Resend(env.RESEND_API_KEY);
       const { error } = await resend.emails.send({
         from: `Wedding Day Content Co. <${env.RESEND_FROM_ADDRESS_PAYLOAD}>`,
         to: env.RESEND_TO_ADDRESS_DEFAULT,
-        subject: `New ${form.title} Submission`,
+        subject: form.emailSettings.subjectTemplate.replace('{{subjectField}}', subjectValue),
         react: FormSubmissionEmailTemplate({ data: result.data, form }),
+        headers: {
+          'X-Entity-Ref-ID': nanoid(32),
+        },
       });
 
       if (error) {
@@ -82,7 +93,34 @@ const setClient: CollectionAfterChangeHook<PayloadFormSubmissionsCollection> = a
   }
 
   const { payload } = req;
-  const email = doc.data?.find((datum) => datum.blockType === 'email')?.value;
+
+  let form: PayloadFormsCollection;
+
+  if (typeof doc.form === 'string') {
+    form = await payload.findByID({ collection: 'forms', id: doc.form, req });
+  } else {
+    form = doc.form;
+  }
+
+  const { emailField, nameField, phoneField } = form.emailSettings;
+
+  let email: string | undefined;
+  let name: string | undefined;
+  let phoneNumber: string | undefined;
+
+  doc.data?.forEach((datum) => {
+    if (emailField && datum.name === emailField) {
+      email = datum.value;
+    }
+
+    if (nameField && datum.name === nameField) {
+      name = datum.value;
+    }
+
+    if (phoneField && datum.name === phoneField) {
+      phoneNumber = datum.value;
+    }
+  });
 
   if (!email) {
     return doc;
@@ -103,19 +141,6 @@ const setClient: CollectionAfterChangeHook<PayloadFormSubmissionsCollection> = a
       req,
     });
   }
-
-  let name: string | undefined;
-  let phoneNumber: string | undefined;
-
-  doc.data?.forEach((datum) => {
-    if (slugify(datum.label) === 'name') {
-      name = datum.value;
-    }
-
-    if (datum.blockType === 'phoneNumber') {
-      phoneNumber = datum.value;
-    }
-  });
 
   const { id } = await payload.create({
     collection: 'clients',
@@ -213,6 +238,14 @@ export const FormSubmissions: CollectionConfig<'form-submissions'> = {
         },
         {
           name: 'blockType',
+          type: 'text',
+          required: true,
+          admin: {
+            readOnly: true,
+          },
+        },
+        {
+          name: 'name',
           type: 'text',
           required: true,
           admin: {
