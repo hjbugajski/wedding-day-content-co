@@ -90,7 +90,7 @@ const fetchGlobal = async (slug: GlobalSlug) => {
 
 const fetchCachedGlobal = <T,>(slug: GlobalSlug) =>
   unstable_cache(fetchGlobal, [slug], {
-    tags: [`global_${slug}`],
+    tags: [`global:${slug}`],
   })(slug) as Promise<T>;
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

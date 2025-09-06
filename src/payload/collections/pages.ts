@@ -61,10 +61,15 @@ const setPath: CollectionAfterChangeHook<PayloadPagesCollection> = ({ context, d
 };
 
 const revalidatePageAfterChange: CollectionAfterChangeHook<PayloadPagesCollection> = ({
+  context,
   doc,
   previousDoc,
   req: { payload },
 }) => {
+  if (context?.disableRevalidate) {
+    return doc;
+  }
+
   if (doc._status === 'published' && doc.path) {
     payload.logger.info(`Revalidating path: ${doc.path}`);
 
@@ -73,18 +78,35 @@ const revalidatePageAfterChange: CollectionAfterChangeHook<PayloadPagesCollectio
     }
 
     revalidatePath(doc.path);
-    revalidateTag('pages-sitemap');
+    revalidateTag('pages:sitemap');
   }
 
   if (previousDoc?._status === 'published' && doc._status !== 'published' && previousDoc.path) {
     payload.logger.info(`Revalidating previous path: ${previousDoc.path}`);
 
-    if (doc.path === '/home') {
+    if (previousDoc.path === '/home') {
       revalidatePath('/');
     }
 
     revalidatePath(previousDoc.path);
-    revalidateTag('pages-sitemap');
+    revalidateTag('pages:sitemap');
+  }
+
+  if (
+    previousDoc?.path &&
+    doc?.path &&
+    previousDoc.path !== doc.path &&
+    previousDoc._status === 'published' &&
+    doc._status === 'published'
+  ) {
+    payload.logger.info(`Revalidating changed path: from ${previousDoc.path} to ${doc.path}`);
+
+    if (previousDoc.path === '/home') {
+      revalidatePath('/');
+    }
+
+    revalidatePath(previousDoc.path);
+    revalidateTag('pages:sitemap');
   }
 
   return doc;
@@ -94,15 +116,15 @@ export const revalidatePageAfterDelete: CollectionAfterDeleteHook<PayloadPagesCo
   doc,
   req: { context, payload },
 }) => {
-  if (!context.disableRevalidate && doc.path) {
-    payload.logger.info(`Revalidating path: ${doc.path}`);
+  if (!context?.disableRevalidate && doc.path) {
+    payload.logger.info(`Revalidating deleted page path: ${doc.path}`);
 
     if (doc.path === '/home') {
       revalidatePath('/');
     }
 
     revalidatePath(doc.path);
-    revalidateTag('pages-sitemap');
+    revalidateTag('pages:sitemap');
   }
 
   return doc;

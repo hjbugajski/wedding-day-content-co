@@ -1,5 +1,11 @@
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
-import type { CollectionConfig, TextField, Validate } from 'payload';
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionConfig,
+  TextField,
+  Validate,
+} from 'payload';
 
 import { Role, hasRole } from '@/payload/access';
 import { Date } from '@/payload/blocks/form-fields/date';
@@ -14,6 +20,7 @@ import {
   cleanEmptyLexicalBeforeChange,
 } from '@/payload/hooks/clean-empty-lexical';
 import type { PayloadFormsCollection } from '@/payload/payload-types';
+import { revalidatePagesUsingCollection } from '@/payload/utils/revalidation';
 
 type TextFieldValidator = Validate<string, PayloadFormsCollection, unknown, TextField>;
 
@@ -25,6 +32,33 @@ const validateFieldExists: TextFieldValidator = (value, { data }) => {
   const fieldExists = data.fields.some((field) => field.name === value);
 
   return fieldExists || 'Selected field does not exist in the form';
+};
+
+const revalidateFormAfterChange: CollectionAfterChangeHook<PayloadFormsCollection> = async ({
+  context,
+  doc,
+  req: { payload },
+}) => {
+  if (context?.disableRevalidate) {
+    return doc;
+  }
+
+  if (doc._status === 'published') {
+    const logger = (message: string) => payload.logger.info(message);
+    await revalidatePagesUsingCollection({ payload, logger }, 'forms', doc.id);
+  }
+
+  return doc;
+};
+
+const revalidateFormAfterDelete: CollectionAfterDeleteHook<PayloadFormsCollection> = async ({
+  doc,
+  req: { payload },
+}) => {
+  const logger = (message: string) => payload.logger.info(message);
+  await revalidatePagesUsingCollection({ payload, logger }, 'forms', doc.id);
+
+  return doc;
 };
 
 export const Forms: CollectionConfig<'forms'> = {
@@ -45,6 +79,10 @@ export const Forms: CollectionConfig<'forms'> = {
     create: hasRole(Role.Admin, Role.Editor),
     update: hasRole(Role.Admin, Role.Editor),
     delete: hasRole(Role.Admin),
+  },
+  hooks: {
+    afterChange: [revalidateFormAfterChange],
+    afterDelete: [revalidateFormAfterDelete],
   },
   fields: [
     {
