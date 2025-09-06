@@ -101,7 +101,7 @@ export function FormClient({
       <form
         id={id}
         onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
-        className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2"
+        className="my-6 grid w-full grid-cols-1 gap-6 first:mt-0 last:mb-0 sm:grid-cols-2"
       >
         {fieldList.map(({ meta, config: { Renderer } }) => (
           <FormField

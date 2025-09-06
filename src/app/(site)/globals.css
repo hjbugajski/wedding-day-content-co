@@ -196,3 +196,25 @@
 @utility subheading {
   @apply font-semibold tracking-[0.08em] uppercase;
 }
+
+@utility masonry {
+  column-count: 1;
+  column-fill: balance;
+  column-gap: 2rem;
+  width: 100%;
+
+  @media (width >= 768px) {
+    column-count: 2;
+  }
+
+  @media (width >= 1024px) {
+    column-count: 3;
+  }
+}
+
+@utility masonry-item {
+  display: inline-block;
+  break-inside: avoid;
+  width: 100%;
+  margin-bottom: 2rem;
+}
