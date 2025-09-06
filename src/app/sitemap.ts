@@ -32,8 +32,8 @@ const getPagesSitemap = unstable_cache(
         priority: page?.path === '/home' ? 1 : 0.8,
       }));
   },
-  ['pages-sitemap'],
-  { tags: ['pages-sitemap'] },
+  ['pages:sitemap'],
+  { tags: ['pages:sitemap'] },
 );
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

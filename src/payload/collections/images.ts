@@ -1,10 +1,16 @@
-import type { CollectionAfterChangeHook, CollectionConfig, Field } from 'payload';
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionConfig,
+  Field,
+} from 'payload';
 
 import { Role, hasRole } from '@/payload/access';
 import { linkGroup } from '@/payload/fields/link';
 import type { PayloadImagesCollection } from '@/payload/payload-types';
 import { createDataUrl } from '@/payload/utils/create-data-url';
 import { deepMerge } from '@/payload/utils/deep-merge';
+import { revalidatePagesUsingCollection } from '@/payload/utils/revalidation';
 
 const addDataUrl: CollectionAfterChangeHook<PayloadImagesCollection> = async ({
   context,
@@ -30,6 +36,37 @@ const addDataUrl: CollectionAfterChangeHook<PayloadImagesCollection> = async ({
   });
 };
 
+const revalidateImageAfterChange: CollectionAfterChangeHook<PayloadImagesCollection> = async ({
+  context,
+  doc,
+  req: { payload },
+}) => {
+  if (context?.disableRevalidate) {
+    return doc;
+  }
+
+  if (context?.ignoreAddDataUrl) {
+    return doc;
+  }
+
+  const logger = (message: string) => payload.logger.info(message);
+
+  await revalidatePagesUsingCollection({ payload, logger }, 'images', doc.id);
+
+  return doc;
+};
+
+const revalidateImageAfterDelete: CollectionAfterDeleteHook<PayloadImagesCollection> = async ({
+  doc,
+  req: { payload },
+}) => {
+  const logger = (message: string) => payload.logger.info(message);
+
+  await revalidatePagesUsingCollection({ payload, logger }, 'images', doc.id);
+
+  return doc;
+};
+
 export const Images: CollectionConfig<'images'> = {
   slug: 'images',
   typescript: {
@@ -46,7 +83,8 @@ export const Images: CollectionConfig<'images'> = {
     delete: hasRole(Role.Admin),
   },
   hooks: {
-    afterChange: [addDataUrl],
+    afterChange: [addDataUrl, revalidateImageAfterChange],
+    afterDelete: [revalidateImageAfterDelete],
   },
   upload: {
     adminThumbnail: 'thumbnail',
