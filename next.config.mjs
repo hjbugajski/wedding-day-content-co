@@ -12,7 +12,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: production ? 'https' : 'http',
-        hostname: production ? domain : 'localhost',
+        hostname: production && domain ? domain : 'localhost',
         pathname: '/api/**',
       },
     ],
