@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import type {
   CollectionAfterChangeHook,
+  CollectionAfterErrorHook,
   CollectionAfterOperationHook,
   CollectionConfig,
   RelationshipFieldSingleValidation,
@@ -15,6 +16,7 @@ import type {
   PayloadFormSubmissionsCollection,
   PayloadFormsCollection,
 } from '@/payload/payload-types';
+import { sendFallbackFormEmail } from '@/services/email';
 
 const formRelationshipValidation: RelationshipFieldSingleValidation = async (
   value,
@@ -162,6 +164,30 @@ const setClient: CollectionAfterChangeHook<PayloadFormSubmissionsCollection> = a
   });
 };
 
+const afterErrorHook: CollectionAfterErrorHook = async ({ req, error, context }) => {
+  req.payload.logger.error('Form submission error occurred:', {
+    error: error.message,
+    stack: error.stack,
+    context,
+  });
+
+  if (context && 'formSubmissionData' in context && context.formSubmissionData) {
+    const { form, data } = context.formSubmissionData as {
+      form: string;
+      data: PayloadFormSubmissionsCollection['data'];
+    };
+
+    if (form && data) {
+      try {
+        await sendFallbackFormEmail(form, data);
+        req.payload.logger.info('Fallback email sent due to database error');
+      } catch (emailError) {
+        req.payload.logger.error('Failed to send fallback email:', emailError);
+      }
+    }
+  }
+};
+
 export const FormSubmissions: CollectionConfig<'form-submissions'> = {
   slug: 'form-submissions',
   typescript: {
@@ -179,6 +205,7 @@ export const FormSubmissions: CollectionConfig<'form-submissions'> = {
   hooks: {
     afterChange: [setClient],
     afterOperation: [sendFormSubmissionEmail],
+    afterError: [afterErrorHook],
   },
   fields: [
     {
