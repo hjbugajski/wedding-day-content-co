@@ -165,9 +165,9 @@ const setClient: CollectionAfterChangeHook<PayloadFormSubmissionsCollection> = a
 };
 
 const afterErrorHook: CollectionAfterErrorHook = async ({ req, error, context }) => {
-  req.payload.logger.error('Form submission error occurred:', {
-    error: error.message,
-    stack: error.stack,
+  req.payload.logger.error({
+    err: error,
+    msg: 'Form submission error occurred',
     context,
   });
 
