@@ -33,7 +33,7 @@ export const decryptField: FieldHook = ({ value, req: { payload } }) => {
         return decrypted;
       }
     } catch (e) {
-      payload.logger.error('Decryption failed', e);
+      payload.logger.error({ err: e, msg: 'Decryption failed' });
 
       return value;
     }
