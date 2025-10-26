@@ -32,7 +32,7 @@ const formRelationshipValidation: RelationshipFieldSingleValidation = async (
 
     return true;
   } catch (error) {
-    payload.logger.error(error);
+    payload.logger.error({ err: error });
 
     return 'Form does not exist.';
   }
@@ -76,10 +76,10 @@ const sendFormSubmissionEmail: CollectionAfterOperationHook<'form-submissions'> 
       });
 
       if (error) {
-        payload.logger.error(error);
+        payload.logger.error({ err: error });
       }
     } catch (error) {
-      payload.logger.error(error);
+      payload.logger.error({ err: error });
     }
   }
 
@@ -182,7 +182,7 @@ const afterErrorHook: CollectionAfterErrorHook = async ({ req, error, context })
         await sendFallbackFormEmail(form, data);
         req.payload.logger.info('Fallback email sent due to database error');
       } catch (emailError) {
-        req.payload.logger.error('Failed to send fallback email:', emailError);
+        req.payload.logger.error({ err: emailError, msg: 'Failed to send fallback email' });
       }
     }
   }
