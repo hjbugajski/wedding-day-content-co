@@ -16,7 +16,7 @@ const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
 
 export const submitForm = async (form: string, data: PayloadFormSubmissionsCollection['data']) => {
   try {
-    const payload = await getPayload({ config });
+    const payload = await withTimeout(getPayload({ config }), 10_000);
     const result = await withTimeout(
       payload.create({
         collection: 'form-submissions',
