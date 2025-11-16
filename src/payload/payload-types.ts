@@ -819,10 +819,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'mux-video';
         value: string | MuxVideo;
-      } | null)
-    | ({
-        relationTo: 'payload-kv';
-        value: string | PayloadKv;
       } | null);
   globalSlug?: string | null;
   user:
