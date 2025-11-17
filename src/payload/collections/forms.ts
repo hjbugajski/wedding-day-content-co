@@ -8,6 +8,7 @@ import type {
 } from 'payload';
 
 import { Role, hasRole } from '@/payload/access';
+import { Checkbox } from '@/payload/blocks/form-fields/checkbox';
 import { Date } from '@/payload/blocks/form-fields/date';
 import { Email } from '@/payload/blocks/form-fields/email';
 import { PhoneNumber } from '@/payload/blocks/form-fields/phone-number';
@@ -118,7 +119,7 @@ export const Forms: CollectionConfig<'forms'> = {
       type: 'blocks',
       required: true,
       minRows: 1,
-      blocks: [Text, Textarea, Date, Select, Radio, Email, PhoneNumber],
+      blocks: [Text, Textarea, Date, Select, Radio, Checkbox, Email, PhoneNumber],
     },
     {
       name: 'emailSettings',

@@ -109,6 +109,12 @@ export const Packages: Block = {
               type: 'text',
               required: true,
             },
+            {
+              name: 'highlight',
+              type: 'checkbox',
+              defaultValue: false,
+              required: true,
+            },
           ],
         },
         {

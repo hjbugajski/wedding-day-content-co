@@ -85,6 +85,10 @@ export const fields: Field[] = [
             value: 'calendarCheck',
           },
           {
+            label: 'Checkmark',
+            value: 'checkmark',
+          },
+          {
             label: 'Chevron down',
             value: 'chevronDown',
           },
@@ -123,6 +127,10 @@ export const fields: Field[] = [
           {
             label: 'Quote solid',
             value: 'quoteSolid',
+          },
+          {
+            label: 'Sparkle',
+            value: 'sparkle',
           },
           {
             label: 'TikTok',

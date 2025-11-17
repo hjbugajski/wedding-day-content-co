@@ -54,6 +54,7 @@ export type PayloadIconField =
       | 'arrowUpRight'
       | 'calendar'
       | 'calendarCheck'
+      | 'checkmark'
       | 'chevronDown'
       | 'circle'
       | 'instagram'
@@ -64,6 +65,7 @@ export type PayloadIconField =
       | 'navArrowRight'
       | 'navArrowUp'
       | 'quoteSolid'
+      | 'sparkle'
       | 'tikTok'
       | 'x'
     )
@@ -446,6 +448,7 @@ export interface PayloadFormsCollection {
     | PayloadDateBlock
     | PayloadSelectBlock
     | PayloadRadioBlock
+    | PayloadCheckboxBlock
     | PayloadEmailBlock
     | PayloadPhoneNumberBlock
   )[];
@@ -644,6 +647,56 @@ export interface PayloadRadioBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'radio';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PayloadCheckboxBlock".
+ */
+export interface PayloadCheckboxBlock {
+  label: string;
+  width: 'half' | 'full';
+  placeholder?: string | null;
+  defaultValue?: string | null;
+  options: {
+    label: string;
+    description?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    value: string;
+    id?: string | null;
+  }[];
+  required: boolean;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  name: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'checkbox';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1010,6 +1063,7 @@ export interface FormsSelect<T extends boolean = true> {
         date?: T | PayloadDateBlockSelect<T>;
         select?: T | PayloadSelectBlockSelect<T>;
         radio?: T | PayloadRadioBlockSelect<T>;
+        checkbox?: T | PayloadCheckboxBlockSelect<T>;
         email?: T | PayloadEmailBlockSelect<T>;
         phoneNumber?: T | PayloadPhoneNumberBlockSelect<T>;
       };
@@ -1116,6 +1170,29 @@ export interface PayloadRadioBlockSelect<T extends boolean = true> {
     | T
     | {
         label?: T;
+        value?: T;
+        id?: T;
+      };
+  required?: T;
+  description?: T;
+  name?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PayloadCheckboxBlock_select".
+ */
+export interface PayloadCheckboxBlockSelect<T extends boolean = true> {
+  label?: T;
+  width?: T;
+  placeholder?: T;
+  defaultValue?: T;
+  options?:
+    | T
+    | {
+        label?: T;
+        description?: T;
         value?: T;
         id?: T;
       };
@@ -1502,6 +1579,7 @@ export interface PayloadPackagesBlock {
         [k: string]: unknown;
       };
       price: string;
+      highlight: boolean;
       id?: string | null;
     }[];
     footer?: {

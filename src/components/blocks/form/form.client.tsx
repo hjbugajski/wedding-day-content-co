@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { checkboxConfig } from '@/components/blocks/form/configs/checkbox';
 import { dateConfig } from '@/components/blocks/form/configs/date';
 import { emailConfig } from '@/components/blocks/form/configs/email';
 import { phoneNumberConfig } from '@/components/blocks/form/configs/phone-number';
@@ -30,6 +31,7 @@ const fieldConfigs: FieldConfigs = {
   select: selectConfig,
   radio: radioConfig,
   date: dateConfig,
+  checkbox: checkboxConfig,
 };
 
 function getFieldConfig<M extends FieldMeta>(meta: M): FieldConfig<M> {

@@ -33,17 +33,11 @@ export function AddOnsAccordion({ addOns }: Props) {
               <RichText
                 data={content}
                 overrideClasses={{
-                  paragraph: 'my-1 first:mt-0 last:mb-0 text-base text-dusty-rose-800',
+                  paragraph: 'my-1 first:mt-0 text-lg last:mb-0 text-dusty-rose-800',
                 }}
               />
             </div>
-            {price ? (
-              <div className="flex items-center border-l border-l-dusty-rose-600 py-2 pl-3">
-                <p className="pt-1 font-serif text-2xl leading-none font-light text-dusty-rose-800 drop-shadow-lg">
-                  {price}
-                </p>
-              </div>
-            ) : null}
+            {price ? <p className="text-lg font-semibold text-dusty-rose-800">{price}</p> : null}
           </AccordionContent>
         </AccordionItem>
       ))}

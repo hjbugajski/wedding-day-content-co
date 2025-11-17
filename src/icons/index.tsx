@@ -8,6 +8,7 @@ import { IconArrowRight } from '@/icons/arrow-right';
 import { IconArrowUpRight } from '@/icons/arrow-up-right';
 import { IconCalendar } from '@/icons/calendar';
 import { IconCalendarCheck } from '@/icons/calendar-check';
+import { IconCheckmark } from '@/icons/checkmark';
 import { IconCircle } from '@/icons/circle';
 import { IconInstagram } from '@/icons/instagram';
 import { IconMenu } from '@/icons/menu';
@@ -17,6 +18,7 @@ import { IconNavArrowLeft } from '@/icons/nav-arrow-left';
 import { IconNavArrowRight } from '@/icons/nav-arrow-right';
 import { IconNavArrowUp } from '@/icons/nav-arrow-up';
 import { IconQuoteSolid } from '@/icons/quote-solid';
+import { IconSparkle } from '@/icons/sparkle';
 import { IconTikTok } from '@/icons/tiktok';
 import { IconXMark } from '@/icons/x-mark';
 import type { PayloadIconField } from '@/payload/payload-types';
@@ -32,6 +34,7 @@ const icons: Record<IconName, IconFunction> = {
   arrowUpRight: IconArrowUpRight,
   calendar: IconCalendar,
   calendarCheck: IconCalendarCheck,
+  checkmark: IconCheckmark,
   chevronDown: IconNavArrowDown,
   circle: IconCircle,
   instagram: IconInstagram,
@@ -42,6 +45,7 @@ const icons: Record<IconName, IconFunction> = {
   navArrowRight: IconNavArrowRight,
   navArrowUp: IconNavArrowUp,
   quoteSolid: IconQuoteSolid,
+  sparkle: IconSparkle,
   tikTok: IconTikTok,
   x: IconXMark,
 };
