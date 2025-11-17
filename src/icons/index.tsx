@@ -8,6 +8,7 @@ import { IconArrowRight } from '@/icons/arrow-right';
 import { IconArrowUpRight } from '@/icons/arrow-up-right';
 import { IconCalendar } from '@/icons/calendar';
 import { IconCalendarCheck } from '@/icons/calendar-check';
+import { IconCheckmark } from '@/icons/checkmark';
 import { IconCircle } from '@/icons/circle';
 import { IconInstagram } from '@/icons/instagram';
 import { IconMenu } from '@/icons/menu';
@@ -32,6 +33,7 @@ const icons: Record<IconName, IconFunction> = {
   arrowUpRight: IconArrowUpRight,
   calendar: IconCalendar,
   calendarCheck: IconCalendarCheck,
+  checkmark: IconCheckmark,
   chevronDown: IconNavArrowDown,
   circle: IconCircle,
   instagram: IconInstagram,
