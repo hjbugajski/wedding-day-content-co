@@ -18,6 +18,7 @@ import { IconNavArrowLeft } from '@/icons/nav-arrow-left';
 import { IconNavArrowRight } from '@/icons/nav-arrow-right';
 import { IconNavArrowUp } from '@/icons/nav-arrow-up';
 import { IconQuoteSolid } from '@/icons/quote-solid';
+import { IconSparkle } from '@/icons/sparkle';
 import { IconTikTok } from '@/icons/tiktok';
 import { IconXMark } from '@/icons/x-mark';
 import type { PayloadIconField } from '@/payload/payload-types';
@@ -44,6 +45,7 @@ const icons: Record<IconName, IconFunction> = {
   navArrowRight: IconNavArrowRight,
   navArrowUp: IconNavArrowUp,
   quoteSolid: IconQuoteSolid,
+  sparkle: IconSparkle,
   tikTok: IconTikTok,
   x: IconXMark,
 };

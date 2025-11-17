@@ -129,6 +129,10 @@ export const fields: Field[] = [
             value: 'quoteSolid',
           },
           {
+            label: 'Sparkle',
+            value: 'sparkle',
+          },
+          {
             label: 'TikTok',
             value: 'tikTok',
           },

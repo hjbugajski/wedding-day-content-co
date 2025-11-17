@@ -65,6 +65,7 @@ export type PayloadIconField =
       | 'navArrowRight'
       | 'navArrowUp'
       | 'quoteSolid'
+      | 'sparkle'
       | 'tikTok'
       | 'x'
     )
@@ -1578,6 +1579,7 @@ export interface PayloadPackagesBlock {
         [k: string]: unknown;
       };
       price: string;
+      highlight: boolean;
       id?: string | null;
     }[];
     footer?: {
