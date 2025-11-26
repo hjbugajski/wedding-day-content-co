@@ -93,10 +93,8 @@ export default buildConfig({
         try {
           const startTime = Date.now();
 
-          await req.payload.find({
+          await req.payload.count({
             collection: 'users',
-            limit: 1,
-            pagination: false,
           });
 
           const responseTime = Date.now() - startTime;

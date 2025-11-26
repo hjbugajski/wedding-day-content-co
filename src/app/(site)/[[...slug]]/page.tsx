@@ -32,6 +32,13 @@ const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
         equals: `/${segments.join('/')}`,
       },
     },
+    select: {
+      title: true,
+      description: true,
+      content: true,
+      slug: true,
+      breadcrumbs: true,
+    },
   });
 
   return result.docs?.[0] || null;
