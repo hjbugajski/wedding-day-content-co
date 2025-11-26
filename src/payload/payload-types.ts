@@ -191,6 +191,7 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
+  fallbackLocale: null;
   globals: {
     navigation: PayloadNavigationGlobal;
     footer: PayloadFooterGlobal;
