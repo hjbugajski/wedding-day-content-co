@@ -7,6 +7,18 @@ export const MessagesMarquee: Block = {
     {
       name: 'messages',
       type: 'array',
+      admin: {
+        components: {
+          RowLabel: {
+            path: '@/payload/components/row-label.tsx',
+            exportName: 'RowLabel',
+            clientProps: {
+              path: 'content',
+              fallback: 'Message',
+            },
+          },
+        },
+      },
       fields: [
         {
           name: 'content',

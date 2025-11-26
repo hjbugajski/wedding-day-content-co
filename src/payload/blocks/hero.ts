@@ -1,6 +1,6 @@
 import type { Block } from 'payload';
 
-import { buttonLinkArray } from '@/payload/fields/buttonLink';
+import { buttonLinkArray } from '@/payload/fields/button-link';
 
 export const Hero: Block = {
   slug: 'hero',

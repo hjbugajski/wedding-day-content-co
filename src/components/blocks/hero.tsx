@@ -14,7 +14,7 @@ export function HeroBlock({
   return (
     <div className="relative isolate -mt-18 overflow-hero flex h-svh flex-row items-center justify-center bg-black">
       <PayloadVideo video={video} videoPoster={videoPoster} />
-      <div className="absolute inset-0 bg-black/25" />
+      <div aria-hidden="true" className="absolute inset-0 bg-black/25" />
       <div className="absolute z-10 flex h-full flex-col items-center justify-center gap-12 px-4">
         <div className="flex flex-col items-center justify-center gap-1 text-center text-wrap-balance">
           <h1 className="text-5xl text-white shadow-black t-shadow-lg md:text-8xl">{heading}</h1>

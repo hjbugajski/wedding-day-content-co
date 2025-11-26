@@ -4,21 +4,10 @@ export default {
     'import-notation': null,
     'at-rule-no-unknown': [
       true,
-      {
-        ignoreAtRules: ['theme', 'source', 'utility', 'variant', 'custom-variant', 'plugin'],
-      },
+      { ignoreAtRules: ['theme', 'source', 'utility', 'variant', 'custom-variant', 'plugin'] },
     ],
-    'at-rule-no-deprecated': [
-      true,
-      {
-        ignoreAtRules: ['apply'],
-      },
-    ],
-    'function-no-unknown': [
-      true,
-      {
-        ignoreFunctions: ['theme'],
-      },
-    ],
+    'at-rule-no-deprecated': [true, { ignoreAtRules: ['apply'] }],
+    'function-no-unknown': [true, { ignoreFunctions: ['theme'] }],
+    'no-invalid-position-declaration': null,
   },
 };

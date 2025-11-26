@@ -54,6 +54,18 @@ export const Checkbox: Block = {
       type: 'array',
       required: true,
       minRows: 1,
+      admin: {
+        components: {
+          RowLabel: {
+            path: '@/payload/components/row-label.tsx',
+            exportName: 'RowLabel',
+            clientProps: {
+              path: 'label',
+              fallback: 'Option',
+            },
+          },
+        },
+      },
       fields: [
         {
           name: 'label',

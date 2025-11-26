@@ -32,6 +32,18 @@ export const Select: Block = {
       type: 'array',
       required: true,
       minRows: 2,
+      admin: {
+        components: {
+          RowLabel: {
+            path: '@/payload/components/row-label.tsx',
+            exportName: 'RowLabel',
+            clientProps: {
+              path: 'label',
+              fallback: 'Option',
+            },
+          },
+        },
+      },
       fields: [
         {
           name: 'label',

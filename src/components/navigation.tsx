@@ -196,6 +196,7 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
           <dialog
             aria-live="polite"
             aria-hidden={!open}
+            aria-modal={open}
             open={open}
             data-state={open ? 'open' : 'closed'}
             className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] rounded-xs bg-neutral-50/75 p-4 pt-2 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:fade-out data-[state=closed]:slide-out-to-top-4 data-[state=open]:animate-in data-[state=open]:duration-300 data-[state=open]:fade-in data-[state=open]:slide-in-from-top-2"
