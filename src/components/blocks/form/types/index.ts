@@ -9,7 +9,7 @@ export type FieldValue<M> =
   M extends Exclude<FieldMeta['blockType'], 'date'>
     ? string
     : M extends Extract<FieldMeta['blockType'], 'date'>
-      ? (Date | undefined) | (Date[] | []) | ({ from?: Date; to?: Date } | Record<string, never>)
+      ? (Date | undefined) | Date[] | ({ from?: Date; to?: Date } | Record<string, never>)
       : never;
 
 export type FieldValues<M> =
@@ -18,7 +18,7 @@ export type FieldValues<M> =
     : M extends Extract<FieldMeta['blockType'], 'date'>
       ? Record<
           string,
-          (Date | undefined) | (Date[] | []) | ({ from?: Date; to?: Date } | Record<string, never>)
+          (Date | undefined) | Date[] | ({ from?: Date; to?: Date } | Record<string, never>)
         >
       : never;
 

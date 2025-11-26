@@ -88,8 +88,7 @@ export function FormClient({
 
         toast.success(confirmationMessage);
         form.reset();
-      } catch (error) {
-        console.error('Form submit failed:', error);
+      } catch {
         toast.error('Something went wrong. Please try again.');
       } finally {
         setPending(false);

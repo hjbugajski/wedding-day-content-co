@@ -18,9 +18,9 @@ interface PageProps {
 
 const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
   const segments = slug || ['home'];
-  const draftModePromis = draftMode();
+  const draftModePromise = draftMode();
   const payloadPromise = getPayload({ config });
-  const [{ isEnabled: draft }, payload] = await Promise.all([draftModePromis, payloadPromise]);
+  const [{ isEnabled: draft }, payload] = await Promise.all([draftModePromise, payloadPromise]);
   const result = await payload.find({
     collection: 'pages',
     draft,
@@ -31,6 +31,13 @@ const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
       path: {
         equals: `/${segments.join('/')}`,
       },
+    },
+    select: {
+      title: true,
+      description: true,
+      content: true,
+      slug: true,
+      breadcrumbs: true,
     },
   });
 

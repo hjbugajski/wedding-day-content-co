@@ -10,13 +10,13 @@ import { Resend } from 'resend';
 
 import { env } from '@/env/server';
 import { Role, hasRole } from '@/payload/access';
-import { FormSubmissionEmailTemplate } from '@/payload/components/form-submission-email-template';
 import { decryptField, encryptField } from '@/payload/hooks/encryption';
 import type {
   PayloadFormSubmissionsCollection,
   PayloadFormsCollection,
 } from '@/payload/payload-types';
 import { sendFallbackFormEmail } from '@/services/email';
+import { FormSubmissionEmailTemplate } from '@/services/email/form-submission-email-template';
 
 const formRelationshipValidation: RelationshipFieldSingleValidation = async (
   value,

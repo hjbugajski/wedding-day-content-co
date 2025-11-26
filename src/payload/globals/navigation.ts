@@ -1,7 +1,7 @@
 import type { Field, GlobalConfig } from 'payload';
 
 import { Role, hasRole } from '@/payload/access';
-import { buttonLinkGroup } from '@/payload/fields/buttonLink';
+import { buttonLinkGroup } from '@/payload/fields/button-link';
 import { linkArray, linkGroup } from '@/payload/fields/link';
 import { revalidateGlobalAfterChange } from '@/payload/hooks/revalidate-global';
 import { deepMerge } from '@/payload/utils/deep-merge';

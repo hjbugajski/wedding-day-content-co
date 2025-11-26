@@ -1,6 +1,6 @@
 import type { FieldHook } from 'payload';
 
-import { decrypt, encrypt } from '@/payload/utilities/crypto';
+import { decrypt, encrypt } from '@/payload/utils/crypto';
 
 export const encryptField: FieldHook = ({ value }) => {
   if (value === undefined || value === null) {

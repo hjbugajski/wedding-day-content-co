@@ -61,8 +61,8 @@ export default function PayloadMuxVideo({ className, onPlaying, video }: Props) 
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            currentVideoElement.play().catch((error) => {
-              console.error('Video play failed:', error);
+            void currentVideoElement.play().catch(() => {
+              // Video autoplay may be blocked by browser - this is expected
             });
             startTimer();
           } else {

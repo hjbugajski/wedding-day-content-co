@@ -1,10 +1,10 @@
 import { Body, Font, Head, Heading, Html, Preview, Tailwind } from '@react-email/components';
 
-import { tailwindEmailConfig } from '@/config/tailwind-email';
 import type {
   PayloadFormSubmissionsCollection,
   PayloadFormsCollection,
 } from '@/payload/payload-types';
+import { tailwindEmailConfig } from '@/services/email/tailwind';
 import { slugify } from '@/utils/slugify';
 
 interface Props {
