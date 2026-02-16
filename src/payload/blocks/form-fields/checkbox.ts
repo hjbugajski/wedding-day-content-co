@@ -12,7 +12,7 @@ import {
   UnorderedListFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical';
-import type { Block } from 'payload';
+import type { Block, Validate } from 'payload';
 
 import { baseFormFields } from '@/payload/fields/base-form-fields';
 import { richTextFields } from '@/payload/fields/link';
@@ -31,7 +31,7 @@ export const Checkbox: Block = {
       defaultValue: {
         name: 'defaultValue',
         type: 'text',
-        validate: (value: any, { siblingData }: { siblingData: Partial<PayloadCheckboxBlock> }) => {
+        validate: ((value, { siblingData }) => {
           if (!value || typeof value !== 'string') {
             return true;
           }
@@ -46,7 +46,7 @@ export const Checkbox: Block = {
           }
 
           return true;
-        },
+        }) satisfies Validate<string, unknown, Partial<PayloadCheckboxBlock>>,
       },
     },
     {

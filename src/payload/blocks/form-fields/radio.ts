@@ -1,4 +1,4 @@
-import type { Block } from 'payload';
+import type { Block, Validate } from 'payload';
 
 import { baseFormFields } from '@/payload/fields/base-form-fields';
 import type { PayloadRadioBlock } from '@/payload/payload-types';
@@ -12,7 +12,7 @@ export const Radio: Block = {
       defaultValue: {
         name: 'defaultValue',
         type: 'text',
-        validate: (value: any, { siblingData }: { siblingData: Partial<PayloadRadioBlock> }) => {
+        validate: ((value, { siblingData }) => {
           if (!value) {
             return true;
           }
@@ -24,7 +24,7 @@ export const Radio: Block = {
           }
 
           return true;
-        },
+        }) satisfies Validate<string, unknown, Partial<PayloadRadioBlock>>,
       },
     },
     {

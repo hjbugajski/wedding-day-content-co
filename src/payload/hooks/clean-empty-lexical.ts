@@ -1,7 +1,7 @@
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical';
 import type { FieldHook } from 'payload';
 
-function isEmptyLexicalField(value: any): boolean {
+function isEmptyLexicalField(value: unknown): boolean {
   if (!value || typeof value !== 'object') {
     return false;
   }

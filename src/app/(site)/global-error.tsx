@@ -8,6 +8,7 @@ export default function GlobalError() {
           <h1 className="mb-4 text-4xl font-light">Something went wrong</h1>
           <p className="text-lg">We encountered an unexpected error.</p>
         </div>
+        {/* oxlint-disable-next-line nextjs/no-html-link-for-pages -- global error boundary; hard nav resets app state */}
         <a
           href="/"
           className="rounded-sm bg-neutral-800 px-6 py-3 font-semibold text-neutral-100 uppercase transition hover:bg-neutral-900"

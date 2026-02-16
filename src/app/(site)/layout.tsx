@@ -7,6 +7,8 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { type GlobalSlug, getPayload } from 'payload';
 
+import payloadConfig from '@payload-config';
+
 import { Footer } from '@/components/footer';
 import { Navigation } from '@/components/navigation';
 import { Toaster } from '@/components/ui/toaster';
@@ -14,7 +16,6 @@ import { env } from '@/env/client';
 import type { PayloadFooterGlobal, PayloadNavigationGlobal } from '@/payload/payload-types';
 import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 import { cn } from '@/utils/cn';
-import payloadConfig from '@payload-config';
 
 import './globals.css';
 
