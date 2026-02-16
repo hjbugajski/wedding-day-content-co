@@ -1,6 +1,4 @@
-import type { ControllerRenderProps } from 'react-hook-form';
-
-import { FormControl } from '@/components/ui/form';
+import { useFieldAria, useFieldContext } from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -12,17 +10,21 @@ import type { PayloadSelectBlock } from '@/payload/payload-types';
 
 type Props = {
   meta: PayloadSelectBlock;
-  field: ControllerRenderProps<Record<string, string>, string>;
 };
 
-export function SelectField({ meta, field }: Props) {
+export function SelectField({ meta }: Props) {
+  const field = useFieldContext<string>();
+  const { hasError } = useFieldAria();
+
   return (
-    <Select value={field.value} onValueChange={field.onChange} defaultValue={field.value}>
-      <FormControl>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-      </FormControl>
+    <Select
+      value={field.state.value}
+      onValueChange={field.handleChange}
+      defaultValue={field.state.value}
+    >
+      <SelectTrigger aria-invalid={hasError}>
+        <SelectValue />
+      </SelectTrigger>
       <SelectContent>
         {meta.options.map((option) => (
           <SelectItem key={option.id || option.value} value={option.value}>
