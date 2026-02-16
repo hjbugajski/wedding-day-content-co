@@ -201,13 +201,7 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
-  user:
-    | (PayloadClientsCollection & {
-        collection: 'clients';
-      })
-    | (PayloadUsersCollection & {
-        collection: 'users';
-      });
+  user: PayloadClientsCollection | PayloadUsersCollection;
   jobs: {
     tasks: unknown;
     workflows: unknown;
@@ -400,6 +394,7 @@ export interface PayloadClientsCollection {
       }[]
     | null;
   password?: string | null;
+  collection: 'clients';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -785,6 +780,7 @@ export interface PayloadUsersCollection {
       }[]
     | null;
   password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
