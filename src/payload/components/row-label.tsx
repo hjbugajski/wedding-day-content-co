@@ -3,6 +3,16 @@
 import { useRowLabel } from '@payloadcms/ui';
 import type { Data } from 'payload';
 
+function getNestedValue(data: Data, path: string): unknown {
+  return path.split('.').reduce<unknown>((value, part) => {
+    if (value !== null && typeof value === 'object') {
+      return (value as Record<string, unknown>)[part];
+    }
+
+    return undefined;
+  }, data);
+}
+
 export function RowLabel({
   path,
   fallback,
@@ -13,8 +23,8 @@ export function RowLabel({
   fallbackPath?: string;
 }) {
   const { data, rowNumber } = useRowLabel<Data>();
-  const fieldValue: any = path.split('.').reduce((value, part) => value?.[part], data);
-  const fallbackValue: any = fallbackPath?.split('.')?.reduce((value, part) => value?.[part], data);
+  const fieldValue = getNestedValue(data, path);
+  const fallbackValue = fallbackPath ? getNestedValue(data, fallbackPath) : undefined;
 
   return <>{fieldValue || fallbackValue || `${fallback} ${rowNumber}`}</>;
 }

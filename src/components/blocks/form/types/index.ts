@@ -26,7 +26,7 @@ export interface FieldConfig<M extends FieldMeta> {
   defaultValue: (meta: M) => FieldValue<M['blockType']>;
   schema: (meta: M) => z.ZodType<FieldValue<M['blockType']>>;
   Renderer: React.FC<{ meta: M; field: ControllerRenderProps<FieldValues<M['blockType']>> }>;
-  format: (meta: M, value: any) => string;
+  format: (meta: M, value: FieldValue<M['blockType']>) => string;
 }
 
 export type FieldConfigs = {

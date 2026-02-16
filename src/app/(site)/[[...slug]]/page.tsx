@@ -4,13 +4,14 @@ import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
 
+import config from '@payload-config';
+
 import { metadata } from '@/app/(site)/layout';
 import { LivePreviewListener } from '@/components/live-preview-listener';
 import { RichText } from '@/components/rich-text';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { cn } from '@/utils/cn';
 import { pageTitle } from '@/utils/page-title';
-import config from '@payload-config';
 
 interface PageProps {
   params: Promise<{ slug: string[] }>;

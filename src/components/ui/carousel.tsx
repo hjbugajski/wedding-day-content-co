@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 'use client';
 
 import type { ComponentProps, KeyboardEvent } from 'react';
@@ -12,10 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
+type EmblaApi = NonNullable<ReturnType<typeof useEmblaCarousel>[1]>;
+
 type CarouselProps = {
-  opts?: any;
-  plugins?: any[];
-  setApi?: (api: any) => void;
+  opts?: Parameters<typeof useEmblaCarousel>[0];
+  plugins?: Parameters<typeof useEmblaCarousel>[1];
+  setApi?: (api: EmblaApi) => void;
 };
 
 type CarouselContextProps = {
@@ -51,7 +50,7 @@ const Carousel = ({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const onSelect = useCallback((api: any) => {
+  const onSelect = useCallback((api: EmblaApi) => {
     if (!api) {
       return;
     }

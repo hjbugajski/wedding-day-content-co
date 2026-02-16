@@ -24,7 +24,7 @@ export function deepClone<T>(value: T, visited = new WeakMap()): T {
   }
 
   if (Array.isArray(value)) {
-    const arr: any[] = [];
+    const arr: unknown[] = [];
 
     visited.set(value, arr);
     value.forEach((item) => {
