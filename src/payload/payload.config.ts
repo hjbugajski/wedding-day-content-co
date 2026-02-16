@@ -47,6 +47,14 @@ const whitelist = [env.SERVER_URL, ...env.WHITELIST.split(' ')].filter(Boolean);
 
 export default buildConfig({
   admin: {
+    components: {
+      header: [
+        {
+          path: '@/payload/components/env-banner.tsx',
+          exportName: 'EnvBanner',
+        },
+      ],
+    },
     livePreview: {
       breakpoints: [
         {
