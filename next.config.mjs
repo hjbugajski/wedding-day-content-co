@@ -9,6 +9,7 @@ const domain =
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    dangerouslyAllowLocalIP: !production,
     remotePatterns: [
       {
         protocol: production ? 'https' : 'http',

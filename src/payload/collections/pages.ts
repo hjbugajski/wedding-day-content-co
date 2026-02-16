@@ -78,7 +78,7 @@ const revalidatePageAfterChange: CollectionAfterChangeHook<PayloadPagesCollectio
     }
 
     revalidatePath(doc.path);
-    revalidateTag('pages:sitemap');
+    revalidateTag('pages:sitemap', { expire: 0 });
   }
 
   if (previousDoc?._status === 'published' && doc._status !== 'published' && previousDoc.path) {
@@ -89,7 +89,7 @@ const revalidatePageAfterChange: CollectionAfterChangeHook<PayloadPagesCollectio
     }
 
     revalidatePath(previousDoc.path);
-    revalidateTag('pages:sitemap');
+    revalidateTag('pages:sitemap', { expire: 0 });
   }
 
   if (
@@ -106,7 +106,7 @@ const revalidatePageAfterChange: CollectionAfterChangeHook<PayloadPagesCollectio
     }
 
     revalidatePath(previousDoc.path);
-    revalidateTag('pages:sitemap');
+    revalidateTag('pages:sitemap', { expire: 0 });
   }
 
   return doc;
@@ -124,7 +124,7 @@ export const revalidatePageAfterDelete: CollectionAfterDeleteHook<PayloadPagesCo
     }
 
     revalidatePath(doc.path);
-    revalidateTag('pages:sitemap');
+    revalidateTag('pages:sitemap', { expire: 0 });
   }
 
   return doc;
