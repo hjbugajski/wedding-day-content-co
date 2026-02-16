@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "import", "nextjs", "oxc", "promise", "react", "typescript", "unicorn"],
+  "env": {
+    "browser": true
+  },
+  "ignorePatterns": [
+    "**/.next-env.d.ts",
+    "**/.next/**",
+    "**/importMap.js",
+    "**/migrations/**",
+    "**/payload-types.ts"
+  ],
+  "rules": {
+    "sort-imports": [
+      "error",
+      {
+        "allowSeparatedGroups": true,
+        "ignoreCase": false,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
+      }
+    ],
+    "typescript/no-explicit-any": "warn",
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-floating-promises": "error"
+  }
+}

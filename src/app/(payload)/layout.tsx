@@ -8,7 +8,6 @@ import type { ServerFunctionClient } from 'payload';
 import config from '@payload-config';
 
 import { importMap } from './admin/importMap.js';
-
 import '@payloadcms/next/css';
 
 type Args = {

@@ -12,7 +12,10 @@ export const Radio: Block = {
       defaultValue: {
         name: 'defaultValue',
         type: 'text',
-        validate: (value: any, { siblingData }: { siblingData: Partial<PayloadRadioBlock> }) => {
+        validate: (
+          value: unknown,
+          { siblingData }: { siblingData: Partial<PayloadRadioBlock> },
+        ) => {
           if (!value) {
             return true;
           }

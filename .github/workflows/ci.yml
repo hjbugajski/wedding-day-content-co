@@ -28,11 +28,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Prettier
-        run: pnpm prettier
+      - name: Format
+        run: pnpm format
 
-      - name: ESLint
-        run: pnpm eslint
+      - name: Lint
+        run: pnpm lint
 
       - name: Stylelint
         run: pnpm stylelint

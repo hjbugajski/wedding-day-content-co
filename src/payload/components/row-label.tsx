@@ -13,8 +13,18 @@ export function RowLabel({
   fallbackPath?: string;
 }) {
   const { data, rowNumber } = useRowLabel<Data>();
-  const fieldValue: any = path.split('.').reduce((value, part) => value?.[part], data);
-  const fallbackValue: any = fallbackPath?.split('.')?.reduce((value, part) => value?.[part], data);
+  const fieldValue: unknown = path
+    .split('.')
+    .reduce<Record<string, unknown> | undefined>(
+      (value, part) => value?.[part] as Record<string, unknown> | undefined,
+      data as Record<string, unknown>,
+    );
+  const fallbackValue: unknown = fallbackPath
+    ?.split('.')
+    ?.reduce<Record<string, unknown> | undefined>(
+      (value, part) => value?.[part] as Record<string, unknown> | undefined,
+      data as Record<string, unknown>,
+    );
 
   return <>{fieldValue || fallbackValue || `${fallback} ${rowNumber}`}</>;
 }

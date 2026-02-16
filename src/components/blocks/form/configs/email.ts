@@ -24,5 +24,5 @@ export const emailConfig: FieldConfig<PayloadEmailBlock> = {
   defaultValue: (m) => m.defaultValue || '',
   schema: (m) => (m.required ? requiredSchema : optionalSchema),
   Renderer: TextField,
-  format: (_, v) => v,
+  format: (_, v) => String(v),
 };

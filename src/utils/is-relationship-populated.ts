@@ -3,6 +3,5 @@ type MultiRelationship = {
   value: unknown;
 };
 
-export const isRelationshipPopulated = <T extends MultiRelationship>(item: any): item is T =>
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  typeof item.value !== 'string';
+export const isRelationshipPopulated = <T extends MultiRelationship>(item: unknown): item is T =>
+  typeof item === 'object' && item !== null && 'value' in item && typeof item.value !== 'string';

@@ -12,7 +12,10 @@ export const Select: Block = {
       defaultValue: {
         name: 'defaultValue',
         type: 'text',
-        validate: (value: any, { siblingData }: { siblingData: Partial<PayloadSelectBlock> }) => {
+        validate: (
+          value: unknown,
+          { siblingData }: { siblingData: Partial<PayloadSelectBlock> },
+        ) => {
           if (!value) {
             return true;
           }

@@ -31,7 +31,10 @@ export const Checkbox: Block = {
       defaultValue: {
         name: 'defaultValue',
         type: 'text',
-        validate: (value: any, { siblingData }: { siblingData: Partial<PayloadCheckboxBlock> }) => {
+        validate: (
+          value: unknown,
+          { siblingData }: { siblingData: Partial<PayloadCheckboxBlock> },
+        ) => {
           if (!value || typeof value !== 'string') {
             return true;
           }
