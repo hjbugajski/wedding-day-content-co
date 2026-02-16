@@ -2,51 +2,124 @@
 
 import type { ComponentProps } from 'react';
 
-import { DayPicker } from 'react-day-picker';
+import { cva } from 'class-variance-authority';
+import { type ChevronProps, type DayButtonProps, DayPicker } from 'react-day-picker';
 
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const Calendar = ({
+function Chevron({ orientation }: ChevronProps) {
+  switch (orientation) {
+    case 'left':
+      return <Icons name="navArrowLeft" size="sm" />;
+    case 'right':
+      return <Icons name="navArrowRight" size="sm" />;
+    case 'down':
+      return <Icons name="navArrowDownSmall" size="sm" />;
+    default:
+      return <></>;
+  }
+}
+
+function CalendarDayButton({ day: _day, modifiers, className, ...props }: DayButtonProps) {
+  return (
+    <button
+      className={cn(
+        'inline-flex h-9 w-9 items-center justify-center rounded-xs p-0 text-sm font-normal transition',
+        'hover:bg-neutral-200 hover:text-black',
+        'focus:ring-2 focus:ring-neutral-600/75 focus:outline-hidden',
+        'disabled:pointer-events-none',
+        modifiers.selected &&
+          !modifiers.range_start &&
+          !modifiers.range_end &&
+          !modifiers.range_middle &&
+          'bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.range_start &&
+          modifiers.range_end &&
+          'rounded-xs bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.range_start &&
+          !modifiers.range_end &&
+          'rounded-l-xs rounded-r-none bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.range_end &&
+          !modifiers.range_start &&
+          'rounded-l-none rounded-r-xs bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.range_middle &&
+          'rounded-none bg-dusty-rose-100 font-medium text-dusty-rose-800 hover:bg-dusty-rose-200',
+        modifiers.outside && 'font-light text-neutral-600',
+        modifiers.outside &&
+          modifiers.range_start &&
+          'bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.outside &&
+          modifiers.range_end &&
+          'bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300',
+        modifiers.disabled && 'font-light text-neutral-400',
+        modifiers.hidden && 'invisible',
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+const navButtonVariants = cva(
+  'inline-flex items-center justify-center rounded-xs bg-transparent p-0 transition focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
+  {
+    variants: {
+      size: {
+        default: 'h-7 w-7',
+      },
+      variant: {
+        default:
+          'text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800 focus-visible:bg-neutral-200 aria-disabled:pointer-events-none aria-disabled:text-neutral-300',
+      },
+    },
+    defaultVariants: {
+      size: 'default',
+      variant: 'default',
+    },
+  },
+);
+
+function Calendar({
   className,
   classNames,
   showOutsideDays = true,
   ...props
-}: ComponentProps<typeof DayPicker>) => (
-  <DayPicker
-    showOutsideDays={showOutsideDays}
-    className={cn('p-2', className)}
-    // prettier-ignore
-    classNames={{
-      months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-      month: 'space-y-4',
-      caption: 'flex justify-center pt-1 relative items-center',
-      caption_label: 'text-sm font-medium',
-      nav: 'space-x-1 flex items-center',
-      nav_button: 'h-7 w-7 bg-transparent p-0 inline-flex transition items-center justify-center rounded-xs text-neutral-600 hover:text-neutral-800 hover:bg-neutral-200 focus-visible:bg-neutral-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-600/75',
-      nav_button_previous: 'absolute left-1',
-      nav_button_next: 'absolute right-1',
-      table: 'w-full border-collapse space-y-1',
-      head_row: 'flex',
-      head_cell: 'text-neutral-600 rounded-xs w-9 font-normal text-sm',
-      row: 'flex w-full mt-2',
-      cell: 'h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20',
-      day: 'h-9 w-9 p-0 font-normal rounded-xs [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:hover:bg-neutral-200 [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:hover:text-black [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:hover:rounded-xs transition focus:ring-2 focus:ring-neutral-600/75 focus:outline-hidden',
-      day_range_start: 'day-range-start rounded-l-xs rounded-r-none bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300 transition',
-      day_range_end: 'day-range-end rounded-r-xs rounded-l-none bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300 transition',
-      day_selected: 'font-medium! day-selected [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:rounded-xs [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:bg-dusty-rose-200 [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:text-dusty-rose-950 [&:not(.day-disabled,.day-range-start,.day-range-end,.day-range-middle)]:hover:bg-dusty-rose-300 transition',
-      day_outside: 'day-outside font-light! text-neutral-600 aria-selected:bg-neutral-100 aria-selected:text-neutral-600 [&.day-range-start]:bg-dusty-rose-200 [&.day-range-start]:text-dusty-rose-950 [&.day-range-start]:hover:bg-dusty-rose-300 [&.day-range-end]:bg-dusty-rose-200 [&.day-range-end]:text-dusty-rose-950 [&.day-range-end]:hover:bg-dusty-rose-300 transition',
-      day_disabled: 'day-disabled font-light! text-neutral-400',
-      day_range_middle: 'day-range-middle rounded-none aria-selected:bg-dusty-rose-100 aria-selected:hover:bg-dusty-rose-200 aria-selected:text-dusty-rose-800 aria-selected:font-medium',
-      day_hidden: 'invisible',
-      ...classNames,
-    }}
-    components={{
-      IconLeft: () => <Icons name="navArrowLeft" size="sm" />,
-      IconRight: () => <Icons name="navArrowRight" size="sm" />,
-    }}
-    {...props}
-  />
-);
+}: ComponentProps<typeof DayPicker>) {
+  return (
+    <DayPicker
+      showOutsideDays={showOutsideDays}
+      className={cn('p-2', className)}
+      classNames={{
+        months: 'relative flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+        month: 'space-y-2',
+        month_caption: 'flex justify-center h-7 relative items-center',
+        caption_label: 'inline-flex items-center ml-1 gap-1 text-sm font-medium',
+        nav: 'absolute -top-1 z-10 m-0 flex h-9 w-full items-center justify-between pointer-events-none',
+        button_previous: cn(navButtonVariants(), 'pointer-events-auto'),
+        button_next: cn(navButtonVariants(), 'pointer-events-auto'),
+        month_grid: 'w-full border-collapse space-y-1',
+        weekdays: 'flex',
+        weekday: 'text-neutral-600 rounded-xs w-9 font-normal text-sm',
+        week: 'flex w-full mt-2',
+        day: 'h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20',
+        day_button: '',
+        dropdowns: 'flex gap-2 items-center',
+        dropdown_root:
+          'relative inline-flex items-center rounded-xs focus-within:ring-2 focus-visible:ring-neutral-600/75',
+        dropdown:
+          'absolute inset-0 z-10 opacity-0 cursor-pointer appearance-none border-none bg-transparent text-sm focus:outline-hidden',
+        years_dropdown: '',
+        months_dropdown: '',
+        ...classNames,
+      }}
+      components={{
+        Chevron,
+        DayButton: CalendarDayButton,
+      }}
+      {...props}
+    />
+  );
+}
 
-export { Calendar };
+export { Calendar, CalendarDayButton };

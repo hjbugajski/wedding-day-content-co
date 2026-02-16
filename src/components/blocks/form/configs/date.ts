@@ -25,14 +25,14 @@ const defaultValue: FieldConfig<PayloadDateBlock>['defaultValue'] = (m) => {
 const schema: FieldConfig<PayloadDateBlock>['schema'] = (m) => {
   switch (m.mode) {
     case 'single':
-      return m.required ? z.date({ required_error: REQUIRED_MESSAGE }) : z.date().optional();
+      return m.required ? z.date({ message: REQUIRED_MESSAGE }) : z.date().optional();
     case 'multiple':
       return m.required
         ? z.date().array().min(1, { message: REQUIRED_MESSAGE })
         : z.date().array().optional();
     case 'range':
       return z.object({
-        from: m.required ? z.date({ required_error: REQUIRED_MESSAGE }) : z.date().optional(),
+        from: m.required ? z.date({ message: REQUIRED_MESSAGE }) : z.date().optional(),
         to: z.date().optional(),
       });
   }

@@ -1,17 +1,17 @@
-import type { ControllerRenderProps } from 'react-hook-form';
-
 import { RichText } from '@/components/rich-text';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FormControl, FormItem, FormLabel } from '@/components/ui/form';
+import { useFieldAria, useFieldContext } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
 type Props = {
   meta: PayloadCheckboxBlock;
-  field: ControllerRenderProps<Record<string, string>, string>;
 };
 
-export function CheckboxField({ meta, field }: Props) {
-  const selectedValues = field.value ? field.value.split(',') : [];
+export function CheckboxField({ meta }: Props) {
+  const field = useFieldContext<string>();
+  const { hasError } = useFieldAria();
+  const selectedValues = field.state.value ? field.state.value.split(',') : [];
 
   const handleChange = (value: string, checked: boolean) => {
     let newValues: string[];
@@ -22,34 +22,30 @@ export function CheckboxField({ meta, field }: Props) {
       newValues = selectedValues.filter((v: string) => v !== value);
     }
 
-    field.onChange(newValues.join(','));
+    field.handleChange(newValues.join(','));
   };
 
   return (
-    <FormControl>
-      <div className="flex flex-col justify-start gap-2">
-        {meta.options.map((option) => (
-          <FormItem key={option.id || option.value} className="flex flex-row items-start gap-3">
-            <FormControl>
-              <Checkbox
-                checked={selectedValues.includes(option.value)}
-                onCheckedChange={(checked) => handleChange(option.value, checked === true)}
+    <div role="group" aria-invalid={hasError} className="flex flex-col justify-start gap-2">
+      {meta.options.map((option) => (
+        <div key={option.id || option.value} className="flex flex-row items-start gap-3">
+          <Checkbox
+            checked={selectedValues.includes(option.value)}
+            onCheckedChange={(checked) => handleChange(option.value, checked === true)}
+          />
+          <div className="flex flex-col gap-1">
+            <Label className="text-lg font-normal tracking-normal text-neutral-800 normal-case">
+              {option.label}
+            </Label>
+            {option.description ? (
+              <RichText
+                data={option.description}
+                overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
               />
-            </FormControl>
-            <div className="flex flex-col gap-1">
-              <FormLabel className="text-lg font-normal tracking-normal text-neutral-800 normal-case">
-                {option.label}
-              </FormLabel>
-              {option.description ? (
-                <RichText
-                  data={option.description}
-                  overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
-                />
-              ) : null}
-            </div>
-          </FormItem>
-        ))}
-      </div>
-    </FormControl>
+            ) : null}
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
