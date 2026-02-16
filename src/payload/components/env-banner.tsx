@@ -41,12 +41,13 @@ const baseStyle: CSSProperties = {
 function getEnvironment(): Environment {
   const vercelEnv = process.env.VERCEL_TARGET_ENV;
 
-  if (vercelEnv === 'preview') {
-    return 'preview';
-  }
-
-  if (vercelEnv === 'production') {
-    return 'production';
+  switch (vercelEnv) {
+    case 'preview':
+      return 'preview';
+    case 'staging':
+      return 'staging';
+    case 'production':
+      return 'production';
   }
 
   return process.env.NODE_ENV === 'development' ? 'local' : 'production';
