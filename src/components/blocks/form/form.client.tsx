@@ -1,11 +1,8 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
 
 import { checkboxConfig } from '@/components/blocks/form/configs/checkbox';
 import { dateConfig } from '@/components/blocks/form/configs/date';
@@ -18,9 +15,7 @@ import { textareaConfig } from '@/components/blocks/form/configs/textarea';
 import { submitForm } from '@/components/blocks/form/form.action';
 import type { FieldConfig, FieldConfigs, FieldMeta } from '@/components/blocks/form/types';
 import { RichText } from '@/components/rich-text';
-import { Button } from '@/components/ui/button';
-import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Spinner } from '@/components/ui/spinner';
+import { useAppForm } from '@/components/ui/form';
 import type { PayloadFormsCollection } from '@/payload/payload-types';
 
 const fieldConfigs: FieldConfigs = {
@@ -44,43 +39,33 @@ export function FormClient({
   id,
   submitButtonLabel,
 }: PayloadFormsCollection) {
-  const [pending, setPending] = useState(false);
-
   const fieldList = useMemo(
     () => fields.map((meta) => ({ meta, config: getFieldConfig(meta) })),
     [fields],
   );
 
-  const { defaultValues, schemaShape } = useMemo(() => {
+  const { defaultValues, fieldSchemas } = useMemo(() => {
     return fieldList.reduce(
       (acc, { meta, config }) => {
         acc.defaultValues[meta.name] = config.defaultValue(meta);
-        acc.schemaShape[meta.name] = config.schema(meta);
+        acc.fieldSchemas[meta.name] = config.schema(meta);
         return acc;
       },
       {
         defaultValues: {} as Record<string, unknown>,
-        schemaShape: {} as Record<string, z.ZodTypeAny>,
+        fieldSchemas: {} as Record<string, ReturnType<FieldConfig<FieldMeta>['schema']>>,
       },
     );
   }, [fieldList]);
 
-  const formSchema = useMemo(() => z.object(schemaShape), [schemaShape]);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useAppForm({
     defaultValues,
-  });
-
-  const onSubmit = useCallback(
-    async (values: z.infer<typeof formSchema>) => {
-      setPending(true);
-
+    onSubmit: async ({ value }) => {
       try {
         const payload = fields.map((f) => ({
           blockType: f.blockType,
           label: f.label,
-          value: getFieldConfig(f).format(f, values[f.name]),
+          value: getFieldConfig(f).format(f, value[f.name]),
           name: f.name,
         }));
 
@@ -90,53 +75,48 @@ export function FormClient({
         form.reset();
       } catch {
         toast.error('Something went wrong. Please try again.');
-      } finally {
-        setPending(false);
       }
     },
-    [form, fields, id, confirmationMessage],
-  );
+  });
 
   return (
-    <Form {...form}>
-      <form
-        id={id}
-        onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
-        className="my-6 grid w-full grid-cols-1 gap-6 first:mt-0 last:mb-0 sm:grid-cols-2"
-      >
-        {fieldList.map(({ meta, config: { Renderer } }) => (
-          <FormField
+    <form.Form id={id} handleSubmit={() => form.handleSubmit()}>
+      {fieldList.map(({ meta, config: { Renderer } }) => {
+        const schema = fieldSchemas[meta.name];
+
+        return (
+          <form.AppField
             key={meta.id}
-            control={form.control}
             name={meta.name}
-            render={({ field }) => (
-              <FormItem data-width={meta.width} className="data-[width=full]:sm:col-span-2">
-                <FormLabel>
-                  {meta.label}
-                  {meta.required ? null : ' (optional)'}
-                </FormLabel>
-                <Renderer meta={meta} field={field} />
-                <RichText
-                  data={meta.description}
-                  overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
-                />
-                <FormMessage />
-              </FormItem>
+            validators={{
+              onSubmit: schema,
+              onChange: schema,
+            }}
+          >
+            {(field) => (
+              <field.Field
+                label={meta.label}
+                required={meta.required}
+                description={
+                  meta.description ? (
+                    <RichText
+                      data={meta.description}
+                      overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
+                    />
+                  ) : undefined
+                }
+                width={meta.width}
+              >
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic field types */}
+                <Renderer meta={meta as any} />
+              </field.Field>
             )}
-          />
-        ))}
-        <Button
-          type="submit"
-          disabled={pending}
-          variant="primary"
-          size="lg"
-          iconPosition={pending ? 'left' : undefined}
-          className="w-full sm:col-span-2 sm:w-fit sm:justify-self-end"
-        >
-          {submitButtonLabel}
-          {pending ? <Spinner /> : null}
-        </Button>
-      </form>
-    </Form>
+          </form.AppField>
+        );
+      })}
+      <form.AppForm>
+        <form.SubmitButton>{submitButtonLabel}</form.SubmitButton>
+      </form.AppForm>
+    </form.Form>
   );
 }

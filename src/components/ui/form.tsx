@@ -1,126 +1,157 @@
-import type { ComponentProps } from 'react';
+'use client';
+
+import type { ComponentProps, ReactNode } from 'react';
 import { createContext, useContext, useId } from 'react';
 
-import type { Root } from '@radix-ui/react-label';
-import { Slot } from '@radix-ui/react-slot';
-import type { ControllerProps, FieldPath, FieldValues } from 'react-hook-form';
-import { Controller, FormProvider, useFormContext } from 'react-hook-form';
+import {
+  type AnyFieldMeta,
+  createFormHook,
+  createFormHookContexts,
+  useStore,
+} from '@tanstack/react-form';
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/cn';
 
-const Form = FormProvider;
-
-type FormFieldContextValue<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-  name: TName;
+type FieldAriaContext = {
+  id: string;
+  errorId: string;
+  descriptionId: string;
+  hasError: boolean;
+  hasDescription: boolean;
 };
 
-const FormFieldContext = createContext<FormFieldContextValue>({} as FormFieldContextValue);
+const FieldAriaCtx = createContext<FieldAriaContext | null>(null);
 
-const FormField = <
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => (
-  <FormFieldContext.Provider value={{ name: props.name }}>
-    <Controller {...props} />
-  </FormFieldContext.Provider>
-);
+function useFieldAria(): FieldAriaContext {
+  const ctx = useContext(FieldAriaCtx);
 
-const useFormField = () => {
-  const fieldContext = useContext(FormFieldContext);
-  const itemContext = useContext(FormItemContext);
-  const { getFieldState, formState } = useFormContext();
-
-  const fieldState = getFieldState(fieldContext.name, formState);
-
-  if (!fieldContext) {
-    throw new Error('useFormField should be used within <FormField>');
+  if (!ctx) {
+    throw new Error('useFieldAria must be used within a Field component');
   }
 
-  const { id } = itemContext;
+  return ctx;
+}
 
-  return {
-    id,
-    name: fieldContext.name,
-    formItemId: `${id}-form-item`,
-    formDescriptionId: `${id}-form-item-description`,
-    formMessageId: `${id}-form-item-message`,
-    ...fieldState,
-  };
-};
-
-type FormItemContextValue = {
-  id: string;
-};
-
-const FormItemContext = createContext<FormItemContextValue>({} as FormItemContextValue);
-
-const FormItem = ({ className, ...props }: ComponentProps<'div'>) => {
-  const id = useId();
-
-  return (
-    <FormItemContext.Provider value={{ id }}>
-      <div className={cn('flex w-full flex-col gap-2', className)} {...props} />
-    </FormItemContext.Provider>
-  );
-};
-
-const FormLabel = ({ className, ...props }: ComponentProps<typeof Root>) => {
-  const { error, formItemId } = useFormField();
-
-  return (
-    <Label className={cn(error && 'text-red-700', className)} htmlFor={formItemId} {...props} />
-  );
-};
-
-const FormControl = (props: ComponentProps<typeof Slot>) => {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
-
-  return (
-    <Slot
-      id={formItemId}
-      aria-describedby={!error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`}
-      aria-invalid={!!error}
-      {...props}
-    />
-  );
-};
-
-const FormDescription = ({ className, ...props }: ComponentProps<'p'>) => {
-  const { formDescriptionId } = useFormField();
-
-  return (
-    <p id={formDescriptionId} className={cn('text-sm text-neutral-500', className)} {...props} />
-  );
-};
-
-const FormMessage = ({ className, children, ...props }: ComponentProps<'p'>) => {
-  const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : children;
-
-  if (!body) {
+function FieldError({ meta, id }: { meta: AnyFieldMeta; id: string }) {
+  if (meta.isValid) {
     return null;
   }
 
   return (
-    <p id={formMessageId} className={cn('text-xs font-medium text-red-700', className)} {...props}>
-      {body === 'undefined' ? 'Required' : body}
+    <p id={id} className="text-xs font-medium text-red-700" role="alert">
+      {typeof meta.errors[0] === 'string'
+        ? meta.errors[0]
+        : (meta.errors[0] as { message: string }).message}
     </p>
   );
+}
+
+type FieldProps = ComponentProps<'div'> & {
+  label: string;
+  required?: boolean;
+  description?: ReactNode;
+  width?: string;
 };
 
-export {
-  useFormField,
-  Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage,
-  FormField,
+function Field({ className, children, label, required = true, description, width }: FieldProps) {
+  const field = useFieldContext<unknown>();
+  const uniqueId = useId();
+  const fieldId = `${field.name}-${uniqueId}`;
+  const errorId = `${fieldId}-error`;
+  const descriptionId = `${fieldId}-description`;
+  const hasError = !field.state.meta.isValid;
+  const hasDescription = !!description;
+
+  return (
+    <div
+      data-width={width}
+      className={cn('flex w-full flex-col gap-2 data-[width=full]:sm:col-span-2', className)}
+    >
+      <Label htmlFor={fieldId} className={cn(hasError && 'text-red-700')}>
+        {label}
+        {required ? null : ' (optional)'}
+      </Label>
+      <FieldAriaCtx.Provider
+        value={{ id: fieldId, errorId, descriptionId, hasError, hasDescription }}
+      >
+        {children}
+      </FieldAriaCtx.Provider>
+      {description ? <div id={descriptionId}>{description}</div> : null}
+      <FieldError meta={field.state.meta} id={errorId} />
+    </div>
+  );
+}
+
+type SubmitButtonProps = ComponentProps<typeof Button> & {
+  submittingText?: string;
 };
+
+function SubmitButton({
+  children,
+  submittingText,
+  className,
+  disabled,
+  ...props
+}: SubmitButtonProps) {
+  const form = useFormContext();
+
+  const [isSubmitting, canSubmit] = useStore(form.store, (state) => [
+    state.isSubmitting,
+    state.canSubmit,
+  ]);
+
+  return (
+    <Button
+      {...props}
+      type="submit"
+      variant="primary"
+      size="lg"
+      disabled={!canSubmit || isSubmitting || disabled}
+      iconPosition={isSubmitting ? 'left' : undefined}
+      className={cn('w-full sm:col-span-2 sm:w-fit sm:justify-self-end', className)}
+    >
+      {isSubmitting && submittingText ? submittingText : children}
+      {isSubmitting ? <Spinner /> : null}
+    </Button>
+  );
+}
+
+type FormProps = Omit<ComponentProps<'form'>, 'onSubmit'> & {
+  handleSubmit: () => Promise<void> | void;
+};
+
+function Form({ className, handleSubmit, ...props }: FormProps) {
+  return (
+    <form
+      {...props}
+      className={cn(
+        'my-6 grid w-full grid-cols-1 gap-6 first:mt-0 last:mb-0 sm:grid-cols-2',
+        className,
+      )}
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void handleSubmit();
+      }}
+    />
+  );
+}
+
+const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
+
+const { useAppForm } = createFormHook({
+  fieldContext,
+  formContext,
+  fieldComponents: {
+    Field,
+  },
+  formComponents: {
+    Form,
+    SubmitButton,
+  },
+});
+
+export { useAppForm, useFieldAria, useFieldContext };

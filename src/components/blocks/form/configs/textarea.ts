@@ -10,5 +10,5 @@ export const textareaConfig: FieldConfig<PayloadTextareaBlock> = {
   schema: (m) =>
     m.required ? z.string().min(1, { message: REQUIRED_MESSAGE }) : z.string().min(0),
   Renderer: TextField,
-  format: (_, v) => v,
+  format: (_, v) => String(v),
 };

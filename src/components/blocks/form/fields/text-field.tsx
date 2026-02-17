@@ -1,9 +1,7 @@
 import type { ComponentProps } from 'react';
 import { useMemo } from 'react';
 
-import type { ControllerRenderProps } from 'react-hook-form';
-
-import { FormControl } from '@/components/ui/form';
+import { useFieldAria, useFieldContext } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import type {
@@ -21,15 +19,27 @@ type PayloadTextField =
 
 type Props = {
   meta: PayloadTextField;
-  field: ControllerRenderProps<Record<string, string>, string>;
 };
 
-export function TextField({ meta, field }: Props) {
+export function TextField({ meta }: Props) {
+  const field = useFieldContext<string>();
+  const { id, errorId, descriptionId, hasError, hasDescription } = useFieldAria();
+
+  const ariaDescribedBy =
+    [hasDescription ? descriptionId : null, hasError ? errorId : null].filter(Boolean).join(' ') ||
+    undefined;
+
   if (meta.blockType === 'textarea') {
     return (
-      <FormControl>
-        <Textarea {...field} />
-      </FormControl>
+      <Textarea
+        id={id}
+        name={field.name}
+        value={field.state.value}
+        aria-invalid={hasError}
+        aria-describedby={ariaDescribedBy}
+        onChange={(e) => field.handleChange(e.target.value)}
+        onBlur={field.handleBlur}
+      />
     );
   }
 
@@ -48,8 +58,15 @@ export function TextField({ meta, field }: Props) {
   }, [meta.blockType]);
 
   return (
-    <FormControl>
-      <Input {...field} {...extra} />
-    </FormControl>
+    <Input
+      id={id}
+      name={field.name}
+      value={field.state.value}
+      aria-invalid={hasError}
+      aria-describedby={ariaDescribedBy}
+      onChange={(e) => field.handleChange(e.target.value)}
+      onBlur={field.handleBlur}
+      {...extra}
+    />
   );
 }
