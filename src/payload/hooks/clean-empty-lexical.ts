@@ -8,13 +8,13 @@ function isEmptyLexicalField(value: unknown): boolean {
 
   const editorState = value as SerializedEditorState;
 
-  if (!editorState.root || editorState.root.type !== 'root') {
+  if (editorState.root?.type !== 'root') {
     return false;
   }
 
   const { children } = editorState.root;
 
-  if (!children || children.length !== 1) {
+  if (children?.length !== 1) {
     return false;
   }
 

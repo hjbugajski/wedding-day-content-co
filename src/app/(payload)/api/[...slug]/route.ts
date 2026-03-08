@@ -10,6 +10,7 @@ import {
 } from '@payloadcms/next/routes';
 
 import config from '@payload-config';
+
 import '@payloadcms/next/css';
 
 export const GET = REST_GET(config);

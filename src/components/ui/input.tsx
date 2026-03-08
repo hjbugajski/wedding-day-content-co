@@ -25,6 +25,7 @@ const InputButton = ({
   ...props
 }: InputButtonProps) => (
   <button
+    type="button"
     className={cn(
       baseClass,
       'group flex flex-row items-center',

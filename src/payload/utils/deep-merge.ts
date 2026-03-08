@@ -1,5 +1,5 @@
 function filterArray<T extends object>(target: T[], source: T[], key: keyof T): T[] {
-  return source.filter((s) => !target.find((t) => t?.[key] === s?.[key]));
+  return source.filter((s) => !target.some((t) => t?.[key] === s?.[key]));
 }
 
 function isObject(item: unknown): item is Record<string, unknown> {

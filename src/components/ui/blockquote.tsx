@@ -17,7 +17,7 @@ const Blockquote = ({ children, className, ...props }: ComponentProps<'blockquot
       className="size-12 self-center drop-shadow-lg dark:text-neutral-300"
     />
     {children}
-    <div className="absolute -z-10 h-64 w-56 rotate-45 rounded-full bg-dusty-rose-300/15 blur-3xl group-odd:top-1/4 group-odd:-right-1/4 group-even:top-1/2 group-even:right-1/4 dark:bg-dusty-rose-800/15"></div>
+    <div className="absolute -z-10 h-64 w-56 rotate-45 rounded-full bg-dusty-rose-300/15 blur-3xl group-odd:top-1/4 group-odd:-right-1/4 group-even:top-1/2 group-even:right-1/4 dark:bg-dusty-rose-800/15" />
   </blockquote>
 );
 

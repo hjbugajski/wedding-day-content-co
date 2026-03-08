@@ -1,6 +1,16 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["eslint", "import", "nextjs", "oxc", "promise", "react", "typescript", "unicorn"],
+  "plugins": [
+    "eslint",
+    "import",
+    "jsx-a11y",
+    "nextjs",
+    "oxc",
+    "promise",
+    "react",
+    "typescript",
+    "unicorn"
+  ],
   "env": {
     "browser": true
   },
@@ -12,6 +22,32 @@
     "**/payload-types.ts"
   ],
   "rules": {
+    "eqeqeq": "warn",
+    "import/no-cycle": "error",
+    "import/no-duplicates": "warn",
+    "import/no-self-import": "error",
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/anchor-has-content": "error",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/heading-has-content": "error",
+    "jsx-a11y/no-noninteractive-tabindex": "warn",
+    "no-await-in-loop": "warn",
+    "no-else-return": "warn",
+    "no-lonely-if": "warn",
+    "no-unneeded-ternary": "warn",
+    "oxc/no-accumulating-spread": "warn",
+    "prefer-object-spread": "warn",
+    "prefer-template": "warn",
+    "promise/no-multiple-resolved": "error",
+    "react/button-has-type": "error",
+    "react/exhaustive-deps": "warn",
+    "react/jsx-curly-brace-presence": "warn",
+    "react/jsx-no-constructed-context-values": "warn",
+    "react/jsx-no-target-blank": "warn",
+    "react/jsx-no-useless-fragment": "warn",
+    "react/rules-of-hooks": "error",
+    "react/self-closing-comp": "warn",
     "sort-imports": [
       "error",
       {
@@ -22,8 +58,23 @@
         "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
       }
     ],
-    "typescript/no-explicit-any": "warn",
     "typescript/consistent-type-imports": "error",
-    "typescript/no-floating-promises": "error"
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-for-in-array": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-misused-spread": "error",
+    "typescript/no-unnecessary-type-assertion": "warn",
+    "typescript/no-unsafe-argument": "warn",
+    "typescript/prefer-optional-chain": "warn",
+    "typescript/prefer-ts-expect-error": "warn",
+    "typescript/restrict-template-expressions": "warn",
+    "unicorn/consistent-function-scoping": "warn",
+    "unicorn/no-await-in-promise-methods": "error",
+    "unicorn/no-useless-spread": "warn",
+    "unicorn/prefer-array-flat-map": "warn",
+    "unicorn/prefer-array-some": "warn",
+    "unicorn/prefer-optional-catch-binding": "warn",
+    "unicorn/throw-new-error": "warn"
   }
 }

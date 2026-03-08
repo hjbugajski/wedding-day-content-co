@@ -26,7 +26,7 @@ export function CheckboxField({ meta }: Props) {
   };
 
   return (
-    <div role="group" aria-invalid={hasError} className="flex flex-col justify-start gap-2">
+    <fieldset aria-invalid={hasError} className="flex flex-col justify-start gap-2">
       {meta.options.map((option) => (
         <div key={option.id || option.value} className="flex flex-row items-start gap-3">
           <Checkbox
@@ -46,6 +46,6 @@ export function CheckboxField({ meta }: Props) {
           </div>
         </div>
       ))}
-    </div>
+    </fieldset>
   );
 }

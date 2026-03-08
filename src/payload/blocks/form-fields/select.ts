@@ -60,7 +60,7 @@ export const Select: Block = {
             readOnly: true,
           },
           hooks: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+            // oxlint-disable-next-line typescript/no-unsafe-argument
             beforeValidate: [({ siblingData }) => slugify(siblingData?.label)],
           },
         },

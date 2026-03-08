@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "printWidth": 100,
   "singleQuote": true,
   "ignorePatterns": [
     "**/.next-env.d.ts",
@@ -9,7 +8,7 @@
     "**/migrations/**",
     "**/payload-types.ts"
   ],
-  "experimentalSortImports": {
+  "sortImports": {
     "customGroups": [
       {
         "groupName": "react",
@@ -27,11 +26,13 @@
       ["wdcc"],
       ["internal", "type-internal"],
       ["parent", "type-parent", "sibling", "type-sibling"],
-      ["index", "type-index"]
+      ["index", "type-index"],
+      ["side_effect"],
+      ["unknown"]
     ],
     "newlinesBetween": true
   },
-  "experimentalTailwindcss": {
+  "sortTailwindcss": {
     "stylesheet": "./src/app/(site)/globals.css",
     "attributes": ["class", "className"],
     "functions": ["cn", "cva"],

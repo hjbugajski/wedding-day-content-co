@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps, KeyboardEvent } from 'react';
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import useEmblaCarousel from 'embla-carousel-react';
 
@@ -102,18 +102,21 @@ const Carousel = ({
     };
   }, [api, onSelect]);
 
+  const contextValue = useMemo(
+    () => ({
+      carouselRef,
+      api,
+      opts,
+      scrollPrev,
+      scrollNext,
+      canScrollPrev,
+      canScrollNext,
+    }),
+    [carouselRef, api, opts, scrollPrev, scrollNext, canScrollPrev, canScrollNext],
+  );
+
   return (
-    <CarouselContext.Provider
-      value={{
-        carouselRef,
-        api: api,
-        opts,
-        scrollPrev,
-        scrollNext,
-        canScrollPrev,
-        canScrollNext,
-      }}
-    >
+    <CarouselContext.Provider value={contextValue}>
       <div
         onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}

@@ -10,7 +10,7 @@ import type { PayloadFooterGlobal } from '@/payload/payload-types';
 const FaqAccordion = dynamic(() => import('./faq-accordion'), { loading: () => <FaqsLoading /> });
 
 export function Footer({ contact, faqs, linkGroups, marquee }: PayloadFooterGlobal) {
-  const marqueeText = Array.from({ length: 4 }, () => marquee ?? '').join(' ') + ' ';
+  const marqueeText = `${Array.from({ length: 4 }, () => marquee ?? '').join(' ')} `;
 
   return (
     <footer className="dark flex flex-col gap-24 bg-black py-16 text-neutral-200">
