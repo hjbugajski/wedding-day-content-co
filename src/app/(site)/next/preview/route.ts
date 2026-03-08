@@ -1,80 +1,43 @@
-import jwt from 'jsonwebtoken';
-import { cookies, draftMode } from 'next/headers';
+import { draftMode } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { NextRequest } from 'next/server';
-import type { CollectionSlug } from 'payload';
+import type { CollectionSlug, PayloadRequest } from 'payload';
 import { getPayload } from 'payload';
 
 import configPromise from '@payload-config';
 
-const payloadToken = 'payload-token';
-
 export async function GET(req: NextRequest): Promise<Response> {
   const payload = await getPayload({ config: configPromise });
-  const cookieStore = await cookies();
-  const token = cookieStore.get(payloadToken)?.value;
   const { searchParams } = new URL(req.url);
+
   const path = searchParams.get('path');
   const collection = searchParams.get('collection') as CollectionSlug;
 
-  const previewSecret = searchParams.get('previewSecret');
-
-  if (previewSecret) {
-    return new Response('You are not allowed to preview this page', { status: 403 });
-  }
-
-  if (!path) {
-    return new Response('No path provided', { status: 404 });
-  }
-
-  if (!collection) {
-    return new Response('No path provided', { status: 404 });
-  }
-
-  if (!token) {
-    return new Response('You are not allowed to preview this page', { status: 403 });
+  if (!path || !collection) {
+    return new Response('Insufficient search params', { status: 404 });
   }
 
   if (!path.startsWith('/')) {
-    return new Response('This endpoint can only be used for internal previews', { status: 500 });
+    return new Response('This endpoint can only be used for relative previews', { status: 500 });
   }
 
   let user;
 
   try {
-    user = jwt.verify(token, payload.secret);
+    user = await payload.auth({
+      req: req as unknown as PayloadRequest,
+      headers: req.headers,
+    });
   } catch (error) {
-    payload.logger.error({ err: error, msg: 'Error verifying token for live preview' });
+    payload.logger.error({ err: error }, 'Error verifying token for live preview');
+    return new Response('You are not allowed to preview this page', { status: 403 });
   }
 
   const draft = await draftMode();
 
-  // You can add additional checks here to see if the user is allowed to preview this page
   if (!user) {
     draft.disable();
     return new Response('You are not allowed to preview this page', { status: 403 });
-  }
-
-  // Verify the given path exists
-  try {
-    const docs = await payload.find({
-      collection,
-      draft: true,
-      limit: 1,
-      pagination: false,
-      depth: 0,
-      where: {
-        path: {
-          equals: path,
-        },
-      },
-    });
-
-    if (!docs.docs.length) {
-      return new Response('Document not found', { status: 404 });
-    }
-  } catch (error) {
-    payload.logger.error({ err: error, msg: 'Error verifying token for live preview' });
   }
 
   draft.enable();
