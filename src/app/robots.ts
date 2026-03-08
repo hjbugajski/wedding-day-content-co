@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/next/', '/api/'],
     },
-    sitemap: env.NEXT_PUBLIC_SERVER_URL + '/sitemap.xml',
+    sitemap: `${env.NEXT_PUBLIC_SERVER_URL}/sitemap.xml`,
   };
 }

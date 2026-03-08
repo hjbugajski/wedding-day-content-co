@@ -100,7 +100,6 @@ export function DateField({ meta }: Props) {
             onSelect={(date) => field.handleChange(date as FieldValue<'date'>)}
             disabled={disabled}
             numberOfMonths={1}
-            autoFocus
           />
         ) : null}
         {meta.mode === 'multiple' ? (
@@ -113,7 +112,6 @@ export function DateField({ meta }: Props) {
             onSelect={(dates) => field.handleChange(dates as FieldValue<'date'>)}
             disabled={disabled}
             numberOfMonths={1}
-            autoFocus
           />
         ) : null}
         {meta.mode === 'range' ? (
@@ -126,7 +124,6 @@ export function DateField({ meta }: Props) {
             onSelect={(range) => field.handleChange(range as FieldValue<'date'>)}
             disabled={disabled}
             numberOfMonths={1}
-            autoFocus
           />
         ) : null}
       </PopoverContent>

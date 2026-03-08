@@ -107,8 +107,7 @@ export function FormClient({
                 }
                 width={meta.width}
               >
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any -- dynamic field types */}
-                <Renderer meta={meta as any} />
+                <Renderer meta={meta} />
               </field.Field>
             )}
           </form.AppField>

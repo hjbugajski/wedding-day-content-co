@@ -1,7 +1,7 @@
 'use client';
 
 import type { ComponentProps, ReactNode } from 'react';
-import { createContext, useContext, useId } from 'react';
+import { createContext, useContext, useId, useMemo } from 'react';
 
 import {
   type AnyFieldMeta,
@@ -35,6 +35,18 @@ function useFieldAria(): FieldAriaContext {
   return ctx;
 }
 
+function getErrorMessage(error: unknown): string {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return String(error.message);
+  }
+
+  return 'Invalid';
+}
+
 function FieldError({ meta, id }: { meta: AnyFieldMeta; id: string }) {
   if (meta.isValid) {
     return null;
@@ -42,9 +54,7 @@ function FieldError({ meta, id }: { meta: AnyFieldMeta; id: string }) {
 
   return (
     <p id={id} className="text-xs font-medium text-red-700" role="alert">
-      {typeof meta.errors[0] === 'string'
-        ? meta.errors[0]
-        : (meta.errors[0] as { message: string }).message}
+      {getErrorMessage(meta.errors[0])}
     </p>
   );
 }
@@ -64,6 +74,10 @@ function Field({ className, children, label, required = true, description, width
   const descriptionId = `${fieldId}-description`;
   const hasError = !field.state.meta.isValid;
   const hasDescription = !!description;
+  const fieldAria = useMemo(
+    () => ({ id: fieldId, errorId, descriptionId, hasError, hasDescription }),
+    [fieldId, errorId, descriptionId, hasError, hasDescription],
+  );
 
   return (
     <div
@@ -74,11 +88,7 @@ function Field({ className, children, label, required = true, description, width
         {label}
         {required ? null : ' (optional)'}
       </Label>
-      <FieldAriaCtx.Provider
-        value={{ id: fieldId, errorId, descriptionId, hasError, hasDescription }}
-      >
-        {children}
-      </FieldAriaCtx.Provider>
+      <FieldAriaCtx.Provider value={fieldAria}>{children}</FieldAriaCtx.Provider>
       {description ? <div id={descriptionId}>{description}</div> : null}
       <FieldError meta={field.state.meta} id={errorId} />
     </div>

@@ -26,5 +26,6 @@ export function RowLabel({
   const fieldValue = getNestedValue(data, path);
   const fallbackValue = fallbackPath ? getNestedValue(data, fallbackPath) : undefined;
 
+  // oxlint-disable-next-line react/jsx-no-useless-fragment
   return <>{fieldValue || fallbackValue || `${fallback} ${rowNumber}`}</>;
 }

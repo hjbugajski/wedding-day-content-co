@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -14,21 +13,21 @@ export type PayloadImageProps = PayloadImagesCollection & {
 const PayloadImage = ({
   alt,
   className,
-  createdAt,
+  createdAt: _createdAt,
   dataUrl,
   displayOriginal,
   filename,
-  filesize,
-  focalX,
-  focalY,
+  filesize: _filesize,
+  focalX: _focalX,
+  focalY: _focalY,
   hasLink,
   height: propsHeight,
   link,
-  mimeType,
+  mimeType: _mimeType,
   sizes,
-  thumbnailURL,
+  thumbnailURL: _thumbnailURL,
   title,
-  updatedAt,
+  updatedAt: _updatedAt,
   url,
   width: propsWidth,
   ...props

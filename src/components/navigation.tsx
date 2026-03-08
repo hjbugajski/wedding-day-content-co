@@ -183,6 +183,7 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
               </li>
             ) : null}
             <button
+              type="button"
               onClick={toggleMenu}
               aria-label={open ? 'Close navigation' : 'Open navigation'}
               className={cn(

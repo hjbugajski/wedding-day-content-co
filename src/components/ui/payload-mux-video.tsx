@@ -15,15 +15,6 @@ interface Props {
 }
 
 export default function PayloadMuxVideo({ className, onPlaying, video }: Props) {
-  if (
-    typeof video === 'string' ||
-    !video?.playbackOptions?.length ||
-    !video?.playbackOptions[0]?.playbackId ||
-    !video?.playbackOptions[0]?.posterUrl
-  ) {
-    return null;
-  }
-
   const videoElementRef = useRef<HTMLVideoElement | null>(null);
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -83,6 +74,15 @@ export default function PayloadMuxVideo({ className, onPlaying, video }: Props) 
       clearTimer();
     };
   }, [startTimer, clearTimer]);
+
+  if (
+    typeof video === 'string' ||
+    !video?.playbackOptions?.length ||
+    !video?.playbackOptions[0]?.playbackId ||
+    !video?.playbackOptions[0]?.posterUrl
+  ) {
+    return null;
+  }
 
   return (
     <MuxPlayer

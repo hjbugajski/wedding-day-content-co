@@ -39,9 +39,7 @@ const setPath: CollectionAfterChangeHook<PayloadPagesCollection> = ({ context, d
     return doc;
   }
 
-  const path = doc.breadcrumbs?.length
-    ? doc.breadcrumbs[doc.breadcrumbs.length - 1].url
-    : `/${slugify(doc.title)}`;
+  const path = doc.breadcrumbs[doc.breadcrumbs.length - 1].url;
 
   if (doc.path === path) {
     return doc;

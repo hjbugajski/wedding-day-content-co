@@ -107,7 +107,6 @@ type Classes = {
 };
 
 interface Props {
-  additionalClasses?: Classes;
   data?: SerializedEditorState | null;
   overrideClasses?: Classes;
 }

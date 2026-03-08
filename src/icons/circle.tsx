@@ -18,7 +18,7 @@ export function IconCircle(props: ComponentProps<'svg'>) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-      ></path>
+      />
     </svg>
   );
 }

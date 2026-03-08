@@ -12,7 +12,7 @@ export function MessagesMarqueeBlock({ messages }: PayloadMessagesMarqueeBlock) 
       className="relative isolate max-w-72 shrink-0 overflow-clip rounded-sm bg-neutral-100/75 p-4 text-center text-base text-balance shadow-lg ring-2 shadow-black/10 ring-neutral-200 md:max-w-80 md:p-6 md:text-lg dark:bg-neutral-900 dark:shadow-white/5 dark:ring-neutral-800"
     >
       {content}
-      <div className="absolute -z-10 h-32 w-48 rotate-45 rounded-full bg-dusty-rose-300/15 blur-3xl group-odd:top-1/4 group-odd:-right-1/4 group-even:top-1/2 group-even:right-1/4 dark:bg-dusty-rose-800/15"></div>
+      <div className="absolute -z-10 h-32 w-48 rotate-45 rounded-full bg-dusty-rose-300/15 blur-3xl group-odd:top-1/4 group-odd:-right-1/4 group-even:top-1/2 group-even:right-1/4 dark:bg-dusty-rose-800/15" />
     </div>
   ));
 

@@ -1,5 +1,6 @@
 import { cache } from 'react';
 
+import type { Metadata } from 'next';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
@@ -64,7 +65,7 @@ export async function generateStaticParams() {
   }
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = await fetchCachedPage({ slug });
 

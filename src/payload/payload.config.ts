@@ -205,7 +205,7 @@ export default buildConfig({
       parentFieldSlug: 'parent',
       breadcrumbsFieldSlug: 'breadcrumbs',
       generateLabel: (_, doc) => doc?.title as string,
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      // oxlint-disable-next-line typescript/restrict-template-expressions
       generateURL: (docs) => docs.reduce((url, doc) => `${url}/${doc?.slug}`, ''),
     }),
     s3Storage({

@@ -29,10 +29,10 @@ jobs:
         run: pnpm install
 
       - name: Format
-        run: pnpm format
+        run: pnpm fmt:check
 
       - name: Lint
-        run: pnpm lint
+        run: pnpm lint:check
 
       - name: Stylelint
-        run: pnpm stylelint
+        run: pnpm stylelint:check

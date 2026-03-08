@@ -1,8 +1,4 @@
-const canUseDom = !!(
-  typeof window !== 'undefined' &&
-  window.document &&
-  window.document.createElement
-);
+const canUseDom = typeof window !== 'undefined' && !!window.document?.createElement;
 
 export const getClientSideUrl = () => {
   if (canUseDom) {

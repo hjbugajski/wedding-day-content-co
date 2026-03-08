@@ -16,44 +16,36 @@ function Chevron({ orientation }: ChevronProps) {
       return <Icons name="navArrowRight" size="sm" />;
     case 'down':
       return <Icons name="navArrowDownSmall" size="sm" />;
+    case 'up':
+      return <Icons name="navArrowUp" size="sm" />;
     default:
+      // oxlint-disable-next-line react/jsx-no-useless-fragment -- react-day-picker requires Element return
       return <></>;
   }
 }
 
 function CalendarDayButton({ day: _day, modifiers, className, ...props }: DayButtonProps) {
+  const isEndpoint = modifiers.range_start || modifiers.range_end;
+
   return (
     <button
+      type="button"
       className={cn(
         'inline-flex h-9 w-9 items-center justify-center rounded-xs p-0 text-sm font-normal transition',
         'hover:bg-neutral-200 hover:text-black',
         'focus:ring-2 focus:ring-neutral-600/75 focus:outline-hidden',
         'disabled:pointer-events-none',
-        modifiers.selected &&
-          !modifiers.range_start &&
-          !modifiers.range_end &&
-          !modifiers.range_middle &&
-          'bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.range_start &&
-          modifiers.range_end &&
-          'rounded-xs bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.range_start &&
-          !modifiers.range_end &&
-          'rounded-l-xs rounded-r-none bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.range_end &&
-          !modifiers.range_start &&
-          'rounded-l-none rounded-r-xs bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.range_middle &&
-          'rounded-none bg-dusty-rose-100 font-medium text-dusty-rose-800 hover:bg-dusty-rose-200',
-        modifiers.outside && 'font-light text-neutral-600',
-        modifiers.outside &&
-          modifiers.range_start &&
-          'bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.outside &&
-          modifiers.range_end &&
-          'bg-dusty-rose-200 text-dusty-rose-950 hover:bg-dusty-rose-300',
-        modifiers.disabled && 'font-light text-neutral-400',
-        modifiers.hidden && 'invisible',
+        {
+          'font-light text-neutral-600': modifiers.outside,
+          'bg-dusty-rose-200 font-medium text-dusty-rose-950 hover:bg-dusty-rose-300':
+            isEndpoint || (modifiers.selected && !modifiers.range_middle),
+          'rounded-none bg-dusty-rose-100 font-medium text-dusty-rose-800 hover:bg-dusty-rose-200':
+            modifiers.range_middle,
+          'rounded-l-xs rounded-r-none': modifiers.range_start && !modifiers.range_end,
+          'rounded-l-none rounded-r-xs': modifiers.range_end && !modifiers.range_start,
+          'font-light text-neutral-400': modifiers.disabled,
+          invisible: modifiers.hidden,
+        },
         className,
       )}
       {...props}
@@ -122,4 +114,4 @@ function Calendar({
   );
 }
 
-export { Calendar, CalendarDayButton };
+export { Calendar };

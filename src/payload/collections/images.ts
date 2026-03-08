@@ -27,31 +27,20 @@ const addDataUrl: CollectionAfterChangeHook<PayloadImagesCollection> = async ({
     return doc;
   }
 
-  // Temporarily clear file data to prevent generateFileData from re-processing
-  // the upload during the nested update. The cloud storage afterChange hook
-  // (which runs after this hook) still needs these to upload sized files to S3.
-  const prevFile = req.file;
-  const prevSizes = req.payloadUploadSizes;
-
-  req.file = undefined;
-  req.payloadUploadSizes = undefined;
-
-  try {
-    return await req.payload.update({
-      collection: 'images',
-      id: doc.id,
-      data: {
-        dataUrl,
-      },
-      context: {
-        ignoreAddDataUrl: true,
-      },
-      req,
-    });
-  } finally {
-    req.file = prevFile;
-    req.payloadUploadSizes = prevSizes;
-  }
+  return await req.payload.update({
+    collection: 'images',
+    id: doc.id,
+    data: {
+      dataUrl,
+    },
+    context: {
+      ignoreAddDataUrl: true,
+    },
+    req: {
+      transactionID: req.transactionID,
+      user: req.user,
+    },
+  });
 };
 
 const revalidateImageAfterChange: CollectionAfterChangeHook<PayloadImagesCollection> = async ({
@@ -59,11 +48,7 @@ const revalidateImageAfterChange: CollectionAfterChangeHook<PayloadImagesCollect
   doc,
   req: { payload },
 }) => {
-  if (context?.disableRevalidate) {
-    return doc;
-  }
-
-  if (context?.ignoreAddDataUrl) {
+  if (context?.disableRevalidate || context?.ignoreAddDataUrl) {
     return doc;
   }
 
