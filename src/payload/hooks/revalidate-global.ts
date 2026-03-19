@@ -12,7 +12,7 @@ export const revalidateGlobalAfterChange: GlobalAfterChangeHook = ({
   }
 
   payload.logger.info(`Revalidating global: ${slug}`);
-  revalidateTag(`global:${slug}`);
+  revalidateTag(`global:${slug}`, { expire: 0 });
 
   return doc;
 };
