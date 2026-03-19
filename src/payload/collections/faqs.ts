@@ -26,7 +26,7 @@ const revalidateFaqAfterChange: CollectionAfterChangeHook<PayloadFaqsCollection>
   const logger = (message: string) => payload.logger.info(message);
 
   logger(`Revalidating Footer global due to FAQ change: ${doc.id}`);
-  revalidateTag('global:footer');
+  revalidateTag('global:footer', { expire: 0 });
 
   await revalidatePagesUsingCollection({ payload, logger }, 'faqs', doc.id);
 
@@ -40,7 +40,7 @@ const revalidateFaqAfterDelete: CollectionAfterDeleteHook<PayloadFaqsCollection>
   const logger = (message: string) => payload.logger.info(message);
 
   logger(`Revalidating Footer global due to FAQ deletion: ${doc.id}`);
-  revalidateTag('global:footer');
+  revalidateTag('global:footer', { expire: 0 });
 
   await revalidatePagesUsingCollection({ payload, logger }, 'faqs', doc.id);
 
