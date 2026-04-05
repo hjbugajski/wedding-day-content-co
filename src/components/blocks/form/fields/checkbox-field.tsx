@@ -1,4 +1,5 @@
-import { RichText } from '@/components/rich-text';
+import type { ReactNode } from 'react';
+
 import { Checkbox } from '@/components/ui/checkbox';
 import { useFieldAria, useFieldContext } from '@/components/ui/form';
 import { Label } from '@/components/ui/label';
@@ -6,9 +7,10 @@ import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
 type Props = {
   meta: PayloadCheckboxBlock;
+  optionDescriptions?: Record<string, ReactNode>;
 };
 
-export function CheckboxField({ meta }: Props) {
+export function CheckboxField({ meta, optionDescriptions }: Props) {
   const field = useFieldContext<string>();
   const { hasError } = useFieldAria();
   const selectedValues = field.state.value ? field.state.value.split(',') : [];
@@ -37,12 +39,7 @@ export function CheckboxField({ meta }: Props) {
             <Label className="text-lg font-normal tracking-normal text-neutral-800 normal-case">
               {option.label}
             </Label>
-            {option.description ? (
-              <RichText
-                data={option.description}
-                overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
-              />
-            ) : null}
+            {optionDescriptions?.[option.id || option.value] ?? null}
           </div>
         </div>
       ))}

@@ -1,6 +1,7 @@
 'use client';
 
-import { RichText } from '@/components/rich-text';
+import type { ReactNode } from 'react';
+
 import {
   Accordion,
   AccordionContent,
@@ -8,20 +9,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import type { PayloadPackagesBlock } from '@/payload/payload-types';
+
+type AddOn = {
+  id?: string | null;
+  title: string;
+  price?: string | null;
+  renderedContent: ReactNode;
+};
 
 type Props = {
-  addOns: NonNullable<PayloadPackagesBlock['addOnsSection']>['addOns'];
+  addOns: AddOn[];
 };
 
 export function AddOnsAccordion({ addOns }: Props) {
-  if (!addOns?.length) {
+  if (!addOns.length) {
     return null;
   }
 
   return (
     <Accordion type="multiple">
-      {addOns.map(({ id, title, content, price }) => (
+      {addOns.map(({ id, title, renderedContent, price }) => (
         <AccordionItem value={id || ''} key={id} className="border-b-dusty-rose-800/75">
           <AccordionHeader asChild>
             <h3 className="font-sans leading-none text-dusty-rose-800 drop-shadow-none">
@@ -29,14 +36,7 @@ export function AddOnsAccordion({ addOns }: Props) {
             </h3>
           </AccordionHeader>
           <AccordionContent className="flex flex-col gap-4">
-            <div>
-              <RichText
-                data={content}
-                overrideClasses={{
-                  paragraph: 'my-1 first:mt-0 text-lg last:mb-0 text-dusty-rose-800',
-                }}
-              />
-            </div>
+            <div>{renderedContent}</div>
             {price ? <p className="text-lg font-semibold text-dusty-rose-800">{price}</p> : null}
           </AccordionContent>
         </AccordionItem>

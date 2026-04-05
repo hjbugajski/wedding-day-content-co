@@ -7,12 +7,11 @@ import { getPayload } from 'payload';
 
 import config from '@payload-config';
 
-import { metadata } from '@/app/(site)/layout';
 import { LivePreviewListener } from '@/components/live-preview-listener';
 import { RichText } from '@/components/rich-text';
 import { Breadcrumbs } from '@/components/ui/breadcrumbs';
+import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 import { cn } from '@/utils/cn';
-import { pageTitle } from '@/utils/page-title';
 
 interface PageProps {
   params: Promise<{ slug: string[] }>;
@@ -68,10 +67,39 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const page = await fetchCachedPage({ slug });
+  const segments = slug || ['home'];
+  const isHome = !slug || segments[0] === 'home';
+  const siteUrl = getServerSideUrl();
+  const pageUrl = isHome ? siteUrl : `${siteUrl}/${segments.join('/')}`;
+
+  if (!page) {
+    return {};
+  }
+
+  const title = !page.title || page.title.toLowerCase() === 'home' ? undefined : page.title;
+  const description =
+    page.description || 'Wedding and event content creation, storytelling for love that inspires.';
+  const siteName = 'Wedding Day Content Co.';
+  const defaultTitle = `${siteName} | NYC Wedding Content Creator`;
+  const resolvedTitle = title || defaultTitle;
 
   return {
-    title: pageTitle(page?.title, metadata),
-    description: page?.description || metadata.description,
+    title: title || { absolute: defaultTitle },
+    description,
+    alternates: { canonical: pageUrl },
+    openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      siteName,
+      title: resolvedTitle,
+      description,
+      url: pageUrl,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: resolvedTitle,
+      description,
+    },
   };
 }
 
@@ -87,7 +115,7 @@ export default async function Page({ params }: PageProps) {
   return (
     <main className={cn('mx-auto w-full max-w-7xl px-6', page.slug !== 'home' && 'py-12')}>
       {draft ? <LivePreviewListener /> : null}
-      {page.slug !== 'home' && <Breadcrumbs breadcrumbs={page.breadcrumbs} />}
+      {page.slug !== 'home' ? <Breadcrumbs breadcrumbs={page.breadcrumbs} /> : null}
       <RichText data={page.content} />
     </main>
   );

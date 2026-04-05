@@ -1,7 +1,11 @@
-import { RichText } from '@/components/rich-text';
+import type { RichTextComponent } from '@/components/rich-text/types';
 import type { PayloadSectionBlock } from '@/payload/payload-types';
 import { cn } from '@/utils/cn';
 import { slugify } from '@/utils/slugify';
+
+interface SectionBlockProps extends PayloadSectionBlock {
+  RichText: RichTextComponent;
+}
 
 export function SectionBlock({
   background,
@@ -10,7 +14,8 @@ export function SectionBlock({
   contentColumnOne,
   contentColumnTwo,
   heading,
-}: PayloadSectionBlock) {
+  RichText,
+}: SectionBlockProps) {
   return (
     <section
       className={cn(
