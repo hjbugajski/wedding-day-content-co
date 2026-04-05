@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import type { z } from 'zod';
 
 import type { PayloadFormsCollection } from '@/payload/payload-types';
@@ -14,7 +16,7 @@ export type FieldValue<M> =
 export interface FieldConfig<M extends FieldMeta> {
   defaultValue: (meta: M) => FieldValue<M['blockType']>;
   schema: (meta: M) => z.ZodType<FieldValue<M['blockType']>>;
-  Renderer: React.FC<{ meta: M }>;
+  Renderer: React.FC<{ meta: M; optionDescriptions?: Record<string, ReactNode> }>;
   format: (meta: M, value: unknown) => string;
 }
 

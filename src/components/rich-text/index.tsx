@@ -1,14 +1,6 @@
 import { type ReactNode, cloneElement, isValidElement } from 'react';
 
-import type {
-  DefaultNodeTypes,
-  SerializedBlockNode,
-  SerializedInlineBlockNode,
-} from '@payloadcms/richtext-lexical';
-import type {
-  SerializedEditorState,
-  SerializedLexicalNode,
-} from '@payloadcms/richtext-lexical/lexical';
+import type { SerializedLexicalNode } from '@payloadcms/richtext-lexical/lexical';
 import type {
   JSXConverters,
   JSXConvertersFunction,
@@ -33,18 +25,7 @@ import { listConverter } from '@/components/rich-text/list-converter';
 import { listitemConverter } from '@/components/rich-text/listitem-converter';
 import { paragraphConverter } from '@/components/rich-text/paragraph-converter';
 import { textConverter } from '@/components/rich-text/text-converter';
-import type {
-  PayloadButtonLinkBlock,
-  PayloadFormBlock,
-  PayloadGalleryBlock,
-  PayloadHeroBlock,
-  PayloadMediaStackBlock,
-  PayloadMessagesMarqueeBlock,
-  PayloadPackagesBlock,
-  PayloadQuotesBlock,
-  PayloadSectionBlock,
-  PayloadStepperBlock,
-} from '@/payload/payload-types';
+import type { Classes, NodeType, RichTextProps } from '@/components/rich-text/types';
 import { cn } from '@/utils/cn';
 
 export type JSXConverter<
@@ -68,49 +49,6 @@ export type JSXConverter<
   parent: SerializedLexicalNodeWithParent;
 }) => React.ReactNode;
 
-type NodeType =
-  | DefaultNodeTypes
-  | SerializedBlockNode<
-      | PayloadButtonLinkBlock
-      | PayloadFormBlock
-      | PayloadGalleryBlock
-      | PayloadHeroBlock
-      | PayloadMediaStackBlock
-      | PayloadMessagesMarqueeBlock
-      | PayloadPackagesBlock
-      | PayloadQuotesBlock
-      | PayloadSectionBlock
-      | PayloadStepperBlock
-    >
-  | SerializedInlineBlockNode;
-
-type Classes = {
-  [nodeType in Exclude<NonNullable<NodeType['type']>, 'block' | 'inlineBlock'>]?: string;
-} & {
-  blocks?: {
-    [K in Extract<
-      Extract<
-        NodeType,
-        {
-          type: 'block';
-        }
-      > extends SerializedBlockNode<infer B>
-        ? B extends {
-            blockType: string;
-          }
-          ? B['blockType']
-          : never
-        : never,
-      string
-    >]?: string;
-  };
-};
-
-interface Props {
-  data?: SerializedEditorState | null;
-  overrideClasses?: Classes;
-}
-
 interface ConvertLexicalToJsxProps {
   additionalClasses?: Classes;
   overrideClasses?: Classes;
@@ -129,15 +67,15 @@ const jsxConverters: JSXConvertersFunction<NodeType> = () => ({
   link: linkConverter,
   blocks: {
     buttonLink: ({ node }) => <ButtonLinkBlock {...node.fields} />,
-    form: ({ node }) => <FormBlock {...node.fields} />,
+    form: ({ node }) => <FormBlock {...node.fields} RichText={RichText} />,
     gallery: ({ node }) => <GalleryBlock {...node.fields} />,
     hero: ({ node }) => <HeroBlock {...node.fields} />,
     mediaStack: ({ node }) => <MediaStackBlock {...node.fields} />,
     messagesMarquee: ({ node }) => <MessagesMarqueeBlock {...node.fields} />,
-    packages: ({ node }) => <PackagesBlock {...node.fields} />,
-    quotes: ({ node }) => <QuotesBlock {...node.fields} />,
-    section: ({ node }) => <SectionBlock {...node.fields} />,
-    stepper: ({ node }) => <StepperBlock {...node.fields} />,
+    packages: ({ node }) => <PackagesBlock {...node.fields} RichText={RichText} />,
+    quotes: ({ node }) => <QuotesBlock {...node.fields} RichText={RichText} />,
+    section: ({ node }) => <SectionBlock {...node.fields} RichText={RichText} />,
+    stepper: ({ node }) => <StepperBlock {...node.fields} RichText={RichText} />,
   },
 });
 
@@ -245,7 +183,7 @@ function convertLexicalToJsx({
   });
 }
 
-export function RichText({ data, overrideClasses }: Props) {
+export function RichText({ data, overrideClasses }: RichTextProps) {
   if (!data?.root?.children?.length) {
     return null;
   }
