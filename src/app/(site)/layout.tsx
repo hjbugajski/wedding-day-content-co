@@ -27,32 +27,63 @@ const nightingale = localFont({
 });
 const figtree = Figtree({ subsets: ['latin'], display: 'swap', variable: '--font-figtree' });
 
+const siteUrl = getServerSideUrl();
+const siteName = 'Wedding Day Content Co.';
+const siteDescription = 'Wedding and event content creation, storytelling for love that inspires.';
+
 export const metadata: Metadata = {
-  metadataBase: new URL(getServerSideUrl()),
-  title: 'Wedding Day Content Co.',
-  description: 'Content creator for weddings and events—your moments, our artistry.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${siteName} | NYC Wedding Content Creator`,
+    template: `%s | ${siteName}`,
+  },
+  description: siteDescription,
   keywords: [
     'Wedding Day Content Co.',
     'Wedding Day Content Co',
     'Wedding Day Content',
-    'Content',
-    'Creator',
     'Content Creator',
-    'Events',
-    'Event Content',
+    'Content Creation',
     'Event Content Creator',
-    'Weddings',
+    'Event Content Creation',
     'Wedding Content',
     'Wedding Content Creator',
-    'Photography',
+    'Wedding Content Creation',
+    'Wedding Day Content Creator',
+    'NYC Wedding Content Creator',
+    'New York Wedding Content Creator',
+    'New York City Wedding Content Creator',
     'Wedding Photography',
-    'Videography',
     'Wedding Videography',
-    'Photographer',
     'Wedding Photographer',
-    'Videographer',
     'Wedding Videographer',
+    'NYC Wedding Videographer',
+    'NYC Wedding Photographer',
+    'New York Wedding Photographer',
+    'New York Wedding Videographer',
+    'New York City Wedding Photographer',
+    'New York City Wedding Videographer',
   ],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName,
+    title: `${siteName} | NYC Wedding Content Creator`,
+    description: siteDescription,
+    url: siteUrl,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${siteName} | NYC Wedding Content Creator`,
+    description: siteDescription,
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  robots:
+    env.NEXT_PUBLIC_VERCEL_TARGET_ENV === 'production'
+      ? undefined
+      : { index: false, follow: false },
   icons: {
     icon: [
       { url: '/favicon.svg' },
@@ -106,6 +137,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         nightingale.variable,
         'h-full scroll-p-36 scroll-smooth! bg-neutral-50 font-sans text-neutral-800',
       )}
+      data-scroll-behavior="smooth"
     >
       <body className="relative flex h-full flex-col">
         <div className="dot-mask fixed inset-0 -z-10 h-full w-full" />

@@ -37,7 +37,9 @@ const getPagesSitemap = unstable_cache(
 );
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const sitemap = await getPagesSitemap();
+  if (env.NEXT_PUBLIC_VERCEL_TARGET_ENV !== 'production') {
+    return [];
+  }
 
-  return sitemap;
+  return getPagesSitemap();
 }
