@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
 
 import { AddOnsAccordion } from '@/components/blocks/packages/add-ons-accordion';
-import { RichText } from '@/components/rich-text';
+import type { RichTextComponent } from '@/components/rich-text/types';
 import { Icons } from '@/icons';
 import type { PayloadPackagesBlock } from '@/payload/payload-types';
 
@@ -19,7 +19,11 @@ const packagesGridVariants = cva('-m-6 grid grid-cols-1 pb-12', {
   },
 });
 
-export function PackagesBlock({ packagesSection, addOnsSection }: PayloadPackagesBlock) {
+interface PackagesBlockProps extends PayloadPackagesBlock {
+  RichText: RichTextComponent;
+}
+
+export function PackagesBlock({ packagesSection, addOnsSection, RichText }: PackagesBlockProps) {
   const packageCount = packagesSection?.packages?.length || 0;
   const gridVariant = packageCount > 4 ? 4 : (packageCount as 1 | 2 | 3 | 4);
 
@@ -85,7 +89,7 @@ export function PackagesBlock({ packagesSection, addOnsSection }: PayloadPackage
             />
           ) : null}
         </div>
-        <AddOnsAccordion addOns={addOnsSection?.addOns} />
+        <AddOnsAccordion addOns={addOnsSection?.addOns} RichText={RichText} />
       </div>
     </section>
   );

@@ -1,9 +1,13 @@
 import { Fragment } from 'react';
 
-import { RichText } from '@/components/rich-text';
+import type { RichTextComponent } from '@/components/rich-text/types';
 import type { PayloadStepperBlock } from '@/payload/payload-types';
 
-export function StepperBlock({ steps }: PayloadStepperBlock) {
+interface StepperBlockProps extends PayloadStepperBlock {
+  RichText: RichTextComponent;
+}
+
+export function StepperBlock({ steps, RichText }: StepperBlockProps) {
   if (!steps?.length) {
     return null;
   }

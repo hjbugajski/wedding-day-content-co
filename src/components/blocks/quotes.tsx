@@ -1,8 +1,12 @@
-import { RichText } from '@/components/rich-text';
+import type { RichTextComponent } from '@/components/rich-text/types';
 import { Blockquote, BlockquoteBody, BlockquoteFooter } from '@/components/ui/blockquote';
 import type { PayloadQuotesBlock } from '@/payload/payload-types';
 
-export function QuotesBlock({ quotes }: PayloadQuotesBlock) {
+interface QuotesBlockProps extends PayloadQuotesBlock {
+  RichText: RichTextComponent;
+}
+
+export function QuotesBlock({ quotes, RichText }: QuotesBlockProps) {
   if (!quotes || quotes.length === 0) {
     return null;
   }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 
 import { toast } from 'sonner';
 
@@ -14,7 +14,6 @@ import { textConfig } from '@/components/blocks/form/configs/text';
 import { textareaConfig } from '@/components/blocks/form/configs/textarea';
 import { submitForm } from '@/components/blocks/form/form.action';
 import type { FieldConfig, FieldConfigs, FieldMeta } from '@/components/blocks/form/types';
-import { RichText } from '@/components/rich-text';
 import { useAppForm } from '@/components/ui/form';
 import type { PayloadFormsCollection } from '@/payload/payload-types';
 
@@ -33,12 +32,19 @@ function getFieldConfig<M extends FieldMeta>(meta: M): FieldConfig<M> {
   return fieldConfigs[meta.blockType] as unknown as FieldConfig<M>;
 }
 
+interface FormClientProps extends PayloadFormsCollection {
+  fieldDescriptions: Record<string, ReactNode>;
+  optionDescriptions: Record<string, Record<string, ReactNode>>;
+}
+
 export function FormClient({
   confirmationMessage,
   fields,
   id,
   submitButtonLabel,
-}: PayloadFormsCollection) {
+  fieldDescriptions,
+  optionDescriptions,
+}: FormClientProps) {
   const fieldList = useMemo(
     () => fields.map((meta) => ({ meta, config: getFieldConfig(meta) })),
     [fields],
@@ -97,17 +103,10 @@ export function FormClient({
               <field.Field
                 label={meta.label}
                 required={meta.required}
-                description={
-                  meta.description ? (
-                    <RichText
-                      data={meta.description}
-                      overrideClasses={{ paragraph: 'text-sm text-neutral-500' }}
-                    />
-                  ) : undefined
-                }
+                description={fieldDescriptions[meta.name]}
                 width={meta.width}
               >
-                <Renderer meta={meta} />
+                <Renderer meta={meta} optionDescriptions={optionDescriptions[meta.name]} />
               </field.Field>
             )}
           </form.AppField>

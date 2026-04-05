@@ -1,6 +1,6 @@
 'use client';
 
-import { RichText } from '@/components/rich-text';
+import type { RichTextComponent } from '@/components/rich-text/types';
 import {
   Accordion,
   AccordionContent,
@@ -12,9 +12,10 @@ import type { PayloadPackagesBlock } from '@/payload/payload-types';
 
 type Props = {
   addOns: NonNullable<PayloadPackagesBlock['addOnsSection']>['addOns'];
+  RichText: RichTextComponent;
 };
 
-export function AddOnsAccordion({ addOns }: Props) {
+export function AddOnsAccordion({ addOns, RichText }: Props) {
   if (!addOns?.length) {
     return null;
   }
