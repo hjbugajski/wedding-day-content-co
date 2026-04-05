@@ -71,11 +71,20 @@ export const metadata: Metadata = {
     title: `${siteName} | NYC Wedding Content Creator`,
     description: siteDescription,
     url: siteUrl,
+    images: [
+      {
+        url: `${siteUrl}/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: siteName,
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${siteName} | NYC Wedding Content Creator`,
     description: siteDescription,
+    images: [`${siteUrl}/opengraph-image`],
   },
   alternates: {
     canonical: siteUrl,
