@@ -89,7 +89,23 @@ export function PackagesBlock({ packagesSection, addOnsSection, RichText }: Pack
             />
           ) : null}
         </div>
-        <AddOnsAccordion addOns={addOnsSection?.addOns} RichText={RichText} />
+        <AddOnsAccordion
+          addOns={
+            addOnsSection?.addOns?.map(({ id, title, content, price }) => ({
+              id,
+              title,
+              price,
+              renderedContent: (
+                <RichText
+                  data={content}
+                  overrideClasses={{
+                    paragraph: 'my-1 first:mt-0 text-lg last:mb-0 text-dusty-rose-800',
+                  }}
+                />
+              ),
+            })) ?? []
+          }
+        />
       </div>
     </section>
   );
