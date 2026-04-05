@@ -1,24 +1,35 @@
-import process from 'node:process';
+import { env } from 'node:process';
 
 import { withPayload } from '@payloadcms/next/withPayload';
 
-const production = process.env.NODE_ENV === 'production';
-const domain =
-  process.env.VERCEL_TARGET_ENV === 'preview' ? process.env.VERCEL_URL : process.env.DOMAIN;
+const domain = env.VERCEL_TARGET_ENV === 'preview' ? env.VERCEL_URL : env.DOMAIN;
+const isProductionNode = env.NODE_ENV === 'production';
+const isProductionVercel = env.VERCEL_TARGET_ENV === 'production';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    dangerouslyAllowLocalIP: !production,
+    dangerouslyAllowLocalIP: !isProductionNode,
     remotePatterns: [
       {
-        protocol: production ? 'https' : 'http',
-        hostname: production && domain ? domain : 'localhost',
+        protocol: isProductionNode ? 'https' : 'http',
+        hostname: isProductionNode && domain ? domain : 'localhost',
         pathname: '/api/**',
       },
     ],
   },
   turbopack: {},
+  headers: async () => [
+    {
+      source: '/(.*)',
+      headers: [
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        ...(isProductionVercel ? [] : [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }]),
+      ],
+    },
+  ],
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });
