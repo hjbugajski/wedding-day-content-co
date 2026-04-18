@@ -33,7 +33,7 @@ const SelectValue = Value;
 const SelectTrigger = ({ className, children, ...props }: ComponentProps<typeof Trigger>) => (
   <Trigger
     className={cn(
-      'flex h-14 w-full items-center justify-between rounded-sm border-2 border-neutral-200/75 bg-neutral-50 pr-3 pl-4 text-lg shadow-sm shadow-black/10 transition placeholder:text-neutral-500 hover:border-neutral-600/75 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden [&>span]:line-clamp-1 [&[data-state=open]>svg]:rotate-180',
+      'flex h-14 w-full items-center justify-between rounded-sm border-2 border-neutral-300/60 bg-neutral-50 pr-3 pl-4 text-lg shadow-md shadow-neutral-500/5 transition placeholder:text-neutral-500 hover:border-neutral-500/60 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden [&>span]:line-clamp-1 [&[data-state=open]>svg]:rotate-180',
       className,
     )}
     {...props}
@@ -79,7 +79,7 @@ const SelectContent = ({
   <Portal>
     <Content
       className={cn(
-        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-sm border-2 border-neutral-200/75 bg-neutral-50 text-neutral-800 shadow-lg shadow-black/10 transition hover:border-neutral-600/75 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-sm border-2 border-neutral-300/60 bg-neutral-50 text-neutral-800 shadow-lg shadow-neutral-500/10 transition hover:border-neutral-500/60 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
         position === 'popper' &&
           'w-full min-w-[var(--radix-select-trigger-width)] data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
         className,

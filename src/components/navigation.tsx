@@ -140,7 +140,7 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
           className="fixed inset-x-2 top-2 z-50"
           viewport={false}
         >
-          <NavigationMenuList className="z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4 rounded-xs bg-neutral-50/75 pr-1 pl-4 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg md-lg:px-4 xl:px-6">
+          <NavigationMenuList className="z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4 rounded-xs bg-neutral-50/75 pr-1 pl-4 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg md-lg:px-4 xl:px-6">
             <li className="flex flex-1">
               <Link href="/" onClick={closeMenu} className="text-sm subheading">
                 Wedding Day Content Co.
@@ -200,7 +200,7 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
             aria-modal={open}
             open={open}
             data-state={open ? 'open' : 'closed'}
-            className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] rounded-xs bg-neutral-50/75 p-4 pt-2 shadow-lg ring-2 shadow-black/10 ring-neutral-200/75 backdrop-blur-lg data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:fade-out data-[state=closed]:slide-out-to-top-4 data-[state=open]:animate-in data-[state=open]:duration-300 data-[state=open]:fade-in data-[state=open]:slide-in-from-top-2"
+            className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] rounded-xs bg-neutral-50/75 p-4 pt-2 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg data-[state=closed]:animate-out data-[state=closed]:duration-300 data-[state=closed]:fade-out data-[state=closed]:slide-out-to-top-4 data-[state=open]:animate-in data-[state=open]:duration-300 data-[state=open]:fade-in data-[state=open]:slide-in-from-top-2"
           >
             <ul className="flex w-full flex-col gap-2">
               {navigationItems?.map(({ id, link, links, navigationType }) =>

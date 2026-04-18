@@ -27,8 +27,9 @@ const buttonVariants = cva(
         none: 'flex-row',
       },
       asChild: {
-        true: 'hover:no-underline! hover:shadow-lg hover:shadow-black/10',
-        false: 'hover:enabled:no-underline! hover:enabled:shadow-lg hover:enabled:shadow-black/10',
+        true: 'hover:no-underline! hover:shadow-lg hover:shadow-neutral-500/10',
+        false:
+          'hover:enabled:no-underline! hover:enabled:shadow-lg hover:enabled:shadow-neutral-500/10',
       },
       background: {
         default: '',

@@ -6,7 +6,7 @@ import { cn } from '@/utils/cn';
 const Blockquote = ({ children, className, ...props }: ComponentProps<'blockquote'>) => (
   <blockquote
     className={cn(
-      'group relative isolate flex w-full flex-col gap-4 overflow-hidden rounded-sm bg-neutral-100/75 p-4 shadow-lg ring-2 shadow-black/10 ring-neutral-200 md:p-6 dark:bg-neutral-900 dark:shadow-white/5 dark:ring-neutral-800',
+      'group relative isolate flex w-full flex-col gap-4 overflow-hidden rounded-sm bg-neutral-100/75 p-4 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200 md:p-6 dark:bg-neutral-900 dark:shadow-neutral-600/10 dark:ring-neutral-800',
       className,
     )}
     {...props}
