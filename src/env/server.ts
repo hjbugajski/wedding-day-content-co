@@ -4,7 +4,9 @@ import { z } from 'zod';
 export const env = createEnv({
   server: {
     DOMAIN: z.string().min(1),
-    VERCEL_TARGET_ENV: z.enum(['development', 'preview', 'staging', 'production']),
+    VERCEL_TARGET_ENV: z
+      .enum(['development', 'preview', 'staging', 'production'])
+      .default('development'),
     MUX_TOKEN_ID: z.string().min(1),
     MUX_TOKEN_SECRET: z.string().min(1),
     MUX_WEBHOOK_SIGNING_SECRET: z.string().min(1),
