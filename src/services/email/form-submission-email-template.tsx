@@ -1,4 +1,4 @@
-import { Body, Font, Head, Heading, Html, Preview, Tailwind } from '@react-email/components';
+import { Body, Font, Head, Heading, Html, Preview, Tailwind } from 'react-email';
 
 import type {
   PayloadFormSubmissionsCollection,
@@ -47,3 +47,31 @@ export const FormSubmissionEmailTemplate = ({ data, form }: Props) => (
     </Html>
   </Tailwind>
 );
+
+const now = new Date().toISOString();
+
+const previewForm: PayloadFormsCollection = {
+  id: 'preview-form',
+  title: 'Contact',
+  submitButtonLabel: 'Submit',
+  confirmationMessage: 'Thanks for reaching out!',
+  fields: [],
+  updatedAt: now,
+  createdAt: now,
+};
+
+const previewData: PayloadFormSubmissionsCollection['data'] = [
+  { id: '1', name: 'name', label: 'Name', value: 'Jane Doe', blockType: 'text' },
+  { id: '2', name: 'email', label: 'Email', value: 'jane@example.com', blockType: 'email' },
+  { id: '3', name: 'phone', label: 'Phone', value: '(555) 123-4567', blockType: 'phoneNumber' },
+  { id: '4', name: 'eventDate', label: 'Event Date', value: 'June 14, 2026', blockType: 'date' },
+  {
+    id: '5',
+    name: 'message',
+    label: 'Message',
+    value: 'We would love to learn more about your wedding day packages.',
+    blockType: 'textarea',
+  },
+];
+
+export default () => <FormSubmissionEmailTemplate data={previewData} form={previewForm} />;
