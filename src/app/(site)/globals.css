@@ -74,6 +74,20 @@
       transform: translateX(-50%);
     }
   }
+
+  @keyframes html-bg-footer {
+    to {
+      background-color: var(--color-black);
+    }
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  html {
+    animation: html-bg-footer steps(1, start) both;
+    animation-timeline: scroll(root);
+    animation-range: 50% 100%;
+  }
 }
 
 @layer base {
