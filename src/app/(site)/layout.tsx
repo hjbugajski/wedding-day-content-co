@@ -11,7 +11,7 @@ import payloadConfig from '@payload-config';
 
 import { Footer } from '@/components/footer';
 import { Navigation } from '@/components/navigation';
-import { Toaster } from '@/components/ui/toaster';
+import { Toasts } from '@/components/ui/toasts';
 import { env } from '@/env/client';
 import type { PayloadFooterGlobal, PayloadNavigationGlobal } from '@/payload/payload-types';
 import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
@@ -153,7 +153,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <Navigation {...navigation} />
         <div className="mt-18 flex flex-1 flex-col">{children}</div>
         <Footer {...footer} />
-        <Toaster />
+        <Toasts />
         <Script
           src={env.NEXT_PUBLIC_UMAMI_SRC}
           data-website-id={env.NEXT_PUBLIC_UMAMI_ID}
