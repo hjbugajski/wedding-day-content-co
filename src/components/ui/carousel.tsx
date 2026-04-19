@@ -1,32 +1,29 @@
 'use client';
 
-import type { ComponentProps, KeyboardEvent } from 'react';
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-
-import useEmblaCarousel from 'embla-carousel-react';
+import type { ComponentProps, RefObject } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-type EmblaApi = NonNullable<ReturnType<typeof useEmblaCarousel>[1]>;
-
-type CarouselProps = {
-  opts?: Parameters<typeof useEmblaCarousel>[0];
-  plugins?: Parameters<typeof useEmblaCarousel>[1];
-  setApi?: (api: EmblaApi) => void;
-};
-
-type CarouselContextProps = {
-  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
-  api: ReturnType<typeof useEmblaCarousel>[1];
+type CarouselContextValue = {
+  scrollRef: RefObject<HTMLDivElement | null>;
   scrollPrev: () => void;
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
-} & CarouselProps;
+};
 
-const CarouselContext = createContext<CarouselContextProps | null>(null);
+const CarouselContext = createContext<CarouselContextValue | null>(null);
 
 function useCarousel() {
   const context = useContext(CarouselContext);
@@ -38,87 +35,127 @@ function useCarousel() {
   return context;
 }
 
-const Carousel = ({
-  opts = {},
-  setApi,
-  plugins,
-  className,
-  children,
-  ...props
-}: ComponentProps<'div'> & CarouselProps) => {
-  const [carouselRef, api] = useEmblaCarousel(Object.assign(opts, { axis: 'x' }), plugins);
+const Carousel = ({ className, children, ...props }: ComponentProps<'div'>) => {
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const onSelect = useCallback((api: EmblaApi) => {
-    if (!api) {
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+
+    if (!el) {
       return;
     }
 
-    setCanScrollPrev(api.canScrollPrev());
-    setCanScrollNext(api.canScrollNext());
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+
+    setCanScrollPrev(scrollLeft > 1);
+    setCanScrollNext(scrollLeft + clientWidth < scrollWidth - 1);
   }, []);
 
-  const scrollPrev = useCallback(() => {
-    api?.scrollPrev();
-  }, [api]);
+  const scrollToDirection = useCallback((direction: 1 | -1) => {
+    const el = scrollRef.current;
 
-  const scrollNext = useCallback(() => {
-    api?.scrollNext();
-  }, [api]);
+    if (!el) {
+      return;
+    }
 
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'ArrowLeft') {
-        event.preventDefault();
-        scrollPrev();
-      } else if (event.key === 'ArrowRight') {
-        event.preventDefault();
-        scrollNext();
+    const items = el.querySelectorAll<HTMLElement>('[data-carousel-item]');
+
+    if (!items.length) {
+      return;
+    }
+
+    const align = getComputedStyle(items[0]).scrollSnapAlign.split(' ').pop() ?? 'start';
+    const isCenter = align === 'center';
+    const isEnd = align === 'end';
+
+    const containerRect = el.getBoundingClientRect();
+    const style = getComputedStyle(el);
+    const spl = parseFloat(style.scrollPaddingLeft) || 0;
+    const spr = parseFloat(style.scrollPaddingRight) || 0;
+
+    const containerAnchor = isCenter
+      ? containerRect.left + spl + (containerRect.width - spl - spr) / 2
+      : isEnd
+        ? containerRect.right - spr
+        : containerRect.left + spl;
+
+    const itemAnchor = (item: HTMLElement) => {
+      const r = item.getBoundingClientRect();
+
+      if (isCenter) {
+        return r.left + r.width / 2;
       }
-    },
-    [scrollPrev, scrollNext],
-  );
 
-  useEffect(() => {
-    if (!api || !setApi) {
+      if (isEnd) {
+        return r.right;
+      }
+
+      return r.left;
+    };
+
+    let currentIndex = 0;
+    let bestDistance = Infinity;
+
+    for (let i = 0; i < items.length; i++) {
+      const distance = Math.abs(itemAnchor(items[i]) - containerAnchor);
+
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        currentIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    const targetIndex = currentIndex + direction;
+
+    if (targetIndex < 0 || targetIndex >= items.length) {
       return;
     }
 
-    setApi(api);
-  }, [api, setApi]);
+    const inline: ScrollLogicalPosition = isCenter ? 'center' : isEnd ? 'end' : 'start';
+
+    items[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline });
+  }, []);
+
+  const scrollPrev = useCallback(() => scrollToDirection(-1), [scrollToDirection]);
+  const scrollNext = useCallback(() => scrollToDirection(1), [scrollToDirection]);
 
   useEffect(() => {
-    if (!api) {
+    const el = scrollRef.current;
+
+    if (!el) {
       return;
     }
 
-    onSelect(api);
-    api.on('reInit', onSelect);
-    api.on('select', onSelect);
+    updateScrollState();
+
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+
+    const resizeObserver = new ResizeObserver(updateScrollState);
+
+    resizeObserver.observe(el);
+
+    for (const child of Array.from(el.children)) {
+      resizeObserver.observe(child);
+    }
 
     return () => {
-      api?.off('select', onSelect);
+      el.removeEventListener('scroll', updateScrollState);
+      resizeObserver.disconnect();
     };
-  }, [api, onSelect]);
+  }, [updateScrollState]);
 
   const contextValue = useMemo(
-    () => ({
-      carouselRef,
-      api,
-      opts,
-      scrollPrev,
-      scrollNext,
-      canScrollPrev,
-      canScrollNext,
-    }),
-    [carouselRef, api, opts, scrollPrev, scrollNext, canScrollPrev, canScrollNext],
+    () => ({ scrollRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext }),
+    [scrollPrev, scrollNext, canScrollPrev, canScrollNext],
   );
 
   return (
     <CarouselContext.Provider value={contextValue}>
       <div
-        onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}
         role="region"
         aria-roledescription="carousel"
@@ -131,20 +168,29 @@ const Carousel = ({
 };
 
 const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) => {
-  const { carouselRef } = useCarousel();
+  const { scrollRef } = useCarousel();
 
   return (
-    <div ref={carouselRef}>
-      <div className={cn('-ml-4 flex', className)} {...props} />
-    </div>
+    <div
+      ref={scrollRef}
+      className={cn(
+        'scroll-x-bleed scrollbar-hidden flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth',
+        className,
+      )}
+      {...props}
+    />
   );
 };
 
 const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => (
   <div
+    data-carousel-item
     role="group"
     aria-roledescription="slide"
-    className={cn('min-w-0 shrink-0 grow-0 basis-full pl-4', className)}
+    className={cn(
+      'min-w-0 shrink-0 grow-0 basis-full snap-center snap-always sm:snap-start',
+      className,
+    )}
     {...props}
   />
 );

@@ -9,5 +9,9 @@ export default {
     'at-rule-no-deprecated': [true, { ignoreAtRules: ['apply'] }],
     'function-no-unknown': [true, { ignoreFunctions: ['theme'] }],
     'no-invalid-position-declaration': null,
+    'nesting-selector-no-missing-scoping-root': [
+      true,
+      { ignoreAtRules: ['utility', 'variant', 'custom-variant'] },
+    ],
   },
 };

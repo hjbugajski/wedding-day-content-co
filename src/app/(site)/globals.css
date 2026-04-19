@@ -103,7 +103,8 @@
     font-variation-settings: 'wght' 350;
     font-optical-sizing: auto;
     font-synthesis: none;
-    text-rendering: optimizeLegibility;
+    text-rendering: optimizelegibility;
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -205,6 +206,23 @@
 @utility overflow-hero {
   width: 100dvw;
   margin-left: calc((100dvw - 100%) / -2);
+}
+
+@utility scroll-x-bleed {
+  --gutter: calc(max(0px, (100dvw - 80rem) / 2) + 1.5rem);
+
+  scroll-padding-inline: var(--gutter);
+  width: 100dvw;
+  margin-left: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+}
+
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @utility items-last-baseline {
