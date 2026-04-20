@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -38,33 +37,11 @@
   --breakpoint-md-lg: 992px;
 
   /* ----- animations ----- */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-marquee-slow: marquee 90s linear infinite;
   --animate-marquee-normal: marquee 60s linear infinite;
   --animate-marquee-fast: marquee 30s linear infinite;
 
   /* ----- keyframes ----- */
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-
-    to {
-      height: 0;
-    }
-  }
-
   @keyframes marquee {
     from {
       transform: translateX(0%);

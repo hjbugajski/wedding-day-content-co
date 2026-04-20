@@ -1,39 +1,13 @@
 'use client';
 
 import type { ComponentProps, ReactNode } from 'react';
-import { createContext, useContext, useId, useMemo } from 'react';
 
-import {
-  type AnyFieldMeta,
-  createFormHook,
-  createFormHookContexts,
-  useStore,
-} from '@tanstack/react-form';
+import { Field as BaseField } from '@base-ui/react/field';
+import { createFormHook, createFormHookContexts, useStore } from '@tanstack/react-form';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/cn';
-
-type FieldAriaContext = {
-  id: string;
-  errorId: string;
-  descriptionId: string;
-  hasError: boolean;
-  hasDescription: boolean;
-};
-
-const FieldAriaCtx = createContext<FieldAriaContext | null>(null);
-
-function useFieldAria(): FieldAriaContext {
-  const ctx = useContext(FieldAriaCtx);
-
-  if (!ctx) {
-    throw new Error('useFieldAria must be used within a Field component');
-  }
-
-  return ctx;
-}
 
 function getErrorMessage(error: unknown): string {
   if (typeof error === 'string') {
@@ -47,51 +21,48 @@ function getErrorMessage(error: unknown): string {
   return 'Invalid';
 }
 
-function FieldError({ meta, id }: { meta: AnyFieldMeta; id: string }) {
-  if (meta.isValid) {
-    return null;
-  }
-
-  return (
-    <p id={id} className="text-xs font-medium text-red-700" role="alert">
-      {getErrorMessage(meta.errors[0])}
-    </p>
-  );
-}
-
-type FieldProps = ComponentProps<'div'> & {
+type FieldProps = ComponentProps<typeof BaseField.Root> & {
   label: string;
   required?: boolean;
   description?: ReactNode;
   width?: string;
 };
 
-function Field({ className, children, label, required = true, description, width }: FieldProps) {
+function Field({
+  className,
+  children,
+  label,
+  required = true,
+  description,
+  width,
+  ...props
+}: FieldProps) {
   const field = useFieldContext<unknown>();
-  const uniqueId = useId();
-  const fieldId = `${field.name}-${uniqueId}`;
-  const errorId = `${fieldId}-error`;
-  const descriptionId = `${fieldId}-description`;
-  const hasError = !field.state.meta.isValid;
-  const hasDescription = !!description;
-  const fieldAria = useMemo(
-    () => ({ id: fieldId, errorId, descriptionId, hasError, hasDescription }),
-    [fieldId, errorId, descriptionId, hasError, hasDescription],
-  );
+  const invalid = !field.state.meta.isValid;
+  const errorMessage = invalid ? getErrorMessage(field.state.meta.errors[0]) : undefined;
 
   return (
-    <div
+    <BaseField.Root
+      name={field.name}
+      invalid={invalid}
       data-width={width}
       className={cn('flex w-full flex-col gap-2 data-[width=full]:sm:col-span-2', className)}
+      {...props}
     >
-      <Label htmlFor={fieldId} className={cn(hasError && 'text-red-700')}>
+      <BaseField.Label className="text-sm leading-none subheading text-neutral-600 data-invalid:text-red-700 dark:text-white/75">
         {label}
         {required ? null : ' (optional)'}
-      </Label>
-      <FieldAriaCtx.Provider value={fieldAria}>{children}</FieldAriaCtx.Provider>
-      {description ? <div id={descriptionId}>{description}</div> : null}
-      <FieldError meta={field.state.meta} id={errorId} />
-    </div>
+      </BaseField.Label>
+      {children}
+      {description ? (
+        <BaseField.Description render={<div />}>{description}</BaseField.Description>
+      ) : null}
+      {invalid ? (
+        <BaseField.Error match={true} className="text-xs font-medium text-red-700" role="alert">
+          {errorMessage}
+        </BaseField.Error>
+      ) : null}
+    </BaseField.Root>
   );
 }
 
@@ -164,4 +135,4 @@ const { useAppForm } = createFormHook({
   },
 });
 
-export { useAppForm, useFieldAria, useFieldContext };
+export { useAppForm, useFieldContext };

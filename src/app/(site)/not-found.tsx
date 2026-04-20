@@ -12,11 +12,9 @@ export default function NotFound() {
           We couldn&apos;t find the page you were looking for.
         </p>
       </div>
-      <Button asChild iconPosition="right">
-        <Link href="/">
-          Home
-          <Icons name="arrowRight" />
-        </Link>
+      <Button render={<Link href="/" />} iconPosition="right">
+        Home
+        <Icons name="arrowRight" />
       </Button>
     </section>
   );

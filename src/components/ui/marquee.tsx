@@ -1,6 +1,8 @@
+'use client';
+
 import type { ComponentProps } from 'react';
 
-import { Slot } from '@radix-ui/react-slot';
+import { useRender } from '@base-ui/react/use-render';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
@@ -17,7 +19,7 @@ const Marquee = ({ className, ...props }: ComponentProps<'div'>) => (
   />
 );
 
-const marqueeContentVariants = cva('whitespace-nowrap group-hover:[animation-play-state:paused]', {
+const marqueeContentVariants = cva('group-hover:paused whitespace-nowrap', {
   variants: {
     speed: {
       slow: 'animate-marquee-slow',
@@ -32,26 +34,28 @@ const marqueeContentVariants = cva('whitespace-nowrap group-hover:[animation-pla
 
 export type MarqueeContentProps = ComponentProps<'div'> &
   VariantProps<typeof marqueeContentVariants> & {
-    asChild?: boolean;
     duplicate?: boolean;
+    render?: useRender.RenderProp;
   };
 
 const MarqueeContent = ({
-  asChild = false,
   className,
   duplicate = false,
+  ref,
+  render,
   speed,
   ...props
 }: MarqueeContentProps) => {
-  const Component = asChild ? Slot : 'div';
-
-  return (
-    <Component
-      aria-hidden={duplicate}
-      className={cn(marqueeContentVariants({ speed }), className)}
-      {...props}
-    />
-  );
+  return useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: {
+      'aria-hidden': duplicate,
+      className: cn(marqueeContentVariants({ speed }), className),
+      ...props,
+    },
+  });
 };
 
 const marqueeFadeVariants = cva(

@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { Checkbox } from '@/components/ui/checkbox';
-import { useFieldAria, useFieldContext } from '@/components/ui/form';
-import { Label } from '@/components/ui/label';
+import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox';
+import { useFieldContext } from '@/components/ui/form';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
 type Props = {
@@ -11,38 +10,29 @@ type Props = {
 };
 
 export function CheckboxField({ meta, optionDescriptions }: Props) {
-  const field = useFieldContext<string>();
-  const { hasError } = useFieldAria();
-  const selectedValues = field.state.value ? field.state.value.split(',') : [];
-
-  const handleChange = (value: string, checked: boolean) => {
-    let newValues: string[];
-
-    if (checked) {
-      newValues = [...selectedValues, value];
-    } else {
-      newValues = selectedValues.filter((v: string) => v !== value);
-    }
-
-    field.handleChange(newValues.join(','));
-  };
+  const field = useFieldContext<string[]>();
+  const invalid = !field.state.meta.isValid;
 
   return (
-    <fieldset aria-invalid={hasError} className="flex flex-col justify-start gap-2">
+    <CheckboxGroup
+      value={field.state.value}
+      onValueChange={(value) => field.handleChange(value)}
+      aria-invalid={invalid || undefined}
+    >
       {meta.options.map((option) => (
-        <div key={option.id || option.value} className="flex flex-row items-start gap-3">
-          <Checkbox
-            checked={selectedValues.includes(option.value)}
-            onCheckedChange={(checked) => handleChange(option.value, checked === true)}
-          />
+        <label
+          key={option.id || option.value}
+          className="flex cursor-pointer flex-row items-start gap-3"
+        >
+          <Checkbox value={option.value} />
           <div className="flex flex-col gap-1">
-            <Label className="text-lg font-normal tracking-normal text-neutral-800 normal-case">
+            <span className="text-lg font-normal tracking-normal text-neutral-800 normal-case">
               {option.label}
-            </Label>
+            </span>
             {optionDescriptions?.[option.id || option.value] ?? null}
           </div>
-        </div>
+        </label>
       ))}
-    </fieldset>
+    </CheckboxGroup>
   );
 }

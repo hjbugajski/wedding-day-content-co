@@ -2,126 +2,103 @@
 
 import type { ComponentProps } from 'react';
 
-import {
-  Content,
-  Group,
-  Icon,
-  Item,
-  ItemIndicator,
-  ItemText,
-  Label,
-  Portal,
-  Root,
-  ScrollDownButton,
-  ScrollUpButton,
-  Separator,
-  Trigger,
-  Value,
-  Viewport,
-} from '@radix-ui/react-select';
+import { Select as Base } from '@base-ui/react/select';
 
 import { OverflowText } from '@/components/ui/overflow-text';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const Select = Root;
+const Select = Base.Root;
 
-const SelectGroup = Group;
+const SelectGroup = Base.Group;
 
-const SelectValue = Value;
+const SelectValue = Base.Value;
 
-const SelectTrigger = ({ className, children, ...props }: ComponentProps<typeof Trigger>) => (
-  <Trigger
+const SelectTrigger = ({ className, children, ...props }: ComponentProps<typeof Base.Trigger>) => (
+  <Base.Trigger
     className={cn(
-      'flex h-14 w-full items-center justify-between rounded-sm border-2 border-neutral-300/60 bg-neutral-50 pr-3 pl-4 text-lg shadow-md shadow-neutral-500/5 transition placeholder:text-neutral-500 hover:border-neutral-500/60 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden [&>span]:line-clamp-1 [&[data-state=open]>svg]:rotate-180',
+      'flex h-14 w-full items-center justify-between rounded-sm border-2 border-neutral-300/60 bg-neutral-50 pr-3 pl-4 text-lg shadow-md shadow-neutral-500/5 transition placeholder:text-neutral-500 hover:border-neutral-500/60 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden [&>span]:line-clamp-1 [&[data-popup-open]>svg]:rotate-180',
       className,
     )}
     {...props}
   >
     {children}
-    <Icon asChild>
-      <Icons
-        name="navArrowDownSmall"
-        size="lg"
-        className="text-neutral-500 transition-transform duration-200"
-      />
-    </Icon>
-  </Trigger>
+    <Icons
+      name="navArrowDownSmall"
+      size="lg"
+      className="text-neutral-500 transition duration-200"
+    />
+  </Base.Trigger>
 );
 
-const SelectScrollUpButton = ({ className, ...props }: ComponentProps<typeof ScrollUpButton>) => (
-  <ScrollUpButton
+const SelectScrollUpButton = ({
+  className,
+  ...props
+}: ComponentProps<typeof Base.ScrollUpArrow>) => (
+  <Base.ScrollUpArrow
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
     <Icons name="navArrowUp" className="text-neutral-500" />
-  </ScrollUpButton>
+  </Base.ScrollUpArrow>
 );
 
 const SelectScrollDownButton = ({
   className,
   ...props
-}: ComponentProps<typeof ScrollDownButton>) => (
-  <ScrollDownButton
+}: ComponentProps<typeof Base.ScrollDownArrow>) => (
+  <Base.ScrollDownArrow
     className={cn('flex cursor-default items-center justify-center py-1', className)}
     {...props}
   >
     <Icons name="navArrowDown" className="text-neutral-500" />
-  </ScrollDownButton>
+  </Base.ScrollDownArrow>
 );
 
-const SelectContent = ({
-  className,
-  children,
-  position = 'popper',
-  ...props
-}: ComponentProps<typeof Content>) => (
-  <Portal>
-    <Content
-      className={cn(
-        'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-sm border-2 border-neutral-300/60 bg-neutral-50 text-neutral-800 shadow-lg shadow-neutral-500/10 transition hover:border-neutral-500/60 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-        position === 'popper' &&
-          'w-full min-w-[var(--radix-select-trigger-width)] data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
-        className,
-      )}
-      position={position}
-      {...props}
-    >
-      <Viewport
+const SelectContent = ({ className, children, ...props }: ComponentProps<typeof Base.Popup>) => (
+  <Base.Portal>
+    <Base.Positioner alignItemWithTrigger={false} sideOffset={4} className="z-50">
+      <Base.Popup
         className={cn(
-          'flex flex-col gap-1 p-1',
-          position === 'popper' && 'h-[var(--radix-select-trigger-height)]',
+          'max-h-(--available-height) min-w-(--anchor-width) origin-(--transform-origin) overflow-hidden rounded-sm border-2 border-neutral-300/60 bg-neutral-50 text-neutral-800 shadow-lg shadow-neutral-500/10 transition duration-150 ease-out hover:border-neutral-500/60',
+          'data-starting-style:scale-95 data-starting-style:opacity-0',
+          'data-ending-style:scale-95 data-ending-style:opacity-0',
+          className,
         )}
+        {...props}
       >
-        {children}
-      </Viewport>
-    </Content>
-  </Portal>
+        <SelectScrollUpButton />
+        <Base.List className="flex flex-col gap-1 p-1">{children}</Base.List>
+        <SelectScrollDownButton />
+      </Base.Popup>
+    </Base.Positioner>
+  </Base.Portal>
 );
 
-const SelectLabel = ({ className, ...props }: ComponentProps<typeof Label>) => (
-  <Label className={cn('py-1.5 pr-2 pl-8 text-sm font-semibold', className)} {...props} />
+const SelectLabel = ({ className, ...props }: ComponentProps<typeof Base.GroupLabel>) => (
+  <Base.GroupLabel className={cn('py-1.5 pr-2 pl-8 text-sm font-semibold', className)} {...props} />
 );
 
-const SelectItem = ({ className, children, ...props }: ComponentProps<typeof Item>) => (
-  <Item
+const SelectItem = ({ className, children, ...props }: ComponentProps<typeof Base.Item>) => (
+  <Base.Item
     className={cn(
-      'relative flex w-full cursor-pointer items-center justify-between rounded-xs py-2 pr-3.75 pl-3 text-lg text-neutral-800 outline-hidden select-none hover:bg-neutral-200 focus-visible:bg-neutral-200 focus-visible:text-black data-disabled:pointer-events-none data-disabled:opacity-50 data-[state=checked]:bg-dusty-rose-100 data-[state=checked]:text-dusty-rose-800 data-[state=checked]:hover:bg-dusty-rose-200 data-[state=checked]:focus-visible:bg-dusty-rose-200',
+      'relative flex w-full cursor-pointer items-center justify-between rounded-xs py-2 pr-3.75 pl-3 text-lg text-neutral-800 outline-hidden select-none hover:bg-neutral-200 data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-neutral-200 data-highlighted:text-black data-selected:bg-dusty-rose-100 data-selected:text-dusty-rose-800 data-selected:hover:bg-dusty-rose-200 data-selected:data-highlighted:bg-dusty-rose-200',
       className,
     )}
     {...props}
   >
     <OverflowText>
-      <ItemText>{children}</ItemText>
+      <Base.ItemText>{children}</Base.ItemText>
     </OverflowText>
-    <ItemIndicator asChild>
-      <Icons name="circle" className="size-2 fill-current text-dusty-rose-700" />
-    </ItemIndicator>
-  </Item>
+    <Base.ItemIndicator
+      className="size-2 fill-current text-dusty-rose-700"
+      render={<Icons name="circle" />}
+    />
+  </Base.Item>
 );
 
-const SelectSeparator = ({ className, ...props }: ComponentProps<typeof Separator>) => (
-  <Separator className={cn('-mx-1 my-1 h-px bg-neutral-200', className)} {...props} />
+const SelectSeparator = ({ className, ...props }: ComponentProps<typeof Base.Separator>) => (
+  <Base.Separator className={cn('-mx-1 my-1 h-px bg-neutral-200', className)} {...props} />
 );
 
 export {

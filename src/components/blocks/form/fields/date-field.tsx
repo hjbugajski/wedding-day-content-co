@@ -4,7 +4,7 @@ import type { DateRange } from 'react-day-picker';
 
 import type { FieldValue } from '@/components/blocks/form/types';
 import { Calendar } from '@/components/ui/calendar';
-import { useFieldAria, useFieldContext } from '@/components/ui/form';
+import { useFieldContext } from '@/components/ui/form';
 import { InputButton } from '@/components/ui/input';
 import { OverflowText } from '@/components/ui/overflow-text';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -17,7 +17,7 @@ type Props = {
 
 export function DateField({ meta }: Props) {
   const field = useFieldContext<FieldValue<'date'>>();
-  const { hasError } = useFieldAria();
+  const invalid = !field.state.meta.isValid;
 
   const value = useMemo<string | null>(() => {
     switch (meta.mode) {
@@ -80,14 +80,16 @@ export function DateField({ meta }: Props) {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <InputButton
-          displayChildren={!!value}
-          icon={value ? 'calendarCheck' : 'calendar'}
-          aria-invalid={hasError}
-        >
-          <OverflowText>{value}</OverflowText>
-        </InputButton>
+      <PopoverTrigger
+        render={
+          <InputButton
+            displayChildren={!!value}
+            icon={value ? 'calendarCheck' : 'calendar'}
+            aria-invalid={invalid || undefined}
+          />
+        }
+      >
+        <OverflowText>{value}</OverflowText>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         {meta.mode === 'single' ? (

@@ -48,7 +48,7 @@ const ToastList = () => {
       <Toast.Content
         className={cn(
           'flex items-start gap-3 overflow-hidden p-4 transition-opacity duration-200',
-          '[&[data-behind]:not([data-expanded])]:opacity-0',
+          'data-behind:opacity-0 data-expanded:opacity-100',
         )}
       >
         <TypeIcon type={toast.type} />

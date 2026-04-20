@@ -6,10 +6,11 @@ import type { PayloadFormsCollection } from '@/payload/payload-types';
 
 export type FieldMeta = PayloadFormsCollection['fields'][number];
 
-export type FieldValue<M> =
-  M extends Exclude<FieldMeta['blockType'], 'date'>
+export type FieldValue<M> = M extends 'checkbox'
+  ? string[]
+  : M extends Exclude<FieldMeta['blockType'], 'date' | 'checkbox'>
     ? string
-    : M extends Extract<FieldMeta['blockType'], 'date'>
+    : M extends 'date'
       ? (Date | undefined) | Date[] | ({ from?: Date; to?: Date } | Record<string, never>)
       : never;
 

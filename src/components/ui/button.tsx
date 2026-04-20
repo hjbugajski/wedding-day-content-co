@@ -1,6 +1,8 @@
+'use client';
+
 import type { ComponentProps } from 'react';
 
-import { Slot } from '@radix-ui/react-slot';
+import { useRender } from '@base-ui/react/use-render';
 import { type VariantProps, cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
@@ -26,7 +28,7 @@ const buttonVariants = cva(
         center: 'flex-row',
         none: 'flex-row',
       },
-      asChild: {
+      rendered: {
         true: 'hover:no-underline! hover:shadow-lg hover:shadow-neutral-500/10',
         false:
           'hover:enabled:no-underline! hover:enabled:shadow-lg hover:enabled:shadow-neutral-500/10',
@@ -99,24 +101,24 @@ const buttonVariants = cva(
       },
       {
         variant: 'primary',
-        asChild: true,
+        rendered: true,
         className:
           'hover:bg-neutral-900 hover:text-neutral-50 dark:hover:bg-dusty-rose-900 dark:hover:text-dusty-rose-100',
       },
       {
         variant: 'primary',
-        asChild: false,
+        rendered: false,
         className:
           'hover:enabled:bg-neutral-900 hover:enabled:text-neutral-50 dark:hover:enabled:bg-dusty-rose-900 dark:hover:enabled:text-dusty-rose-100',
       },
       {
         variant: 'secondary',
-        asChild: true,
+        rendered: true,
         className: 'hover:bg-neutral-200 hover:text-black',
       },
       {
         variant: 'secondary',
-        asChild: false,
+        rendered: false,
         className: 'hover:enabled:bg-neutral-200 hover:enabled:text-black',
       },
     ],
@@ -129,30 +131,34 @@ const buttonVariants = cva(
 );
 
 export type ButtonProps = ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
+  Omit<VariantProps<typeof buttonVariants>, 'rendered'> & {
+    render?: useRender.RenderProp;
   };
 
 const Button = ({
-  asChild = false,
   background,
   className,
   iconPosition,
-  variant,
+  ref,
+  render,
   size,
+  variant,
   ...props
 }: ButtonProps) => {
-  const Component = asChild ? Slot : 'button';
+  const rendered = Boolean(render);
 
-  return (
-    <Component
-      {...props}
-      className={cn(
-        buttonVariants({ variant, size, iconPosition, asChild, background }),
+  return useRender({
+    defaultTagName: 'button',
+    ref,
+    render,
+    props: {
+      className: cn(
+        buttonVariants({ variant, size, iconPosition, rendered, background }),
         className,
-      )}
-    />
-  );
+      ),
+      ...props,
+    },
+  });
 };
 
 export { Button };

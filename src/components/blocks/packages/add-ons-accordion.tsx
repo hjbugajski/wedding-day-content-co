@@ -27,13 +27,15 @@ export function AddOnsAccordion({ addOns }: Props) {
   }
 
   return (
-    <Accordion type="multiple">
+    <Accordion multiple>
       {addOns.map(({ id, title, renderedContent, price }) => (
         <AccordionItem value={id || ''} key={id} className="border-b-dusty-rose-800/75">
-          <AccordionHeader asChild>
-            <h3 className="font-sans leading-none text-dusty-rose-800 drop-shadow-none">
-              <AccordionTrigger className="font-medium">{title}</AccordionTrigger>
-            </h3>
+          <AccordionHeader
+            // oxlint-disable-next-line jsx-a11y/heading-has-content
+            render={<h3 />}
+            className="font-sans leading-none text-dusty-rose-800 drop-shadow-none"
+          >
+            <AccordionTrigger className="font-medium">{title}</AccordionTrigger>
           </AccordionHeader>
           <AccordionContent className="flex flex-col gap-4">
             <div>{renderedContent}</div>
