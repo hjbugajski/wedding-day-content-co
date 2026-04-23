@@ -3,11 +3,7 @@ import { join } from 'node:path';
 
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Wedding Day Content Co.';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
-
-export default async function Image() {
+export async function GET() {
   const [nightingale, figtree] = await Promise.all([
     readFile(join(process.cwd(), 'public/font/DTNightingale.ttf')),
     readFile(join(process.cwd(), 'public/font/Figtree-Regular.ttf')),
@@ -65,7 +61,8 @@ export default async function Image() {
       </div>
     </div>,
     {
-      ...size,
+      width: 1200,
+      height: 630,
       fonts: [
         { name: 'Nightingale', data: nightingale, style: 'normal', weight: 400 },
         { name: 'Figtree', data: figtree, style: 'normal', weight: 400 },
