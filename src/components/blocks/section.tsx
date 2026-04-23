@@ -18,10 +18,9 @@ export function SectionBlock({
 }: SectionBlockProps) {
   return (
     <section
-      className={cn(
-        'relative isolate overflow-section overflow-hidden py-16',
-        background === 'dark' && 'dark bg-black text-neutral-200',
-      )}
+      className={cn('relative isolate overflow-section overflow-hidden py-16', {
+        'dark bg-black text-neutral-200': background === 'dark',
+      })}
     >
       <h1
         id={slugify(heading)}

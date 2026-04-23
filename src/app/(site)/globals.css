@@ -96,7 +96,7 @@
   }
 
   a {
-    @apply rounded-xs no-underline decoration-2 underline-offset-3 hover:not-focus-visible:underline focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden dark:focus-visible:ring-white/75;
+    @apply rounded-xs no-underline decoration-2 underline-offset-3 focus-ring-link hover:not-focus-visible:underline;
   }
 
   strong {
@@ -208,6 +208,38 @@
 
 @utility subheading {
   @apply font-semibold tracking-[0.08em] uppercase;
+}
+
+@utility focus-ring-input {
+  @apply focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden;
+}
+
+@utility focus-ring-link {
+  @apply focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden;
+
+  @variant dark {
+    @apply focus-visible:ring-white/75;
+  }
+}
+
+@utility surface-card {
+  @apply shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200;
+
+  @variant dark {
+    @apply shadow-neutral-600/10 ring-neutral-800;
+  }
+}
+
+@utility surface-overlay {
+  @apply rounded-sm border-2 border-neutral-300/60 shadow-lg shadow-neutral-500/10;
+}
+
+@utility form-field-frame {
+  @apply border-2 border-neutral-300/60 shadow-md focus-ring-input shadow-neutral-500/5 transition hover:border-neutral-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility form-field-base {
+  @apply form-field-frame rounded-sm bg-neutral-50 text-lg placeholder:text-neutral-500 hover:bg-neutral-100;
 }
 
 @utility masonry {

@@ -121,7 +121,7 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <main className={cn('mx-auto w-full max-w-7xl px-6', page.slug !== 'home' && 'py-12')}>
+    <main className={cn('mx-auto w-full max-w-7xl px-6', { 'py-12': page.slug !== 'home' })}>
       {draft ? <LivePreviewListener /> : null}
       <RichText data={page.content} />
     </main>

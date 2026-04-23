@@ -101,7 +101,12 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
       <div
         aria-hidden
         data-open={open || undefined}
-        className="pointer-events-none fixed inset-0 z-40 bg-neutral-50/25 opacity-0 backdrop-blur-md transition-opacity duration-300 ease-out data-open:pointer-events-auto data-open:opacity-100"
+        className={cn([
+          'pointer-events-none fixed inset-0 z-40',
+          'bg-neutral-50/25 opacity-0 backdrop-blur-md',
+          'transition-opacity duration-300 ease-out',
+          'data-open:pointer-events-auto data-open:opacity-100',
+        ])}
       />
       <NavigationMenu
         ref={ref}
@@ -109,7 +114,13 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
         className="fixed inset-x-2 top-2 z-50"
       >
         {open ? <FocusGuard onFocus={wrapToLast} /> : null}
-        <NavigationMenuList className="z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4 rounded-xs bg-neutral-50/75 pr-1 pl-4 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg md-lg:px-4 xl:px-6">
+        <NavigationMenuList
+          className={cn([
+            'z-50 mx-auto flex h-16 max-w-7xl flex-row items-center justify-between gap-4',
+            'pr-1 pl-4 md-lg:px-4 xl:px-6',
+            'rounded-xs bg-neutral-50/75 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg',
+          ])}
+        >
           <li className="flex flex-1">
             <Link href="/" onClick={closeMenu} className="text-sm subheading">
               Wedding Day Content Co.
@@ -130,7 +141,11 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
                           <NavigationMenuLink
                             closeOnClick
                             render={<PayloadLink {...link} />}
-                            className="block w-full p-3 text-sm subheading transition hover:bg-neutral-800/90 hover:no-underline"
+                            className={cn([
+                              'block w-full p-3',
+                              'text-sm subheading',
+                              'transition hover:bg-neutral-800/90 hover:no-underline',
+                            ])}
                           >
                             {link.description ? (
                               <div className="mt-1 text-xs text-neutral-400 normal-case">
@@ -167,7 +182,14 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
         <dialog
           aria-hidden={!open}
           open={open}
-          className="inset-x-0 z-40 m-[unset] mt-3 w-[unset] -translate-y-2 rounded-xs bg-neutral-50/75 p-4 pt-2 opacity-0 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg transition-[opacity,translate,display] transition-discrete duration-300 ease-out [[open]]:translate-y-0 [[open]]:opacity-100 [[open]]:starting:-translate-y-2 [[open]]:starting:opacity-0"
+          className={cn([
+            'inset-x-0 z-40 m-[unset] mt-3 w-[unset] p-4 pt-2',
+            'rounded-xs bg-neutral-50/75 shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200/75 backdrop-blur-lg',
+            '-translate-y-2 opacity-0',
+            'transition-[opacity,translate,display] transition-discrete duration-300 ease-out',
+            '[[open]]:translate-y-0 [[open]]:opacity-100',
+            '[[open]]:starting:-translate-y-2 [[open]]:starting:opacity-0',
+          ])}
         >
           <ul className="flex w-full flex-col gap-2">
             {navigationItems?.map(({ id, link, links, navigationType }) =>

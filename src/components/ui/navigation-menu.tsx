@@ -22,7 +22,7 @@ function NavigationMenuTrigger({
     <Base.Trigger
       className={cn(
         'group inline-flex items-center justify-center rounded-xs text-sm subheading transition',
-        'focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden dark:focus-visible:ring-white/75',
+        'focus-ring-link',
         className,
       )}
       {...props}

@@ -174,7 +174,10 @@ const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) => {
     <div
       ref={scrollRef}
       className={cn(
-        'scroll-x-bleed scrollbar-hidden flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth',
+        'flex gap-4',
+        'overflow-x-auto scroll-smooth',
+        'snap-x snap-mandatory',
+        'scroll-x-bleed scrollbar-hidden',
         className,
       )}
       {...props}
@@ -188,7 +191,8 @@ const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => (
     role="group"
     aria-roledescription="slide"
     className={cn(
-      'min-w-0 shrink-0 grow-0 basis-full snap-center snap-always sm:snap-start',
+      'min-w-0 shrink-0 grow-0 basis-full',
+      'snap-center snap-always sm:snap-start',
       className,
     )}
     {...props}
@@ -212,7 +216,7 @@ const CarouselPrevious = ({
       disabled={!canScrollPrev}
       className={cn(
         'w-12! md:absolute md:top-1/2 md:left-6 md:-translate-y-1/2',
-        !canScrollPrev && 'md:hidden',
+        { 'md:hidden': !canScrollPrev },
         className,
       )}
       onClick={scrollPrev}
@@ -241,7 +245,7 @@ const CarouselNext = ({
       disabled={!canScrollNext}
       className={cn(
         'w-12! md:absolute md:top-1/2 md:right-6 md:-translate-y-1/2',
-        !canScrollNext && 'md:hidden',
+        { 'md:hidden': !canScrollNext },
         className,
       )}
       onClick={scrollNext}

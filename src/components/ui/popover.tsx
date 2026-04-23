@@ -17,7 +17,11 @@ const PopoverPositioner = BasePopover.Positioner;
 const PopoverPopup = ({ className, ...props }: ComponentProps<typeof BasePopover.Popup>) => (
   <BasePopover.Popup
     className={cn(
-      'z-50 w-72 origin-(--transform-origin) rounded-sm border-2 border-neutral-300/60 bg-neutral-50 p-2 text-neutral-800 shadow-lg shadow-neutral-500/10 outline-hidden transition duration-150 ease-out hover:border-neutral-500/60 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
+      'z-50 w-72 origin-(--transform-origin) p-2',
+      'surface-overlay bg-neutral-50 text-neutral-800 outline-hidden',
+      'transition duration-150 ease-out hover:border-neutral-500/60',
+      'data-starting-style:scale-95 data-starting-style:opacity-0',
+      'data-ending-style:scale-95 data-ending-style:opacity-0',
       className,
     )}
     {...props}

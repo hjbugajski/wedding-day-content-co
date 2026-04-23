@@ -31,7 +31,12 @@ const AccordionTrigger = ({
 }: ComponentProps<typeof BaseAccordion.Trigger>) => (
   <BaseAccordion.Trigger
     className={cn(
-      '-mx-4 flex flex-1 items-center justify-between overflow-clip rounded-sm p-4 text-left text-xl font-normal group-first:-mt-4 group-last:-mb-4 hover:underline hover:underline-offset-3 focus-visible:ring-2 focus-visible:ring-neutral-800 focus-visible:outline-hidden dark:focus-visible:ring-neutral-200 [&[data-panel-open]>svg]:rotate-180',
+      'flex flex-1 justify-between overflow-clip',
+      '-mx-4 p-4',
+      'rounded-sm text-left text-xl font-normal',
+      'hover:underline hover:underline-offset-3 focus-visible:ring-2 focus-visible:ring-neutral-800 focus-visible:outline-hidden dark:focus-visible:ring-neutral-200',
+      'group-first:-mt-4 group-last:-mb-4',
+      '[&[data-panel-open]>svg]:rotate-180',
       className,
     )}
     data-umami-event="Accordion trigger"
@@ -39,7 +44,7 @@ const AccordionTrigger = ({
     {...props}
   >
     {children}
-    <Icons name="navArrowDown" className="transition duration-200" />
+    <Icons name="navArrowDown" className="mt-1 transition duration-200" />
   </BaseAccordion.Trigger>
 );
 
@@ -49,7 +54,11 @@ const AccordionContent = ({
   ...props
 }: ComponentProps<typeof BaseAccordion.Panel>) => (
   <BaseAccordion.Panel
-    className="h-(--accordion-panel-height) overflow-hidden text-sm transition-[height] duration-200 ease-out data-ending-style:h-0 data-starting-style:h-0"
+    className={cn([
+      'h-(--accordion-panel-height) overflow-hidden text-sm',
+      'transition-[height] duration-200 ease-out',
+      'data-ending-style:h-0 data-starting-style:h-0',
+    ])}
     {...props}
   >
     <div className={cn('pb-4 group-last:pt-4 dark:text-neutral-400', className)}>{children}</div>

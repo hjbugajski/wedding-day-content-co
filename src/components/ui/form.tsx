@@ -109,7 +109,8 @@ function Form({ className, handleSubmit, ...props }: FormProps) {
     <form
       {...props}
       className={cn(
-        'my-6 grid w-full grid-cols-1 gap-6 first:mt-0 last:mb-0 sm:grid-cols-2',
+        'my-6 grid w-full grid-cols-1 gap-6 sm:grid-cols-2',
+        'first:mt-0 last:mb-0',
         className,
       )}
       onSubmit={(e) => {

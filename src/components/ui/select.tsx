@@ -17,7 +17,8 @@ const SelectValue = Base.Value;
 const SelectTrigger = ({ className, children, ...props }: ComponentProps<typeof Base.Trigger>) => (
   <Base.Trigger
     className={cn(
-      'flex h-14 w-full items-center justify-between rounded-sm border-2 border-neutral-300/60 bg-neutral-50 pr-3 pl-4 text-lg shadow-md shadow-neutral-500/5 transition placeholder:text-neutral-500 hover:border-neutral-500/60 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden [&>span]:line-clamp-1 [&[data-popup-open]>svg]:rotate-180',
+      'flex h-14 w-full form-field-base items-center justify-between pr-3 pl-4',
+      '[&>span]:line-clamp-1 [&[data-popup-open]>svg]:rotate-180',
       className,
     )}
     {...props}
@@ -60,7 +61,9 @@ const SelectContent = ({ className, children, ...props }: ComponentProps<typeof 
     <Base.Positioner alignItemWithTrigger={false} sideOffset={4} className="z-50">
       <Base.Popup
         className={cn(
-          'max-h-(--available-height) min-w-(--anchor-width) origin-(--transform-origin) overflow-hidden rounded-sm border-2 border-neutral-300/60 bg-neutral-50 text-neutral-800 shadow-lg shadow-neutral-500/10 transition duration-150 ease-out hover:border-neutral-500/60',
+          'max-h-(--available-height) min-w-(--anchor-width) origin-(--transform-origin) overflow-hidden',
+          'surface-overlay bg-neutral-50 text-neutral-800',
+          'transition duration-150 ease-out hover:border-neutral-500/60',
           'data-starting-style:scale-95 data-starting-style:opacity-0',
           'data-ending-style:scale-95 data-ending-style:opacity-0',
           className,
@@ -82,7 +85,11 @@ const SelectLabel = ({ className, ...props }: ComponentProps<typeof Base.GroupLa
 const SelectItem = ({ className, children, ...props }: ComponentProps<typeof Base.Item>) => (
   <Base.Item
     className={cn(
-      'relative flex w-full cursor-pointer items-center justify-between rounded-xs py-2 pr-3.75 pl-3 text-lg text-neutral-800 outline-hidden select-none hover:bg-neutral-200 data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-neutral-200 data-highlighted:text-black data-selected:bg-dusty-rose-100 data-selected:text-dusty-rose-800 data-selected:hover:bg-dusty-rose-200 data-selected:data-highlighted:bg-dusty-rose-200',
+      'relative flex w-full cursor-pointer items-center justify-between rounded-xs py-2 pr-3.75 pl-3 text-lg text-neutral-800 outline-hidden select-none',
+      'hover:bg-neutral-200',
+      'data-disabled:pointer-events-none data-disabled:opacity-50',
+      'data-highlighted:bg-neutral-200 data-highlighted:text-black',
+      'data-selected:bg-dusty-rose-100 data-selected:text-dusty-rose-800 data-selected:hover:bg-dusty-rose-200 data-selected:data-highlighted:bg-dusty-rose-200',
       className,
     )}
     {...props}

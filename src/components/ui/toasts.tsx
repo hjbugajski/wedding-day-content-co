@@ -32,7 +32,7 @@ const ToastList = () => {
       toast={toast}
       swipeDirection={SWIPE_DIRECTIONS}
       className={cn(
-        'absolute right-0 bottom-0 left-auto w-full rounded-sm border-2 border-neutral-300/60 bg-neutral-50/95 text-black shadow-lg shadow-neutral-500/10 outline-hidden backdrop-blur-lg',
+        'absolute right-0 bottom-0 left-auto w-full surface-overlay bg-neutral-50/95 text-black outline-hidden backdrop-blur-lg',
         'transition-[transform,opacity] duration-300 ease-out',
         'z-[calc(1000-var(--toast-index))]',
         'transform-[translateY(calc(var(--toast-index)*-10px))_scale(calc(1-(var(--toast-index)*0.05)))]',
@@ -55,7 +55,11 @@ const ToastList = () => {
         <Toast.Description className="flex-1 text-sm font-medium" />
         <Toast.Close
           aria-label="Close"
-          className="inline-flex size-5 shrink-0 items-center justify-center rounded-xs text-neutral-500 transition-colors hover:bg-neutral-200 hover:text-black focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden"
+          className={cn(
+            'inline-flex size-5 shrink-0 items-center justify-center rounded-xs text-neutral-500',
+            'transition-colors hover:bg-neutral-200 hover:text-black',
+            'focus-ring-link',
+          )}
         >
           <IconXMark className="size-4" />
         </Toast.Close>
@@ -67,7 +71,12 @@ const ToastList = () => {
 const Toasts = () => (
   <Toast.Provider toastManager={toast}>
     <Toast.Portal>
-      <Toast.Viewport className="fixed right-4 bottom-4 z-50 flex w-89 max-w-[calc(100%-2rem)] flex-col outline-hidden">
+      <Toast.Viewport
+        className={cn([
+          'fixed right-4 bottom-4 z-50',
+          'flex w-89 max-w-[calc(100%-2rem)] flex-col outline-hidden',
+        ])}
+      >
         <ToastList />
       </Toast.Viewport>
     </Toast.Portal>

@@ -15,14 +15,20 @@ const RadioGroup = ({ className, ...props }: ComponentProps<typeof BaseRadioGrou
 const RadioGroupItem = ({ className, ...props }: ComponentProps<typeof Radio.Root>) => (
   <Radio.Root
     className={cn(
-      'my-1 flex aspect-square size-5 items-center justify-center rounded-full border-2 border-neutral-300/60 text-neutral-800 shadow-md shadow-neutral-500/5 transition hover:border-neutral-500/60 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 data-checked:border-neutral-800/75',
+      'my-1 flex aspect-square size-5 items-center justify-center',
+      'form-field-frame rounded-full text-neutral-800',
+      'data-checked:border-neutral-800/75',
       className,
     )}
     {...props}
   >
     <Radio.Indicator
       keepMounted
-      className="flex items-center justify-center opacity-0 transition-opacity duration-150 data-checked:opacity-100"
+      className={cn([
+        'flex items-center justify-center opacity-0',
+        'transition-opacity duration-150',
+        'data-checked:opacity-100',
+      ])}
     >
       <Icons name="circle" className="size-3 fill-current text-current" />
     </Radio.Indicator>

@@ -35,7 +35,7 @@ export function GalleryBlock({ media, type }: PayloadGalleryBlock) {
                 key={value.id}
                 relationTo={relationTo}
                 value={value}
-                className="w-full rounded-sm shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200 dark:shadow-neutral-600/10 dark:ring-neutral-700"
+                className="w-full rounded-sm surface-card"
               />
             ))}
           </div>
@@ -52,7 +52,7 @@ export function GalleryBlock({ media, type }: PayloadGalleryBlock) {
             <PayloadMedia
               relationTo={relationTo}
               value={value}
-              className="rounded-sm shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200 dark:shadow-neutral-600/10 dark:ring-neutral-700"
+              className="rounded-sm surface-card"
             />
           </CarouselItem>
         ))}

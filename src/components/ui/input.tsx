@@ -3,8 +3,7 @@ import type { ComponentProps } from 'react';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const baseClass =
-  'h-14 w-full rounded-sm shadow-md shadow-neutral-500/5 border-2 border-neutral-300/60 bg-neutral-50 px-4 text-lg text-neutral-800 transition placeholder:text-neutral-500 hover:border-neutral-500/60 hover:bg-neutral-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400/75';
+const baseClass = cn('h-14 w-full form-field-base px-4 text-neutral-800');
 
 const Input = ({ className, ...props }: ComponentProps<'input'>) => (
   <input className={cn(baseClass, className)} {...props} />
@@ -26,12 +25,7 @@ const InputButton = ({
 }: InputButtonProps) => (
   <button
     type="button"
-    className={cn(
-      baseClass,
-      'group flex flex-row items-center',
-      icon ? 'pr-3' : undefined,
-      className,
-    )}
+    className={cn(baseClass, 'group flex flex-row items-center', { 'pr-3': icon }, className)}
     {...props}
   >
     {placeholder && !displayChildren ? (
