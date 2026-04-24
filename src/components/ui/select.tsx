@@ -8,9 +8,25 @@ import { OverflowText } from '@/components/ui/overflow-text';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const Select = Base.Root;
+type SelectProps<Value> = Omit<
+  Base.Root.Props<Value, false>,
+  'multiple' | 'onValueChange' | 'value' | 'defaultValue'
+> & {
+  value?: Value;
+  defaultValue?: Value;
+  onValueChange?: (value: Value) => void;
+};
 
-const SelectGroup = Base.Group;
+const Select = <Value,>({ onValueChange, ...props }: SelectProps<Value>) => (
+  <Base.Root
+    {...props}
+    onValueChange={(value) => {
+      if (value !== null) {
+        onValueChange?.(value);
+      }
+    }}
+  />
+);
 
 const SelectValue = Base.Value;
 
@@ -78,10 +94,6 @@ const SelectContent = ({ className, children, ...props }: ComponentProps<typeof 
   </Base.Portal>
 );
 
-const SelectLabel = ({ className, ...props }: ComponentProps<typeof Base.GroupLabel>) => (
-  <Base.GroupLabel className={cn('py-1.5 pr-2 pl-8 text-sm font-semibold', className)} {...props} />
-);
-
 const SelectItem = ({ className, children, ...props }: ComponentProps<typeof Base.Item>) => (
   <Base.Item
     className={cn(
@@ -104,19 +116,4 @@ const SelectItem = ({ className, children, ...props }: ComponentProps<typeof Bas
   </Base.Item>
 );
 
-const SelectSeparator = ({ className, ...props }: ComponentProps<typeof Base.Separator>) => (
-  <Base.Separator className={cn('-mx-1 my-1 h-px bg-neutral-200', className)} {...props} />
-);
-
-export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
-};
+export { Select, SelectValue, SelectTrigger, SelectContent, SelectItem };

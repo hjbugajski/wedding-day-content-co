@@ -16,15 +16,7 @@ export function SelectField({ meta }: Props) {
   const field = useFieldContext<string>();
 
   return (
-    <Select
-      items={meta.options}
-      value={field.state.value}
-      onValueChange={(value) => {
-        if (typeof value === 'string') {
-          field.handleChange(value);
-        }
-      }}
-    >
+    <Select items={meta.options} value={field.state.value} onValueChange={field.handleChange}>
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>

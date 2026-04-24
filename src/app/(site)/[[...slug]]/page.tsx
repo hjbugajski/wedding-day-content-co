@@ -37,7 +37,6 @@ const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
       description: true,
       content: true,
       slug: true,
-      breadcrumbs: true,
     },
   });
 

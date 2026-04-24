@@ -26,20 +26,9 @@ export function TextField({ meta }: Props) {
   const inputType =
     meta.blockType === 'email' ? 'email' : meta.blockType === 'phoneNumber' ? 'tel' : undefined;
 
-  if (meta.blockType === 'textarea') {
-    return (
-      <Field.Control
-        render={<Textarea />}
-        value={field.state.value}
-        onChange={(e) => field.handleChange(e.target.value)}
-        onBlur={field.handleBlur}
-      />
-    );
-  }
-
   return (
     <Field.Control
-      render={<Input type={inputType} />}
+      render={meta.blockType === 'textarea' ? <Textarea /> : <Input type={inputType} />}
       value={field.state.value}
       onChange={(e) => field.handleChange(e.target.value)}
       onBlur={field.handleBlur}

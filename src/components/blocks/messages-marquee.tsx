@@ -20,11 +20,9 @@ export function MessagesMarqueeBlock({ messages }: PayloadMessagesMarqueeBlock) 
       {content}
       <div
         className={cn([
-          'absolute -z-10 h-32 w-48',
+          'absolute top-1/4 -right-1/4 -z-10 h-32 w-48',
           'rotate-45 rounded-full blur-3xl',
           'bg-dusty-rose-300/15 dark:bg-dusty-rose-800/15',
-          'group-odd:top-1/4 group-odd:-right-1/4',
-          'group-even:top-1/2 group-even:right-1/4',
         ])}
       />
     </div>

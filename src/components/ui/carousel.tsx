@@ -1,6 +1,6 @@
 'use client';
 
-import type { ComponentProps, RefObject } from 'react';
+import type { ComponentProps, KeyboardEvent, RefObject } from 'react';
 import {
   createContext,
   useCallback,
@@ -35,7 +35,9 @@ function useCarousel() {
   return context;
 }
 
-const Carousel = ({ className, children, ...props }: ComponentProps<'div'>) => {
+type CarouselProps = ComponentProps<'div'> & { 'aria-label': string };
+
+const Carousel = ({ className, children, ...props }: CarouselProps) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -116,12 +118,36 @@ const Carousel = ({ className, children, ...props }: ComponentProps<'div'>) => {
     }
 
     const inline: ScrollLogicalPosition = isCenter ? 'center' : isEnd ? 'end' : 'start';
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    items[targetIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline });
+    items[targetIndex].scrollIntoView({
+      behavior: reducedMotion ? 'auto' : 'smooth',
+      block: 'nearest',
+      inline,
+    });
   }, []);
 
   const scrollPrev = useCallback(() => scrollToDirection(-1), [scrollToDirection]);
   const scrollNext = useCallback(() => scrollToDirection(1), [scrollToDirection]);
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      const target = event.target as HTMLElement;
+
+      if (target.closest('input, textarea, select, [contenteditable="true"]')) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        scrollPrev();
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        scrollNext();
+      }
+    },
+    [scrollPrev, scrollNext],
+  );
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -159,6 +185,7 @@ const Carousel = ({ className, children, ...props }: ComponentProps<'div'>) => {
         className={cn('relative', className)}
         role="region"
         aria-roledescription="carousel"
+        onKeyDown={handleKeyDown}
         {...props}
       >
         {children}
@@ -173,9 +200,10 @@ const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) => {
   return (
     <div
       ref={scrollRef}
+      tabIndex={-1}
       className={cn(
-        'flex gap-4',
-        'overflow-x-auto scroll-smooth',
+        'flex gap-4 outline-hidden',
+        'overflow-x-auto scroll-smooth motion-reduce:scroll-auto',
         'snap-x snap-mandatory',
         'scroll-x-bleed scrollbar-hidden',
         className,

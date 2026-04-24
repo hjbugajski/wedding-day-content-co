@@ -26,10 +26,10 @@ const TypeIcon = ({ type }: { type?: string }) => {
 const ToastList = () => {
   const { toasts } = Toast.useToastManager();
 
-  return toasts.map((toast) => (
+  return toasts.map((item) => (
     <Toast.Root
-      key={toast.id}
-      toast={toast}
+      key={item.id}
+      toast={item}
       swipeDirection={SWIPE_DIRECTIONS}
       className={cn(
         'absolute right-0 bottom-0 left-auto w-full surface-overlay bg-neutral-50/95 text-black outline-hidden backdrop-blur-lg',
@@ -51,7 +51,7 @@ const ToastList = () => {
           'data-behind:opacity-0 data-expanded:opacity-100',
         )}
       >
-        <TypeIcon type={toast.type} />
+        <TypeIcon type={item.type} />
         <Toast.Description className="flex-1 text-sm font-medium" />
         <Toast.Close
           aria-label="Close"
@@ -71,12 +71,7 @@ const ToastList = () => {
 const Toasts = () => (
   <Toast.Provider toastManager={toast}>
     <Toast.Portal>
-      <Toast.Viewport
-        className={cn([
-          'fixed right-4 bottom-4 z-50',
-          'flex w-89 max-w-[calc(100%-2rem)] flex-col outline-hidden',
-        ])}
-      >
+      <Toast.Viewport className="fixed right-4 bottom-4 z-50 flex w-89 max-w-[calc(100%-2rem)] flex-col outline-hidden">
         <ToastList />
       </Toast.Viewport>
     </Toast.Portal>

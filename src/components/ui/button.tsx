@@ -104,7 +104,7 @@ const Button = ({ className, iconPosition, ref, render, size, variant, ...props 
     render,
     props: {
       className: cn(
-        buttonVariants({ variant, size, iconPosition, nativeButton: !render }),
+        buttonVariants({ variant, size, iconPosition, nativeButton: render === undefined }),
         className,
       ),
       ...props,

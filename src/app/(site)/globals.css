@@ -51,11 +51,11 @@
       transform: translateX(-50%);
     }
   }
+}
 
-  @keyframes html-bg-footer {
-    to {
-      background-color: var(--color-black);
-    }
+@keyframes html-bg-footer {
+  to {
+    background-color: var(--color-black);
   }
 }
 
@@ -163,15 +163,12 @@
   text-wrap: balance;
 }
 
-@utility mi-auto {
-  margin-inline: auto;
+@utility paused {
+  animation-play-state: paused;
 }
 
-@utility overflow-x-padded {
-  overflow: hidden;
-  width: 100vw;
-  margin-left: calc((100dvw - 100%) / -2);
-  padding-inline: calc((100dvw - 100%) / 2);
+@utility mi-auto {
+  margin-inline: auto;
 }
 
 @utility overflow-section {

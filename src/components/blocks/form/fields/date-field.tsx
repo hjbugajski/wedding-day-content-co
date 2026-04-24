@@ -4,7 +4,7 @@ import type { DateRange } from 'react-day-picker';
 
 import type { FieldValue } from '@/components/blocks/form/types';
 import { Calendar } from '@/components/ui/calendar';
-import { useFieldContext } from '@/components/ui/form';
+import { fieldErrorId, useFieldContext } from '@/components/ui/form';
 import { InputButton } from '@/components/ui/input';
 import { OverflowText } from '@/components/ui/overflow-text';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -86,6 +86,7 @@ export function DateField({ meta }: Props) {
             displayChildren={!!value}
             icon={value ? 'calendarCheck' : 'calendar'}
             aria-invalid={invalid || undefined}
+            aria-describedby={invalid ? fieldErrorId(field.name) : undefined}
           />
         }
       >

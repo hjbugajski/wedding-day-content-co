@@ -93,14 +93,7 @@ export function FormClient({
         const schema = fieldSchemas[meta.name];
 
         return (
-          <form.AppField
-            key={meta.id}
-            name={meta.name}
-            validators={{
-              onSubmit: schema,
-              onChange: schema,
-            }}
-          >
+          <form.AppField key={meta.id} name={meta.name} validators={{ onSubmit: schema }}>
             {(field) => (
               <field.Field
                 label={meta.label}

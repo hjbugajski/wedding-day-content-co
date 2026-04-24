@@ -57,4 +57,4 @@ const PopoverContent = ({
   </PopoverPortal>
 );
 
-export { Popover, PopoverTrigger, PopoverPortal, PopoverPositioner, PopoverPopup, PopoverContent };
+export { Popover, PopoverTrigger, PopoverContent };

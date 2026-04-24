@@ -8,8 +8,8 @@ import { RadioGroup as BaseRadioGroup } from '@base-ui/react/radio-group';
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const RadioGroup = ({ className, ...props }: ComponentProps<typeof BaseRadioGroup>) => (
-  <BaseRadioGroup className={cn('flex flex-col gap-2', className)} {...props} />
+const RadioGroup = ({ className, ...props }: BaseRadioGroup.Props<string>) => (
+  <BaseRadioGroup<string> className={cn('flex flex-col gap-2', className)} {...props} />
 );
 
 const RadioGroupItem = ({ className, ...props }: ComponentProps<typeof Radio.Root>) => (

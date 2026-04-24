@@ -23,31 +23,40 @@ import { slugify } from '@/utils/slugify';
 
 export function Navigation({ callToAction, navigationItems }: PayloadNavigationGlobal) {
   const ref = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
 
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!open) {
+      if (wasOpenRef.current) {
+        toggleRef.current?.focus({ preventScroll: true });
+        wasOpenRef.current = false;
+      }
+
       return;
     }
 
+    wasOpenRef.current = true;
     document.body.classList.add('overflow-hidden');
 
     return () => document.body.classList.remove('overflow-hidden');
   }, [open]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const width = document.documentElement.clientWidth || 0;
+    // matches --breakpoint-md-lg in globals.css
+    const mql = window.matchMedia('(min-width: 992px)');
 
-      if (width >= 992) {
+    const handleChange = () => {
+      if (mql.matches) {
         setOpen(false);
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    mql.addEventListener('change', handleChange);
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => mql.removeEventListener('change', handleChange);
   }, []);
 
   useEffect(() => {
@@ -108,11 +117,7 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
           'data-open:pointer-events-auto data-open:opacity-100',
         ])}
       />
-      <NavigationMenu
-        ref={ref}
-        role={open ? 'dialog' : 'navigation'}
-        className="fixed inset-x-2 top-2 z-50"
-      >
+      <NavigationMenu ref={ref} className="fixed inset-x-2 top-2 z-50">
         {open ? <FocusGuard onFocus={wrapToLast} /> : null}
         <NavigationMenuList
           className={cn([
@@ -167,9 +172,12 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
             </li>
           ) : null}
           <button
+            ref={toggleRef}
             type="button"
             onClick={toggleMenu}
             aria-label={open ? 'Close navigation' : 'Open navigation'}
+            aria-expanded={open}
+            aria-controls="mobile-navigation-dialog"
             className={cn(
               'inline-flex size-10 items-center justify-center rounded-xs transition md-lg:hidden',
               'focus-visible:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
@@ -180,7 +188,10 @@ export function Navigation({ callToAction, navigationItems }: PayloadNavigationG
         </NavigationMenuList>
         <NavigationMenuViewport />
         <dialog
+          id="mobile-navigation-dialog"
           aria-hidden={!open}
+          aria-label="Mobile navigation"
+          aria-modal="true"
           open={open}
           className={cn([
             'inset-x-0 z-40 m-[unset] mt-3 w-[unset] p-4 pt-2',

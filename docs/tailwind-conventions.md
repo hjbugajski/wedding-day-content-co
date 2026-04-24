@@ -119,6 +119,8 @@ Repeated class chains live in `src/app/(site)/globals.css` as `@utility` declara
 - `surface-overlay` — the border + shadow frame for popovers, dropdowns, and toasts
 - `form-field-frame` — border + shadow + hover/focus states without shape or fill (for checkboxes, radios, select triggers that need custom shape/bg)
 - `form-field-base` — composes `form-field-frame` and adds `rounded-sm bg-neutral-50` + hover bg; use on `input`, `textarea`, `select` triggers
+- `scroll-x-bleed` — full-viewport horizontal scroller that aligns scroll-padding with the page gutter; use on snap-scroll containers that should bleed past their parent
+- `scrollbar-hidden` — hides the scrollbar in all browsers while keeping the element scrollable
 
 Use these by class name. Because they're real CSS utilities, they're safe to combine with Tailwind utilities and are properly deduplicated by tailwind-merge thanks to `cn.ts`'s config.
 

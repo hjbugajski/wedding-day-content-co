@@ -3,6 +3,8 @@ import { join } from 'node:path';
 
 import { ImageResponse } from 'next/og';
 
+export const revalidate = 86400;
+
 export async function GET() {
   const [nightingale, figtree] = await Promise.all([
     readFile(join(process.cwd(), 'public/font/DTNightingale.ttf')),

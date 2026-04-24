@@ -45,7 +45,7 @@ export function GalleryBlock({ media, type }: PayloadGalleryBlock) {
   }
 
   return (
-    <Carousel className="first:mt-0 last:mb-0">
+    <Carousel className="first:mt-0 last:mb-0" aria-label="Gallery">
       <CarouselContent className="items-center py-6">
         {filteredMedia?.map(({ relationTo, value }) => (
           <CarouselItem key={value.id} className="mi-auto basis-11/12 sm:basis-1/2 md:basis-1/3">

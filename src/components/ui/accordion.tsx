@@ -54,14 +54,17 @@ const AccordionContent = ({
   ...props
 }: ComponentProps<typeof BaseAccordion.Panel>) => (
   <BaseAccordion.Panel
-    className={cn([
-      'h-(--accordion-panel-height) overflow-hidden text-sm',
-      'transition-[height] duration-200 ease-out',
-      'data-ending-style:h-0 data-starting-style:h-0',
-    ])}
+    className={cn(
+      [
+        'h-(--accordion-panel-height) overflow-hidden text-sm',
+        'transition-[height] duration-200 ease-out',
+        'data-ending-style:h-0 data-starting-style:h-0',
+      ],
+      className,
+    )}
     {...props}
   >
-    <div className={cn('pb-4 group-last:pt-4 dark:text-neutral-400', className)}>{children}</div>
+    <div className="pb-4 group-last:pt-4 dark:text-neutral-400">{children}</div>
   </BaseAccordion.Panel>
 );
 

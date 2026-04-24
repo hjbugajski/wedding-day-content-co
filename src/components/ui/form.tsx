@@ -9,6 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/cn';
 
+function fieldErrorId(name: string) {
+  return `${name}-error`;
+}
+
 function getErrorMessage(error: unknown): string {
   if (typeof error === 'string') {
     return error;
@@ -58,7 +62,12 @@ function Field({
         <BaseField.Description render={<div />}>{description}</BaseField.Description>
       ) : null}
       {invalid ? (
-        <BaseField.Error match={true} className="text-xs font-medium text-red-700" role="alert">
+        <BaseField.Error
+          id={fieldErrorId(field.name)}
+          match={true}
+          className="text-xs font-medium text-red-700"
+          role="alert"
+        >
           {errorMessage}
         </BaseField.Error>
       ) : null}
@@ -136,4 +145,4 @@ const { useAppForm } = createFormHook({
   },
 });
 
-export { useAppForm, useFieldContext };
+export { fieldErrorId, useAppForm, useFieldContext };

@@ -16,7 +16,7 @@ export function CheckboxField({ meta, optionDescriptions }: Props) {
   return (
     <CheckboxGroup
       value={field.state.value}
-      onValueChange={(value) => field.handleChange(value)}
+      onValueChange={field.handleChange}
       aria-invalid={invalid || undefined}
     >
       {meta.options.map((option) => (

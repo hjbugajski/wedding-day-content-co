@@ -20,7 +20,7 @@ const Marquee = ({ className, ...props }: ComponentProps<'div'>) => (
   />
 );
 
-const marqueeContentVariants = cva('group-hover:paused whitespace-nowrap', {
+const marqueeContentVariants = cva('whitespace-nowrap group-hover:paused', {
   variants: {
     speed: {
       slow: 'animate-marquee-slow',
