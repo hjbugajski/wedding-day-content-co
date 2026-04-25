@@ -1,16 +1,37 @@
 import type { ComponentProps } from 'react';
 
+import { type VariantProps, cva } from 'class-variance-authority';
+
 import { Icons } from '@/icons';
 import { cn } from '@/utils/cn';
 
-const baseClass =
-  'h-14 w-full rounded-sm shadow-sm shadow-black/10 border-2 border-neutral-200/75 bg-neutral-50 px-4 text-lg text-neutral-800 transition placeholder:text-neutral-500 hover:border-neutral-600/75 hover:bg-neutral-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400/75';
-
-const Input = ({ className, ...props }: ComponentProps<'input'>) => (
-  <input className={cn(baseClass, className)} {...props} />
+const inputVariants = cva(
+  'w-full form-field-frame rounded-sm bg-neutral-50 text-neutral-800 placeholder:text-neutral-500 hover:bg-neutral-100',
+  {
+    variants: {
+      size: {
+        sm: 'h-9 px-3 text-sm',
+        md: 'h-14 px-4 text-lg',
+      },
+    },
+    defaultVariants: {
+      size: 'md',
+    },
+  },
 );
 
-export type InputButtonProps = ComponentProps<'button'> & {
+type InputSize = NonNullable<VariantProps<typeof inputVariants>['size']>;
+
+type InputProps = Omit<ComponentProps<'input'>, 'size'> & {
+  size?: InputSize;
+};
+
+const Input = ({ className, size, ...props }: InputProps) => (
+  <input className={cn(inputVariants({ size }), className)} {...props} />
+);
+
+export type InputButtonProps = Omit<ComponentProps<'button'>, 'size'> & {
+  size?: InputSize;
   displayChildren?: boolean;
   icon?: ComponentProps<typeof Icons>['name'];
   placeholder?: string;
@@ -22,14 +43,15 @@ const InputButton = ({
   displayChildren,
   icon,
   placeholder,
+  size,
   ...props
 }: InputButtonProps) => (
   <button
     type="button"
     className={cn(
-      baseClass,
+      inputVariants({ size }),
       'group flex flex-row items-center',
-      icon ? 'pr-3' : undefined,
+      { 'pr-3': icon },
       className,
     )}
     {...props}

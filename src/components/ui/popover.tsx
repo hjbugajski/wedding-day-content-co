@@ -2,31 +2,59 @@
 
 import type { ComponentProps } from 'react';
 
-import { Content, Portal, Root, Trigger } from '@radix-ui/react-popover';
+import { Popover as BasePopover } from '@base-ui/react/popover';
 
 import { cn } from '@/utils/cn';
 
-const Popover = Root;
+const Popover = BasePopover.Root;
 
-const PopoverTrigger = Trigger;
+const PopoverTrigger = BasePopover.Trigger;
+
+const PopoverPortal = BasePopover.Portal;
+
+const PopoverPositioner = BasePopover.Positioner;
+
+const PopoverPopup = ({ className, ...props }: ComponentProps<typeof BasePopover.Popup>) => (
+  <BasePopover.Popup
+    className={cn(
+      'z-50 w-72 origin-(--transform-origin) p-2',
+      'surface-overlay bg-neutral-50 text-neutral-800 outline-hidden',
+      'transition duration-150 ease-out hover:border-neutral-500/60',
+      'data-starting-style:scale-95 data-starting-style:opacity-0',
+      'data-ending-style:scale-95 data-ending-style:opacity-0',
+      className,
+    )}
+    {...props}
+  />
+);
+
+type PopoverContentProps = ComponentProps<typeof BasePopover.Popup> &
+  Pick<
+    ComponentProps<typeof BasePopover.Positioner>,
+    'align' | 'alignOffset' | 'side' | 'sideOffset' | 'collisionPadding' | 'sticky'
+  >;
 
 const PopoverContent = ({
-  className,
   align = 'center',
+  alignOffset,
+  collisionPadding,
+  side,
   sideOffset = 4,
+  sticky,
   ...props
-}: ComponentProps<typeof Content>) => (
-  <Portal>
-    <Content
+}: PopoverContentProps) => (
+  <PopoverPortal>
+    <PopoverPositioner
       align={align}
+      alignOffset={alignOffset}
+      collisionPadding={collisionPadding}
+      side={side}
       sideOffset={sideOffset}
-      className={cn(
-        'z-50 w-72 rounded-sm border-2 border-neutral-200/75 bg-neutral-50 p-2 text-neutral-800 shadow-lg shadow-black/10 outline-hidden transition hover:border-neutral-600/75 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-        className,
-      )}
-      {...props}
-    />
-  </Portal>
+      sticky={sticky}
+    >
+      <PopoverPopup {...props} />
+    </PopoverPositioner>
+  </PopoverPortal>
 );
 
 export { Popover, PopoverTrigger, PopoverContent };

@@ -1,9 +1,10 @@
-import { cva } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 
 import { AddOnsAccordion } from '@/components/blocks/packages/add-ons-accordion';
 import type { RichTextComponent } from '@/components/rich-text/types';
 import { Icons } from '@/icons';
 import type { PayloadPackagesBlock } from '@/payload/payload-types';
+import { cn } from '@/utils/cn';
 
 const packagesGridVariants = cva('-m-6 grid grid-cols-1 pb-12', {
   variants: {
@@ -19,13 +20,15 @@ const packagesGridVariants = cva('-m-6 grid grid-cols-1 pb-12', {
   },
 });
 
+type PackageCount = NonNullable<VariantProps<typeof packagesGridVariants>['packageCount']>;
+
 interface PackagesBlockProps extends PayloadPackagesBlock {
   RichText: RichTextComponent;
 }
 
 export function PackagesBlock({ packagesSection, addOnsSection, RichText }: PackagesBlockProps) {
   const packageCount = packagesSection?.packages?.length || 0;
-  const gridVariant = packageCount > 4 ? 4 : (packageCount as 1 | 2 | 3 | 4);
+  const gridVariant = (packageCount > 4 ? 4 : packageCount) as PackageCount;
 
   return (
     <section className="my-12 space-y-12 first:mt-0 last:mb-0">
@@ -36,14 +39,23 @@ export function PackagesBlock({ packagesSection, addOnsSection, RichText }: Pack
               <div
                 data-highlight={highlight ? 'true' : 'false'}
                 key={id}
-                className="flex flex-col justify-between gap-4 p-6 data-[highlight=true]:bg-dusty-rose-100 data-[highlight=true]:ring data-[highlight=true]:ring-dusty-rose-600/75 lg:gap-10 lg:rounded-sm"
+                className={cn([
+                  'flex flex-col justify-between gap-4 p-6 lg:gap-10 lg:rounded-sm',
+                  'data-[highlight=true]:bg-dusty-rose-100 data-[highlight=true]:ring data-[highlight=true]:ring-dusty-rose-600/75',
+                ])}
               >
                 <div className="space-y-6">
                   <div className="space-y-1">
                     <div className="flex flex-row justify-between gap-2">
                       <h2 className="text-2xl text-dusty-rose-800">{title}</h2>
                       {highlight ? (
-                        <span className="-mt-1 -mr-1 flex h-fit flex-row items-center gap-1 rounded-full border-dusty-rose-400/75 bg-linear-to-r from-dusty-rose-600 to-dusty-rose-800 px-2.5 py-1.5 text-xs font-medium text-dusty-rose-100">
+                        <span
+                          className={cn([
+                            '-mt-1 -mr-1 flex h-fit flex-row items-center gap-1 px-2.5 py-1.5',
+                            'rounded-full border-dusty-rose-400/75 bg-linear-to-r from-dusty-rose-600 to-dusty-rose-800',
+                            'text-xs font-medium text-dusty-rose-100',
+                          ])}
+                        >
                           <Icons name="sparkle" size="sm" className="mb-0.5" />
                           Most Popular
                         </span>
@@ -62,7 +74,12 @@ export function PackagesBlock({ packagesSection, addOnsSection, RichText }: Pack
                     }}
                   />
                 </div>
-                <div className="flex items-center justify-between border-l border-l-dusty-rose-600 py-3 pl-4">
+                <div
+                  className={cn([
+                    'flex items-center justify-between py-3 pl-4',
+                    'border-l border-l-dusty-rose-600',
+                  ])}
+                >
                   <p className="pt-1 font-serif text-3xl leading-none font-light text-dusty-rose-800 drop-shadow-lg">
                     {price}
                   </p>
@@ -77,7 +94,12 @@ export function PackagesBlock({ packagesSection, addOnsSection, RichText }: Pack
           </div>
         ) : null}
       </div>
-      <div className="-mx-6 grid grid-cols-1 gap-6 bg-dusty-rose-100 p-6 md:grid-cols-2 md:gap-12 xl:rounded-sm">
+      <div
+        className={cn([
+          '-mx-6 grid grid-cols-1 gap-6 p-6 md:grid-cols-2 md:gap-12',
+          'bg-dusty-rose-100 xl:rounded-sm',
+        ])}
+      >
         <div>
           <h2 className="mb-4 text-3xl text-dusty-rose-800">Add-ons</h2>
           {addOnsSection?.description ? (

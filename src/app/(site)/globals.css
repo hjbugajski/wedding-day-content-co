@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -38,33 +37,11 @@
   --breakpoint-md-lg: 992px;
 
   /* ----- animations ----- */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
   --animate-marquee-slow: marquee 90s linear infinite;
   --animate-marquee-normal: marquee 60s linear infinite;
   --animate-marquee-fast: marquee 30s linear infinite;
 
   /* ----- keyframes ----- */
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-
-    to {
-      height: 0;
-    }
-  }
-
   @keyframes marquee {
     from {
       transform: translateX(0%);
@@ -73,6 +50,20 @@
     to {
       transform: translateX(-50%);
     }
+  }
+}
+
+@keyframes html-bg-footer {
+  to {
+    background-color: var(--color-black);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  html {
+    animation: html-bg-footer steps(1, start) both;
+    animation-timeline: scroll(root);
+    animation-range: 50% 100%;
   }
 }
 
@@ -88,6 +79,11 @@
   html {
     font-variation-settings: 'wght' 350;
     font-optical-sizing: auto;
+    font-synthesis: none;
+    text-rendering: optimizelegibility;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
@@ -100,7 +96,7 @@
   }
 
   a {
-    @apply rounded-xs no-underline decoration-2 underline-offset-3 hover:not-focus-visible:underline focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden dark:focus-visible:ring-white/75;
+    @apply rounded-xs no-underline decoration-2 underline-offset-3 focus-ring-link hover:not-focus-visible:underline;
   }
 
   strong {
@@ -167,15 +163,12 @@
   text-wrap: balance;
 }
 
-@utility mi-auto {
-  margin-inline: auto;
+@utility paused {
+  animation-play-state: paused;
 }
 
-@utility overflow-x-padded {
-  overflow: hidden;
-  width: 100vw;
-  margin-left: calc((100dvw - 100%) / -2);
-  padding-inline: calc((100dvw - 100%) / 2);
+@utility mi-auto {
+  margin-inline: auto;
 }
 
 @utility overflow-section {
@@ -189,12 +182,61 @@
   margin-left: calc((100dvw - 100%) / -2);
 }
 
+@utility scroll-x-bleed {
+  --gutter: calc(max(0px, (100dvw - 80rem) / 2) + 1.5rem);
+
+  scroll-padding-inline: var(--gutter);
+  width: 100dvw;
+  margin-left: calc(var(--gutter) * -1);
+  padding-inline: var(--gutter);
+}
+
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @utility items-last-baseline {
   align-items: last baseline;
 }
 
 @utility subheading {
   @apply font-semibold tracking-[0.08em] uppercase;
+}
+
+@utility focus-ring-input {
+  @apply focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden;
+}
+
+@utility focus-ring-link {
+  @apply focus-visible:ring-2 focus-visible:ring-black/75 focus-visible:outline-hidden;
+
+  @variant dark {
+    @apply focus-visible:ring-white/75;
+  }
+}
+
+@utility surface-card {
+  @apply shadow-lg ring-2 shadow-neutral-500/10 ring-neutral-200;
+
+  @variant dark {
+    @apply shadow-neutral-600/10 ring-neutral-800;
+  }
+}
+
+@utility surface-overlay {
+  @apply rounded-sm border-2 border-neutral-300/60 shadow-lg shadow-neutral-500/10;
+}
+
+@utility form-field-frame {
+  @apply border-2 border-neutral-300/60 shadow-md focus-ring-input shadow-neutral-500/5 transition hover:border-neutral-500/60 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+@utility form-field-base {
+  @apply form-field-frame rounded-sm bg-neutral-50 text-lg placeholder:text-neutral-500 hover:bg-neutral-100;
 }
 
 @utility masonry {

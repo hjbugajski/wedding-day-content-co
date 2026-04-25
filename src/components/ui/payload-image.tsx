@@ -70,7 +70,14 @@ const PayloadImage = ({
         className="z-10 transition duration-300 group-hover:scale-[1.02]"
         {...props}
       />
-      <div className="absolute right-2 bottom-2 z-30 flex size-10 shrink-0 flex-row items-center justify-center rounded-sm bg-neutral-50/75 text-black backdrop-blur-lg transition duration-300 group-hover:bg-neutral-50/90">
+      <div
+        className={cn([
+          'absolute right-2 bottom-2 z-30',
+          'flex size-10 shrink-0 flex-row items-center justify-center',
+          'rounded-sm bg-neutral-50/75 text-black backdrop-blur-lg',
+          'transition duration-300 group-hover:bg-neutral-50/90',
+        ])}
+      >
         <Icons name={link.type === 'internal' ? 'arrowRight' : 'arrowUpRight'} />
       </div>
     </Link>

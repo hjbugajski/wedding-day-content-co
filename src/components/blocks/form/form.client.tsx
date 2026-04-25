@@ -2,8 +2,6 @@
 
 import { type ReactNode, useMemo } from 'react';
 
-import { toast } from 'sonner';
-
 import { checkboxConfig } from '@/components/blocks/form/configs/checkbox';
 import { dateConfig } from '@/components/blocks/form/configs/date';
 import { emailConfig } from '@/components/blocks/form/configs/email';
@@ -15,6 +13,7 @@ import { textareaConfig } from '@/components/blocks/form/configs/textarea';
 import { submitForm } from '@/components/blocks/form/form.action';
 import type { FieldConfig, FieldConfigs, FieldMeta } from '@/components/blocks/form/types';
 import { useAppForm } from '@/components/ui/form';
+import { toast } from '@/components/ui/toasts';
 import type { PayloadFormsCollection } from '@/payload/payload-types';
 
 const fieldConfigs: FieldConfigs = {
@@ -77,10 +76,13 @@ export function FormClient({
 
         await submitForm(id, payload);
 
-        toast.success(confirmationMessage);
+        toast.add({ type: 'success', description: confirmationMessage });
         form.reset();
       } catch {
-        toast.error('Something went wrong. Please try again.');
+        toast.add({
+          type: 'error',
+          description: 'Something went wrong. Please try again.',
+        });
       }
     },
   });
@@ -91,20 +93,14 @@ export function FormClient({
         const schema = fieldSchemas[meta.name];
 
         return (
-          <form.AppField
-            key={meta.id}
-            name={meta.name}
-            validators={{
-              onSubmit: schema,
-              onChange: schema,
-            }}
-          >
+          <form.AppField key={meta.id} name={meta.name} validators={{ onSubmit: schema }}>
             {(field) => (
               <field.Field
                 label={meta.label}
                 required={meta.required}
                 description={fieldDescriptions[meta.name]}
                 width={meta.width}
+                group={meta.blockType === 'checkbox' || meta.blockType === 'radio'}
               >
                 <Renderer meta={meta} optionDescriptions={optionDescriptions[meta.name]} />
               </field.Field>

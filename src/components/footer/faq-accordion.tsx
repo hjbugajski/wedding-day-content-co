@@ -16,13 +16,12 @@ export default function FaqAccordion({ faqs }: { faqs: PayloadFooterGlobal['faqs
   }
 
   return (
-    <Accordion type={faqsArray.length === 1 ? 'single' : 'multiple'}>
+    <Accordion multiple={faqsArray.length > 1}>
       {faqsArray.map((faq) => (
         <AccordionItem value={faq.id} key={faq.id}>
-          <AccordionHeader asChild>
-            <h2 className="font-sans">
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
-            </h2>
+          {/* oxlint-disable-next-line jsx-a11y/heading-has-content */}
+          <AccordionHeader render={<h2 />}>
+            <AccordionTrigger>{faq.question}</AccordionTrigger>
           </AccordionHeader>
           <AccordionContent>
             <RichText data={faq.answer} />

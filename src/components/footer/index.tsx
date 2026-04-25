@@ -52,11 +52,20 @@ export function Footer({ contact, faqs, linkGroups, marquee }: PayloadFooterGlob
       </div>
       {marquee ? (
         <Marquee>
-          <MarqueeContent asChild>
-            <h1 className="text-8xl">{marqueeText}</h1>
+          <MarqueeContent
+            // oxlint-disable-next-line jsx-a11y/heading-has-content
+            render={<h1 />}
+            className="text-8xl"
+          >
+            {marqueeText}
           </MarqueeContent>
-          <MarqueeContent asChild duplicate>
-            <h1 className="text-8xl">{marqueeText}</h1>
+          <MarqueeContent
+            // oxlint-disable-next-line jsx-a11y/heading-has-content
+            render={<h1 />}
+            className="text-8xl"
+            duplicate
+          >
+            {marqueeText}
           </MarqueeContent>
           <MarqueeFade side="left" />
           <MarqueeFade side="right" />
