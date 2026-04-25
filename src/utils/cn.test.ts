@@ -26,6 +26,7 @@ describe('cn', () => {
   });
 
   it('recognises custom breakpoint prefixes (xxs, xs, md-lg)', () => {
+    expect(cn('xxs:p-2', 'xxs:p-4')).toBe('xxs:p-4');
     expect(cn('xs:p-2', 'xs:p-4')).toBe('xs:p-4');
     expect(cn('md-lg:hidden', 'md-lg:block')).toBe('md-lg:block');
   });

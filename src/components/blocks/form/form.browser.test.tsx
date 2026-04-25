@@ -108,8 +108,10 @@ const renderForm = (fields: PayloadFormsCollection['fields']) =>
 
 describe('FormClient — minimal text/email form', () => {
   beforeEach(() => {
-    vi.mocked(submitForm).mockClear();
-    vi.mocked(toast.add).mockClear();
+    vi.mocked(submitForm)
+      .mockReset()
+      .mockResolvedValue({ id: 'stub-submission' } as never);
+    vi.mocked(toast.add).mockReset();
   });
 
   test('renders a labelled input per field and a submit button', async () => {
@@ -126,6 +128,11 @@ describe('FormClient — minimal text/email form', () => {
     await screen.getByRole('button', { name: 'Send' }).click();
 
     await expect.element(screen.getByText('Field is required').first()).toBeVisible();
+    await expect
+      .element(screen.getByLabelText('First Name'))
+      .toHaveAttribute('aria-invalid', 'true');
+    await expect.element(screen.getByLabelText('Email')).toHaveAttribute('aria-invalid', 'true');
+    await expect.element(screen.getByRole('alert').first()).toBeVisible();
     expect(submitForm).not.toHaveBeenCalled();
   });
 
@@ -154,8 +161,10 @@ describe('FormClient — minimal text/email form', () => {
 
 describe('FormClient — mixed field types', () => {
   beforeEach(() => {
-    vi.mocked(submitForm).mockClear();
-    vi.mocked(toast.add).mockClear();
+    vi.mocked(submitForm)
+      .mockReset()
+      .mockResolvedValue({ id: 'stub-submission' } as never);
+    vi.mocked(toast.add).mockReset();
   });
 
   test('phone: rejects a malformed number on submit and does not call the action', async () => {

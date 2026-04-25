@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { createMock, getPayloadMock, sendFallbackMock } = vi.hoisted(() => ({
   createMock: vi.fn(),
@@ -22,6 +22,10 @@ describe('submitForm', () => {
     getPayloadMock.mockResolvedValue({ create: createMock });
     vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('returns the created document on success', async () => {
@@ -60,7 +64,6 @@ describe('submitForm', () => {
 
     expect(result).toBeUndefined();
     expect(sendFallbackMock).toHaveBeenCalledWith('form-1', formData);
-    vi.useRealTimers();
   });
 
   it('throws when both payload.create and fallback email fail', async () => {
