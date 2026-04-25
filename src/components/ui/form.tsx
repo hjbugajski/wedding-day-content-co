@@ -6,6 +6,7 @@ import { Field as BaseField } from '@base-ui/react/field';
 import { createFormHook, createFormHookContexts, useStore } from '@tanstack/react-form';
 
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/cn';
 
@@ -53,7 +54,7 @@ function Field({
       className={cn('flex w-full flex-col gap-2 data-[width=full]:sm:col-span-2', className)}
       {...props}
     >
-      <BaseField.Label className="text-sm leading-none subheading text-neutral-600 data-invalid:text-red-700 dark:text-white/75">
+      <BaseField.Label render={<Label />}>
         {label}
         {required ? null : ' (optional)'}
       </BaseField.Label>

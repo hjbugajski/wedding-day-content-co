@@ -14,7 +14,7 @@ export function StepperBlock({ steps, RichText }: StepperBlockProps) {
   }
 
   return (
-    <div className="relative my-6 ml-4 max-w-5xl border-l-2 border-neutral-200/75 pl-8 first:mt-0 last:mb-0 dark:border-neutral-700">
+    <div className="relative my-6 ml-4 max-w-5xl border-l-2 border-neutral-200/75 pl-8 first:mt-0 last:mb-0 dark:border-neutral-700 dark:text-neutral-200">
       {steps.map(({ content, heading, id }, i) => (
         <Fragment key={id}>
           <h2
@@ -31,7 +31,7 @@ export function StepperBlock({ steps, RichText }: StepperBlockProps) {
                 'inline-flex size-9 items-center justify-center',
                 'rounded-sm border-2 border-neutral-200/75 bg-neutral-100 ring-8 ring-neutral-50',
                 'font-sans text-lg font-medium',
-                'dark:border-neutral-700 dark:bg-black dark:ring-neutral-800',
+                'dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:ring-black',
               ])}
             >
               <span className="shadow-black/10 t-shadow-lg">{i + 1}</span>
