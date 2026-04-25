@@ -68,6 +68,7 @@ const Carousel = ({ className, children, ...props }: CarouselProps) => {
       return;
     }
 
+    // Assumes all items share the same scroll-snap-align (true for CarouselItem callers).
     const align = getComputedStyle(items[0]).scrollSnapAlign.split(' ').pop() ?? 'start';
     const isCenter = align === 'center';
     const isEnd = align === 'end';

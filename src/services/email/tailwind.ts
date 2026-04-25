@@ -8,6 +8,9 @@ export const tailwindEmailConfig: TailwindConfig = {
       sans: ['Figtree', 'sans-serif', ...defaultTheme.fontFamily.sans],
     },
     extend: {
+      screens: {
+        xs: '480px',
+      },
       colors: {
         black: '#111',
         white: '#fff',

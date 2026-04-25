@@ -87,7 +87,6 @@ const buttonVariants = cva(
       variant: 'primary',
       size: 'md',
       iconPosition: 'none',
-      nativeButton: true,
     },
   },
 );

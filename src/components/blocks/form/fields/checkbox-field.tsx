@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { Checkbox, CheckboxGroup } from '@/components/ui/checkbox';
-import { useFieldContext } from '@/components/ui/form';
+import { fieldErrorId, useFieldContext } from '@/components/ui/form';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
 type Props = {
@@ -18,6 +18,7 @@ export function CheckboxField({ meta, optionDescriptions }: Props) {
       value={field.state.value}
       onValueChange={field.handleChange}
       aria-invalid={invalid || undefined}
+      aria-describedby={invalid ? fieldErrorId(field.name) : undefined}
     >
       {meta.options.map((option) => (
         <label

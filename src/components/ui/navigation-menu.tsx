@@ -64,7 +64,7 @@ function NavigationMenuViewport({ className, ...props }: ComponentProps<typeof B
       >
         <Base.Popup
           className={cn(
-            'isolate origin-(--transform-origin) overflow-hidden rounded-xs bg-neutral-900 text-neutral-200 shadow-lg ring-2 shadow-black/10 ring-neutral-800 backdrop-blur-lg',
+            'isolate origin-(--transform-origin) overflow-hidden rounded-xs bg-neutral-900 text-neutral-200 shadow-lg ring-2 shadow-neutral-600/10 ring-neutral-800 backdrop-blur-lg',
             'h-(--popup-height) w-(--popup-width)',
             'transition-[opacity,scale,height,width] duration-300 ease-out',
             'data-starting-style:scale-95 data-starting-style:opacity-0',

@@ -121,6 +121,7 @@ Repeated class chains live in `src/app/(site)/globals.css` as `@utility` declara
 - `form-field-base` — composes `form-field-frame` and adds `rounded-sm bg-neutral-50` + hover bg; use on `input`, `textarea`, `select` triggers
 - `scroll-x-bleed` — full-viewport horizontal scroller that aligns scroll-padding with the page gutter; use on snap-scroll containers that should bleed past their parent
 - `scrollbar-hidden` — hides the scrollbar in all browsers while keeping the element scrollable
+- `paused` — sets `animation-play-state: paused`; use on marquee content via `group-hover:paused`
 
 Use these by class name. Because they're real CSS utilities, they're safe to combine with Tailwind utilities and are properly deduplicated by tailwind-merge thanks to `cn.ts`'s config.
 
