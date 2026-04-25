@@ -1,16 +1,29 @@
 import type { ComponentProps } from 'react';
 
+import { type VariantProps, cva } from 'class-variance-authority';
+
 import { cn } from '@/utils/cn';
 
-const Textarea = ({ className, ...props }: ComponentProps<'textarea'>) => (
-  <textarea
-    className={cn(
-      'w-full rounded-sm border-2 border-neutral-200/75 bg-neutral-50 p-4 text-lg text-neutral-800 shadow-sm shadow-black/10 transition placeholder:text-neutral-500 hover:border-neutral-600/75 hover:bg-neutral-100 focus-visible:ring-2 focus-visible:ring-neutral-400/75 focus-visible:outline-hidden',
-      className,
-    )}
-    rows={4}
-    {...props}
-  />
+const textareaVariants = cva(
+  'w-full form-field-frame rounded-sm bg-neutral-50 text-neutral-800 placeholder:text-neutral-500 hover:bg-neutral-100',
+  {
+    variants: {
+      size: {
+        sm: 'p-3 text-sm',
+        md: 'p-4 text-lg',
+      },
+    },
+    defaultVariants: {
+      size: 'md',
+    },
+  },
+);
+
+type TextareaProps = Omit<ComponentProps<'textarea'>, 'size'> &
+  VariantProps<typeof textareaVariants>;
+
+const Textarea = ({ className, size, ...props }: TextareaProps) => (
+  <textarea className={cn(textareaVariants({ size }), className)} rows={4} {...props} />
 );
 
 export { Textarea };

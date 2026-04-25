@@ -1,4 +1,4 @@
-import { useFieldAria, useFieldContext } from '@/components/ui/form';
+import { useFieldContext } from '@/components/ui/form';
 import {
   Select,
   SelectContent,
@@ -14,15 +14,10 @@ type Props = {
 
 export function SelectField({ meta }: Props) {
   const field = useFieldContext<string>();
-  const { hasError } = useFieldAria();
 
   return (
-    <Select
-      value={field.state.value}
-      onValueChange={field.handleChange}
-      defaultValue={field.state.value}
-    >
-      <SelectTrigger aria-invalid={hasError}>
+    <Select items={meta.options} value={field.state.value} onValueChange={field.handleChange}>
+      <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

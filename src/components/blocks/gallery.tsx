@@ -35,7 +35,7 @@ export function GalleryBlock({ media, type }: PayloadGalleryBlock) {
                 key={value.id}
                 relationTo={relationTo}
                 value={value}
-                className="w-full rounded-sm shadow-lg ring-2 shadow-black/10 ring-neutral-200 dark:shadow-white/5 dark:ring-neutral-700"
+                className="w-full rounded-sm surface-card"
               />
             ))}
           </div>
@@ -45,14 +45,14 @@ export function GalleryBlock({ media, type }: PayloadGalleryBlock) {
   }
 
   return (
-    <Carousel className="overflow-x-padded first:mt-0 last:mb-0" opts={{ dragFree: true }}>
+    <Carousel className="first:mt-0 last:mb-0" aria-label="Gallery">
       <CarouselContent className="items-center py-6">
         {filteredMedia?.map(({ relationTo, value }) => (
-          <CarouselItem key={value.id} className="mi-auto sm:basis-1/2 md:basis-1/3">
+          <CarouselItem key={value.id} className="mi-auto basis-11/12 sm:basis-1/2 md:basis-1/3">
             <PayloadMedia
               relationTo={relationTo}
               value={value}
-              className="rounded-sm shadow-lg ring-2 shadow-black/10 ring-neutral-200 dark:shadow-white/5 dark:ring-neutral-700"
+              className="rounded-sm surface-card"
             />
           </CarouselItem>
         ))}

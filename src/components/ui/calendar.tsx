@@ -2,7 +2,6 @@
 
 import type { ComponentProps } from 'react';
 
-import { cva } from 'class-variance-authority';
 import { type ChevronProps, type DayButtonProps, DayPicker } from 'react-day-picker';
 
 import { Icons } from '@/icons';
@@ -33,7 +32,7 @@ function CalendarDayButton({ day: _day, modifiers, className, ...props }: DayBut
       className={cn(
         'inline-flex h-9 w-9 items-center justify-center rounded-xs p-0 text-sm font-normal transition',
         'hover:bg-neutral-200 hover:text-black',
-        'focus:ring-2 focus:ring-neutral-600/75 focus:outline-hidden',
+        'focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
         'disabled:pointer-events-none',
         {
           'font-light text-neutral-600': modifiers.outside,
@@ -53,24 +52,13 @@ function CalendarDayButton({ day: _day, modifiers, className, ...props }: DayBut
   );
 }
 
-const navButtonVariants = cva(
-  'inline-flex items-center justify-center rounded-xs bg-transparent p-0 transition focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
-  {
-    variants: {
-      size: {
-        default: 'h-7 w-7',
-      },
-      variant: {
-        default:
-          'text-neutral-600 hover:bg-neutral-200 hover:text-neutral-800 focus-visible:bg-neutral-200 aria-disabled:pointer-events-none aria-disabled:text-neutral-300',
-      },
-    },
-    defaultVariants: {
-      size: 'default',
-      variant: 'default',
-    },
-  },
-);
+const navButtonClasses = cn([
+  'inline-flex h-7 w-7 items-center justify-center',
+  'rounded-xs bg-transparent p-0 text-neutral-600 transition',
+  'hover:bg-neutral-200 hover:text-neutral-800',
+  'focus-visible:bg-neutral-200 focus-visible:ring-2 focus-visible:ring-neutral-600/75 focus-visible:outline-hidden',
+  'aria-disabled:pointer-events-none aria-disabled:text-neutral-300',
+]);
 
 function Calendar({
   className,
@@ -88,8 +76,8 @@ function Calendar({
         month_caption: 'flex justify-center h-7 relative items-center',
         caption_label: 'inline-flex items-center ml-1 gap-1 text-sm font-medium',
         nav: 'absolute -top-1 z-10 m-0 flex h-9 w-full items-center justify-between pointer-events-none',
-        button_previous: cn(navButtonVariants(), 'pointer-events-auto'),
-        button_next: cn(navButtonVariants(), 'pointer-events-auto'),
+        button_previous: cn(navButtonClasses, 'pointer-events-auto'),
+        button_next: cn(navButtonClasses, 'pointer-events-auto'),
         month_grid: 'w-full border-collapse space-y-1',
         weekdays: 'flex',
         weekday: 'text-neutral-600 rounded-xs w-9 font-normal text-sm',

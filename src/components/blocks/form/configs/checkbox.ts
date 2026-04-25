@@ -6,22 +6,22 @@ import type { FieldConfig } from '@/components/blocks/form/types';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
 export const checkboxConfig: FieldConfig<PayloadCheckboxBlock> = {
-  defaultValue: (m) => m.defaultValue || '',
+  defaultValue: (m) =>
+    m.defaultValue
+      ? m.defaultValue
+          .split(',')
+          .map((v) => v.trim())
+          .filter(Boolean)
+      : [],
   schema: (m) =>
-    m.required ? z.string().min(1, { message: REQUIRED_MESSAGE }) : z.string().min(0),
+    m.required ? z.array(z.string()).min(1, { message: REQUIRED_MESSAGE }) : z.array(z.string()),
   Renderer: CheckboxField,
   format: (m, v) => {
-    if (!v || typeof v !== 'string') {
+    if (!Array.isArray(v)) {
       return '';
     }
 
-    const values = v.split(',');
-    const labels = values
-      .map((val) => {
-        const option = m.options.find((o) => o.value === val);
-        return option?.label;
-      })
-      .filter(Boolean);
+    const labels = v.map((val) => m.options.find((o) => o.value === val)?.label).filter(Boolean);
 
     return labels.join(', ');
   },

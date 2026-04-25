@@ -1,6 +1,8 @@
+'use client';
+
 import type { ComponentProps } from 'react';
 
-import { Slot } from '@radix-ui/react-slot';
+import { useRender } from '@base-ui/react/use-render';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
@@ -10,14 +12,15 @@ const Marquee = ({ className, ...props }: ComponentProps<'div'>) => (
   <div
     tabIndex={-1}
     className={cn(
-      'group relative flex flex-row gap-8 overflow-x-scroll whitespace-nowrap motion-safe:overflow-x-hidden',
+      'group relative flex flex-row gap-8',
+      'overflow-x-scroll whitespace-nowrap motion-safe:overflow-x-hidden',
       className,
     )}
     {...props}
   />
 );
 
-const marqueeContentVariants = cva('whitespace-nowrap group-hover:[animation-play-state:paused]', {
+const marqueeContentVariants = cva('whitespace-nowrap group-hover:paused', {
   variants: {
     speed: {
       slow: 'animate-marquee-slow',
@@ -32,26 +35,28 @@ const marqueeContentVariants = cva('whitespace-nowrap group-hover:[animation-pla
 
 export type MarqueeContentProps = ComponentProps<'div'> &
   VariantProps<typeof marqueeContentVariants> & {
-    asChild?: boolean;
     duplicate?: boolean;
+    render?: useRender.RenderProp;
   };
 
 const MarqueeContent = ({
-  asChild = false,
   className,
   duplicate = false,
+  ref,
+  render,
   speed,
   ...props
 }: MarqueeContentProps) => {
-  const Component = asChild ? Slot : 'div';
-
-  return (
-    <Component
-      aria-hidden={duplicate}
-      className={cn(marqueeContentVariants({ speed }), className)}
-      {...props}
-    />
-  );
+  return useRender({
+    defaultTagName: 'div',
+    ref,
+    render,
+    props: {
+      'aria-hidden': duplicate,
+      className: cn(marqueeContentVariants({ speed }), className),
+      ...props,
+    },
+  });
 };
 
 const marqueeFadeVariants = cva(
@@ -66,7 +71,7 @@ const marqueeFadeVariants = cva(
   },
 );
 
-export type MarqueeFadeProps = ComponentProps<'div'> & VariantProps<typeof marqueeFadeVariants>;
+export type MarqueeFadeProps = ComponentProps<'div'> & { side: 'left' | 'right' };
 
 const MarqueeFade = ({ className, side, ...props }: MarqueeFadeProps) => (
   <div className={cn(marqueeFadeVariants({ side }), className)} {...props} />

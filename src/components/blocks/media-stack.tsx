@@ -1,6 +1,7 @@
 import { PayloadMedia } from '@/components/ui/payload-media';
 import type { PayloadMediaStackBlock } from '@/payload/payload-types';
 import type { StripString } from '@/types/strip-string';
+import { cn } from '@/utils/cn';
 import { isRelationshipPopulated } from '@/utils/is-relationship-populated';
 
 type FilteredMedia = StripString<PayloadMediaStackBlock['media'][number]>;
@@ -19,7 +20,12 @@ export function MediaStackBlock({ media }: PayloadMediaStackBlock) {
           key={value.id}
           relationTo={relationTo}
           value={value}
-          className="rounded-sm shadow-lg ring-2 shadow-black/10 ring-neutral-200 first:z-10 lg:first:translate-x-4 lg:first:translate-y-1 lg:first:-rotate-3 lg:last:-translate-x-8 lg:last:-translate-y-2 lg:last:rotate-3 dark:shadow-white/5 dark:ring-neutral-700"
+          className={cn([
+            'rounded-sm surface-card',
+            'first:z-10',
+            'lg:first:translate-x-4 lg:first:translate-y-1 lg:first:-rotate-3',
+            'lg:last:-translate-x-8 lg:last:-translate-y-2 lg:last:rotate-3',
+          ])}
         />
       ))}
     </div>

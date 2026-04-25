@@ -9,7 +9,6 @@ import config from '@payload-config';
 
 import { LivePreviewListener } from '@/components/live-preview-listener';
 import { RichText } from '@/components/rich-text';
-import { Breadcrumbs } from '@/components/ui/breadcrumbs';
 import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 import { cn } from '@/utils/cn';
 
@@ -38,7 +37,6 @@ const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
       description: true,
       content: true,
       slug: true,
-      breadcrumbs: true,
     },
   });
 
@@ -122,9 +120,8 @@ export default async function Page({ params }: PageProps) {
   }
 
   return (
-    <main className={cn('mx-auto w-full max-w-7xl px-6', page.slug !== 'home' && 'py-12')}>
+    <main className={cn('mx-auto w-full max-w-7xl px-6', { 'py-12': page.slug !== 'home' })}>
       {draft ? <LivePreviewListener /> : null}
-      {page.slug !== 'home' ? <Breadcrumbs breadcrumbs={page.breadcrumbs} /> : null}
       <RichText data={page.content} />
     </main>
   );

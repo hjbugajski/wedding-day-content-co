@@ -1,19 +1,29 @@
-'use client';
-
 import type { ComponentProps } from 'react';
 
-import { Root } from '@radix-ui/react-label';
+import { type VariantProps, cva } from 'class-variance-authority';
 
 import { cn } from '@/utils/cn';
 
-const Label = ({ className, ...props }: ComponentProps<typeof Root>) => (
-  <Root
-    className={cn(
-      'text-sm leading-none subheading text-neutral-600 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 dark:text-white/75',
-      className,
-    )}
-    {...props}
-  />
+const labelVariants = cva(
+  'leading-none subheading text-neutral-600 data-invalid:text-red-700 dark:text-white/75',
+  {
+    variants: {
+      size: {
+        sm: 'text-xs',
+        md: 'text-sm',
+      },
+    },
+    defaultVariants: {
+      size: 'md',
+    },
+  },
 );
 
-export { Label };
+type LabelProps = Omit<ComponentProps<'label'>, 'size'> & VariantProps<typeof labelVariants>;
+
+const Label = ({ className, size, ...props }: LabelProps) => (
+  // oxlint-disable-next-line label-has-associated-control -- primitive; consumers wrap it around a control or set htmlFor
+  <label className={cn(labelVariants({ size }), className)} {...props} />
+);
+
+export { Label, labelVariants };

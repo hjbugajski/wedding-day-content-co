@@ -11,7 +11,7 @@ import payloadConfig from '@payload-config';
 
 import { Footer } from '@/components/footer';
 import { Navigation } from '@/components/navigation';
-import { Toaster } from '@/components/ui/toaster';
+import { Toasts } from '@/components/ui/toasts';
 import { env } from '@/env/client';
 import type { PayloadFooterGlobal, PayloadNavigationGlobal } from '@/payload/payload-types';
 import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
@@ -148,16 +148,17 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       )}
       data-scroll-behavior="smooth"
     >
-      <body className="relative flex h-full flex-col">
+      <body className="relative flex min-h-full flex-col bg-neutral-50">
         <div className="dot-mask fixed inset-0 -z-10 h-full w-full" />
         <Navigation {...navigation} />
         <div className="mt-18 flex flex-1 flex-col">{children}</div>
         <Footer {...footer} />
-        <Toaster />
+        <Toasts />
         <Script
           src={env.NEXT_PUBLIC_UMAMI_SRC}
           data-website-id={env.NEXT_PUBLIC_UMAMI_ID}
           data-domains={env.NEXT_PUBLIC_DOMAIN}
+          data-performance="true"
         />
       </body>
     </html>

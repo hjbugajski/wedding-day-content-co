@@ -7,7 +7,9 @@ export const env = createEnv({
     NEXT_PUBLIC_UMAMI_ID: z.string().min(1),
     NEXT_PUBLIC_DOMAIN: z.string().min(1),
     NEXT_PUBLIC_SERVER_URL: z.string().min(1),
-    NEXT_PUBLIC_VERCEL_TARGET_ENV: z.enum(['development', 'preview', 'staging', 'production']),
+    NEXT_PUBLIC_VERCEL_TARGET_ENV: z
+      .enum(['development', 'preview', 'staging', 'production'])
+      .default('development'),
   },
   runtimeEnv: {
     NEXT_PUBLIC_UMAMI_SRC: process.env.NEXT_PUBLIC_UMAMI_SRC,
