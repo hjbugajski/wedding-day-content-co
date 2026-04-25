@@ -26,9 +26,10 @@ const Checkbox = ({ className, ...props }: ComponentProps<typeof BaseCheckbox.Ro
       keepMounted
       className={cn([
         'flex h-full w-full items-center justify-center',
-        'text-white opacity-0',
+        'text-white',
         'transition-opacity duration-150',
-        'data-checked:opacity-100',
+        'data-unchecked:opacity-0',
+        'data-ending-style:opacity-0 data-starting-style:opacity-0',
       ])}
     >
       <Icons name="checkmark" className="size-3" />

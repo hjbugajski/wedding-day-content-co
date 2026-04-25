@@ -3,10 +3,11 @@
 import type { ComponentProps, ReactNode } from 'react';
 
 import { Field as BaseField } from '@base-ui/react/field';
+import { Fieldset } from '@base-ui/react/fieldset';
 import { createFormHook, createFormHookContexts, useStore } from '@tanstack/react-form';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
+import { Label, labelVariants } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { cn } from '@/utils/cn';
 
@@ -31,6 +32,7 @@ type FieldProps = ComponentProps<typeof BaseField.Root> & {
   required?: boolean;
   description?: ReactNode;
   width?: string;
+  group?: boolean;
 };
 
 function Field({
@@ -40,11 +42,19 @@ function Field({
   required = true,
   description,
   width,
+  group = false,
   ...props
 }: FieldProps) {
   const field = useFieldContext<unknown>();
   const invalid = !field.state.meta.isValid;
   const errorMessage = invalid ? getErrorMessage(field.state.meta.errors[0]) : undefined;
+
+  const labelText = (
+    <>
+      {label}
+      {required ? null : ' (optional)'}
+    </>
+  );
 
   return (
     <BaseField.Root
@@ -54,12 +64,21 @@ function Field({
       className={cn('flex w-full flex-col gap-2 data-[width=full]:sm:col-span-2', className)}
       {...props}
     >
-      <BaseField.Label render={<Label />}>
-        {label}
-        {required ? null : ' (optional)'}
-      </BaseField.Label>
-      {children}
+      {group ? (
+        <Fieldset.Root className="m-0 flex min-w-0 flex-col gap-2 border-0 p-0">
+          <Fieldset.Legend data-invalid={invalid || undefined} className={labelVariants()}>
+            {labelText}
+          </Fieldset.Legend>
+          {children}
+        </Fieldset.Root>
+      ) : (
+        <>
+          <BaseField.Label render={<Label />}>{labelText}</BaseField.Label>
+          {children}
+        </>
+      )}
       {description ? (
+        // Lexical rich text may contain block-level elements; <p> default would create invalid nesting.
         <BaseField.Description render={<div />}>{description}</BaseField.Description>
       ) : null}
       {invalid ? (
@@ -89,10 +108,8 @@ function SubmitButton({
 }: SubmitButtonProps) {
   const form = useFormContext();
 
-  const [isSubmitting, canSubmit] = useStore(form.store, (state) => [
-    state.isSubmitting,
-    state.canSubmit,
-  ]);
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
+  const canSubmit = useStore(form.store, (state) => state.canSubmit);
 
   return (
     <Button

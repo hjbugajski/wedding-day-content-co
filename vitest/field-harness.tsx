@@ -31,7 +31,11 @@ export function FieldHarness<M extends FieldMeta>({
     <form.Form handleSubmit={() => form.handleSubmit()}>
       <form.AppField name="v" validators={{ onSubmit: config.schema(meta) }}>
         {(field) => (
-          <field.Field label={meta.label} required={meta.required}>
+          <field.Field
+            label={meta.label}
+            required={meta.required}
+            group={meta.blockType === 'checkbox' || meta.blockType === 'radio'}
+          >
             <Renderer meta={meta} />
           </field.Field>
         )}

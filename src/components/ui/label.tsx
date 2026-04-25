@@ -26,4 +26,4 @@ const Label = ({ className, size, ...props }: LabelProps) => (
   <label className={cn(labelVariants({ size }), className)} {...props} />
 );
 
-export { Label };
+export { Label, labelVariants };

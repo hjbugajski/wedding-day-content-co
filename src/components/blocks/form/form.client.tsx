@@ -100,6 +100,7 @@ export function FormClient({
                 required={meta.required}
                 description={fieldDescriptions[meta.name]}
                 width={meta.width}
+                group={meta.blockType === 'checkbox' || meta.blockType === 'radio'}
               >
                 <Renderer meta={meta} optionDescriptions={optionDescriptions[meta.name]} />
               </field.Field>

@@ -28,10 +28,9 @@ function NavigationMenuTrigger({
       {...props}
     >
       {children}{' '}
-      <Icons
-        name="navArrowDownSmall"
-        className="relative ml-0.5 transition duration-300 group-data-popup-open:rotate-180"
-        aria-hidden="true"
+      <Base.Icon
+        render={<Icons name="navArrowDownSmall" aria-hidden="true" />}
+        className="relative ml-0.5 transition duration-300 data-popup-open:rotate-180"
       />
     </Base.Trigger>
   );

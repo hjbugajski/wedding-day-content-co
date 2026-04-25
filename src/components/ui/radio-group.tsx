@@ -25,9 +25,10 @@ const RadioGroupItem = ({ className, ...props }: ComponentProps<typeof Radio.Roo
     <Radio.Indicator
       keepMounted
       className={cn([
-        'flex items-center justify-center opacity-0',
+        'flex items-center justify-center',
         'transition-opacity duration-150',
-        'data-checked:opacity-100',
+        'data-unchecked:opacity-0',
+        'data-ending-style:opacity-0 data-starting-style:opacity-0',
       ])}
     >
       <Icons name="circle" className="size-3 fill-current text-current" />
