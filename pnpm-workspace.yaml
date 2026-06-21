@@ -1,6 +1,13 @@
 allowBuilds:
   esbuild: true
   sharp: true
+minimumReleaseAge: 1440
+overrides:
+  # payload 3.85's bundled tsx 4.22.4 breaks the migrate/generate CLI on Node 24
+  # (require('node:crypto') in the namespaced config graph -> ENOENT). Pin to the
+  # last good tsx until upstream fixes Node 24 CJS-builtin resolution. Scoped to
+  # payload so vite/vitest keep their own tsx.
+  payload>tsx: 4.21.0
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
