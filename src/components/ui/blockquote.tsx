@@ -32,7 +32,7 @@ const Blockquote = ({ children, className, ...props }: ComponentProps<'blockquot
 );
 
 const BlockquoteBody = ({ className, ...props }: ComponentProps<'div'>) => (
-  <div className="my-auto flex grow flex-col">
+  <div className="flex grow flex-col justify-center">
     <div className={cn('text-lg', className)} {...props} />
   </div>
 );
