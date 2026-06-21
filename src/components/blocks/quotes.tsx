@@ -20,10 +20,10 @@ export function QuotesBlock({ quotes, RichText }: QuotesBlockProps) {
 
   return (
     <Carousel aria-label="Testimonials">
-      <CarouselContent className="items-stretch py-6">
+      <CarouselContent className="items-center py-6">
         {quotes.map(({ client, content, id }) => (
           <CarouselItem key={id} className="basis-11/12 sm:basis-1/2 lg:basis-1/3">
-            <Blockquote className="h-full">
+            <Blockquote>
               <BlockquoteBody>
                 <RichText data={content} />
               </BlockquoteBody>
