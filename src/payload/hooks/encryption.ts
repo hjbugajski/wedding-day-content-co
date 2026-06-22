@@ -2,6 +2,8 @@ import type { FieldHook } from 'payload';
 
 import { decrypt, encrypt } from '@/payload/utils/crypto';
 
+// Fields using these hooks must also be listed in ENCRYPTED_TARGETS
+// (src/payload/utils/rekey-encrypted-fields.ts) so secret rotation re-keys them.
 export const encryptField: FieldHook = ({ value }) => {
   if (value === undefined || value === null) {
     return value;
