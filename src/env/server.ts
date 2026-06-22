@@ -3,10 +3,7 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    DOMAIN: z.string().min(1),
-    VERCEL_TARGET_ENV: z
-      .enum(['development', 'preview', 'staging', 'production'])
-      .default('development'),
+    VERCEL_TARGET_ENV: z.enum(['development', 'preview', 'production']).default('development'),
     MUX_TOKEN_ID: z.string().min(1),
     MUX_TOKEN_SECRET: z.string().min(1),
     MUX_WEBHOOK_SIGNING_SECRET: z.string().min(1),
@@ -21,19 +18,10 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
     RESEND_FROM_ADDRESS_DEFAULT: z.string().min(1),
-    RESEND_FROM_ADDRESS_PAYLOAD: z.string().min(1),
-    RESEND_FROM_NAME_DEFAULT: z.string().min(1),
     RESEND_TO_ADDRESS_DEFAULT: z.string().min(1),
-    SERVER_URL: z
-      .string()
-      .min(1)
-      .transform((url) =>
-        process.env.VERCEL_TARGET_ENV === 'preview' ? `https://${process.env.VERCEL_URL}` : url,
-      ),
     WHITELIST: z.string().min(1),
   },
   runtimeEnv: {
-    DOMAIN: process.env.DOMAIN,
     VERCEL_TARGET_ENV: process.env.VERCEL_TARGET_ENV,
     MUX_TOKEN_ID: process.env.MUX_TOKEN_ID,
     MUX_TOKEN_SECRET: process.env.MUX_TOKEN_SECRET,
@@ -49,10 +37,7 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     RESEND_FROM_ADDRESS_DEFAULT: process.env.RESEND_FROM_ADDRESS_DEFAULT,
-    RESEND_FROM_ADDRESS_PAYLOAD: process.env.RESEND_FROM_ADDRESS_PAYLOAD,
-    RESEND_FROM_NAME_DEFAULT: process.env.RESEND_FROM_NAME_DEFAULT,
     RESEND_TO_ADDRESS_DEFAULT: process.env.RESEND_TO_ADDRESS_DEFAULT,
-    SERVER_URL: process.env.SERVER_URL,
     WHITELIST: process.env.WHITELIST,
   },
 });

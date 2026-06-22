@@ -24,26 +24,125 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical';
 import { s3Storage } from '@payloadcms/storage-s3';
-import { buildConfig } from 'payload';
+import { type Endpoint, buildConfig } from 'payload';
 import sharp from 'sharp';
 
 import { env } from '@/env/server';
-import { Role } from '@/payload/access';
+import { Role, hasRole } from '@/payload/access';
 import { Clients } from '@/payload/collections/clients';
 import { Faqs } from '@/payload/collections/faqs';
 import { FormSubmissions } from '@/payload/collections/form-submissions';
 import { Forms } from '@/payload/collections/forms';
 import { Images } from '@/payload/collections/images';
+import { MuxVideo } from '@/payload/collections/mux-video';
 import { Pages } from '@/payload/collections/pages';
 import { Users } from '@/payload/collections/users';
 import { richTextFields } from '@/payload/fields/link';
 import { Footer } from '@/payload/globals/footer';
 import { Navigation } from '@/payload/globals/navigation';
+import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
+
+type MuxAsset = {
+  status: string;
+  aspect_ratio?: string;
+  duration?: number;
+  playback_ids?: { id: string; policy: 'public' | 'signed' }[];
+  tracks?: { type: string; max_width?: number; max_height?: number }[];
+};
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-const whitelist = [env.SERVER_URL, ...env.WHITELIST.split(' ')].filter(Boolean);
+const serverUrl = getServerSideUrl();
+const whitelist = [serverUrl, ...env.WHITELIST.split(' ')].filter(Boolean);
+
+/**
+ * Preview/dev fallback for Mux's "asset ready" webhook, which cannot reach rotating preview hosts
+ * (or localhost). The MuxPlaybackPoller field calls this to pull asset status from the Mux API and
+ * fill `playbackOptions`. Registered only outside production (see endpoints below); production uses
+ * the webhook.
+ */
+const muxRefreshEndpoint: Endpoint = {
+  path: '/mux/refresh',
+  method: 'post',
+  handler: async (req) => {
+    if (!req.user || req.user.collection !== req.payload.config.admin.user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // The update() below runs via the Local API with overrideAccess, bypassing the collection's
+    // update access control — so gate the endpoint to the same write roles.
+    if (!hasRole(Role.Admin, Role.Editor)({ req })) {
+      return Response.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    const body = (await req.json?.()) as { id?: string } | undefined;
+    const id = body?.id;
+
+    if (!id) {
+      return Response.json({ error: 'Missing id' }, { status: 400 });
+    }
+
+    const doc = await req.payload.findByID({ collection: 'mux-video', id }).catch(() => null);
+
+    if (!doc) {
+      // Doc was deleted, or the id is malformed — nothing to refresh; terminal for the poller.
+      return Response.json({ ready: false, status: 'no-asset' });
+    }
+
+    if (doc.playbackOptions?.length) {
+      return Response.json({ ready: true });
+    }
+
+    if (!doc.assetId) {
+      return Response.json({ ready: false, status: 'no-asset' });
+    }
+
+    const auth = Buffer.from(`${env.MUX_TOKEN_ID}:${env.MUX_TOKEN_SECRET}`).toString('base64');
+    const response = await fetch(`https://api.mux.com/video/v1/assets/${doc.assetId}`, {
+      headers: { Authorization: `Basic ${auth}` },
+    });
+
+    if (!response.ok) {
+      // A 4xx from Mux (e.g. the asset was deleted on Mux's side) won't recover on retry — return a
+      // terminal status so the poller stops. A 5xx is transient: surface it as 502 and let the
+      // poller retry (bounded by MAX_ATTEMPTS).
+      if (response.status < 500) {
+        return Response.json({ ready: false, status: 'no-asset' });
+      }
+
+      return Response.json({ ready: false, status: 'error' }, { status: 502 });
+    }
+
+    const { data: asset } = (await response.json()) as { data: MuxAsset };
+
+    if (asset.status !== 'ready') {
+      return Response.json({ ready: false, status: asset.status });
+    }
+
+    const videoTrack = asset.tracks?.find((track) => track.type === 'video');
+
+    await req.payload.update({
+      collection: 'mux-video',
+      id,
+      data: {
+        // Re-send the unchanged assetId: the plugin's beforeChange hook deletes the Mux asset when
+        // the incoming assetId differs from the stored one, so omitting it (undefined !== stored)
+        // would destroy the asset.
+        assetId: doc.assetId,
+        playbackOptions: asset.playback_ids?.map((playback) => ({
+          playbackId: playback.id,
+          playbackPolicy: playback.policy,
+        })),
+        aspectRatio: asset.aspect_ratio?.replace(':', '/'),
+        duration: asset.duration,
+        ...(videoTrack ? { maxWidth: videoTrack.max_width, maxHeight: videoTrack.max_height } : {}),
+      },
+    });
+
+    return Response.json({ ready: true });
+  },
+};
 
 export default buildConfig({
   admin: {
@@ -84,6 +183,7 @@ export default buildConfig({
     Pages,
     Faqs,
     Images,
+    MuxVideo,
     // crm
     Clients,
     Forms,
@@ -134,6 +234,8 @@ export default buildConfig({
         }
       },
     },
+    // Preview/dev only: production fills playback data via the Mux webhook and never polls.
+    ...(env.VERCEL_TARGET_ENV === 'production' ? [] : [muxRefreshEndpoint]),
   ],
   db: postgresAdapter({
     pool: {
@@ -163,7 +265,7 @@ export default buildConfig({
   }),
   email: resendAdapter({
     defaultFromAddress: env.RESEND_FROM_ADDRESS_DEFAULT,
-    defaultFromName: env.RESEND_FROM_NAME_DEFAULT,
+    defaultFromName: 'Wedding Day Content Co.',
     apiKey: env.RESEND_API_KEY,
   }),
   globals: [Navigation, Footer],
@@ -190,15 +292,21 @@ export default buildConfig({
   plugins: [
     muxVideoPlugin({
       enabled: true,
+      extendCollection: 'mux-video',
       initSettings: {
         tokenId: env.MUX_TOKEN_ID || '',
         tokenSecret: env.MUX_TOKEN_SECRET || '',
         webhookSecret: env.MUX_WEBHOOK_SIGNING_SECRET || '',
       },
       uploadSettings: {
-        cors_origin: env.SERVER_URL,
+        // Pin CORS to the canonical origin in production; preview hosts rotate and local dev has no
+        // stable origin, so both use a wildcard (uploads are still gated behind admin auth).
+        cors_origin: env.VERCEL_TARGET_ENV === 'production' ? serverUrl : '*',
       },
-      access: () => true,
+      // Guards the plugin's /mux/upload endpoints, which mint Mux direct-upload URLs — Mux warns
+      // these must be authenticated or anyone could ingest assets into the account. Public read is
+      // handled by the collection's own read access (see collections/mux-video.ts).
+      access: (req) => hasRole(Role.Admin, Role.Editor)({ req }) === true,
     }),
     nestedDocsPlugin({
       collections: ['pages'],
@@ -225,7 +333,7 @@ export default buildConfig({
     }),
   ],
   secret: env.PAYLOAD_SECRET,
-  serverURL: env.SERVER_URL,
+  serverURL: serverUrl,
   sharp,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

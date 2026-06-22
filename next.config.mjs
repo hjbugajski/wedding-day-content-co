@@ -2,7 +2,9 @@ import { env } from 'node:process';
 
 import { withPayload } from '@payloadcms/next/withPayload';
 
-const domain = env.VERCEL_TARGET_ENV === 'preview' ? env.VERCEL_URL : env.DOMAIN;
+// Mirror getServerSideUrl(): the stable per-branch host on preview so image remotePatterns
+// matches the absolute URLs Payload builds from serverURL.
+const domain = env.VERCEL_TARGET_ENV === 'preview' ? env.VERCEL_BRANCH_URL : env.NEXT_PUBLIC_DOMAIN;
 const isProductionNode = env.NODE_ENV === 'production';
 const isProductionVercel = env.VERCEL_TARGET_ENV === 'production';
 
