@@ -4,7 +4,7 @@ vi.mock('@/env/server', () => ({
   env: { PAYLOAD_SECRET: 'test-secret-for-crypto-round-trip' },
 }));
 
-import { decrypt, encrypt } from '@/payload/utils/crypto';
+import { decrypt, decryptWithSecret, encrypt, encryptWithSecret } from '@/payload/utils/crypto';
 
 describe('crypto: encrypt + decrypt', () => {
   it('round-trips a plain string', () => {
@@ -35,10 +35,10 @@ describe('crypto: encrypt + decrypt', () => {
     expect(out.length).toBeGreaterThanOrEqual(32);
   });
 
-  it('throws when decrypting a tampered ciphertext', () => {
+  it('returns garbage (not a throw) when decrypting a tampered ciphertext', () => {
     const good = encrypt('hello');
-    // Flip the final hex nibble of the ciphertext body (leave the 32-char IV intact)
-    // so AES-CTR decrypts to garbage that isn't valid UTF-8.
+    // Flip the final hex nibble of the ciphertext body (leave the 32-char IV intact);
+    // AES-CTR is unauthenticated, so it decrypts to garbage rather than throwing.
     const last = good.at(-1)!;
     const flipped = good.slice(0, -1) + (last === '0' ? '1' : '0');
     expect(() => decrypt(flipped)).not.toThrow();
@@ -47,5 +47,27 @@ describe('crypto: encrypt + decrypt', () => {
 
   it('throws when the hash is too short to contain an IV', () => {
     expect(() => decrypt('abc')).toThrow();
+  });
+});
+
+describe('crypto: secret rotation (re-key)', () => {
+  const OLD = 'old-payload-secret';
+  const NEW = 'new-payload-secret';
+
+  it('re-keys a value from the old secret to the new secret', () => {
+    const plaintext = 'naïve café — "quoted"';
+    const oldCipher = encryptWithSecret(plaintext, OLD);
+
+    const rekeyed = encryptWithSecret(decryptWithSecret(oldCipher, OLD), NEW);
+
+    expect(decryptWithSecret(rekeyed, NEW)).toBe(plaintext);
+  });
+
+  it('old ciphertext no longer decrypts to the original under the new secret', () => {
+    const plaintext = 'sensitive value';
+    const oldCipher = encryptWithSecret(plaintext, OLD);
+
+    // AES-CTR is unauthenticated — the wrong key returns garbage, not an error.
+    expect(decryptWithSecret(oldCipher, NEW)).not.toBe(plaintext);
   });
 });
