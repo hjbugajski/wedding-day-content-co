@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 
-type Environment = 'local' | 'preview' | 'staging' | 'production';
+type Environment = 'local' | 'preview' | 'production';
 
 const ENV_STYLES: Record<Environment, CSSProperties> = {
   local: {
@@ -12,11 +12,6 @@ const ENV_STYLES: Record<Environment, CSSProperties> = {
     backgroundColor: 'var(--theme-success-100)',
     color: 'var(--theme-success-800)',
     borderColor: 'var(--theme-success-250)',
-  },
-  staging: {
-    backgroundColor: 'var(--theme-warning-100)',
-    color: 'var(--theme-warning-800)',
-    borderColor: 'var(--theme-warning-250)',
   },
   production: {
     backgroundColor: 'var(--theme-error-100)',
@@ -44,8 +39,6 @@ function getEnvironment(): Environment {
   switch (vercelEnv) {
     case 'preview':
       return 'preview';
-    case 'staging':
-      return 'staging';
     case 'production':
       return 'production';
   }

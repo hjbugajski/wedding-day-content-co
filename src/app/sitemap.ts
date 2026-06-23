@@ -4,11 +4,12 @@ import { getPayload } from 'payload';
 
 import { env } from '@/env/client';
 import config from '@/payload/payload.config';
+import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 
 const getPagesSitemap = unstable_cache(
   async (): Promise<MetadataRoute.Sitemap> => {
     const payload = await getPayload({ config });
-    const siteUrl = env.NEXT_PUBLIC_SERVER_URL;
+    const siteUrl = getServerSideUrl();
 
     const results = await payload.find({
       collection: 'pages',

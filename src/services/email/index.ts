@@ -21,7 +21,7 @@ export async function sendFallbackFormEmail(
     `Note: Database was unavailable. Please save this information manually.`,
   ].join('\n');
   const { error } = await resend.emails.send({
-    from: `Wedding Day Content Co. <${env.RESEND_FROM_ADDRESS_PAYLOAD}>`,
+    from: `Wedding Day Content Co. <${env.RESEND_FROM_ADDRESS_DEFAULT}>`,
     to: env.RESEND_TO_ADDRESS_DEFAULT,
     subject: `Form Submission - Database Unavailable - ${formId}`,
     text: textContent,

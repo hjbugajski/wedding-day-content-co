@@ -13,5 +13,5 @@ export const getClientSideUrl = () => {
     return `https://${process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL}`;
   }
 
-  return process.env.NEXT_PUBLIC_SERVER_URL || '';
+  return process.env.NEXT_PUBLIC_DOMAIN ? `https://${process.env.NEXT_PUBLIC_DOMAIN}` : '';
 };

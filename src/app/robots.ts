@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { env } from '@/env/client';
+import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 
 export default function robots(): MetadataRoute.Robots {
   if (env.NEXT_PUBLIC_VERCEL_TARGET_ENV !== 'production') {
@@ -15,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/next/', '/api/'],
     },
-    sitemap: `${env.NEXT_PUBLIC_SERVER_URL}/sitemap.xml`,
+    sitemap: `${getServerSideUrl()}/sitemap.xml`,
   };
 }
