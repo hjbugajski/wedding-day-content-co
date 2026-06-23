@@ -1,34 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Wedding Day Content Co.
 
-## Getting Started
+Marketing site and content platform for [Wedding Day Content Co.](https://weddingdaycontent.co), built on [Payload CMS](https://payloadcms.com) and [Next.js](https://nextjs.org). The public site and the Payload admin run from the same Next.js app.
 
-First, run the development server:
+## Stack
+
+- **Framework** — Next.js v16 (App Router, Turbopack), React v19
+- **CMS** — Payload v3 with a PostgreSQL adapter and Lexical rich text
+- **Media** — Mux for video, Cloudflare R2 for image storage, `sharp` for processing
+- **Email** — React Email templates delivered via Resend
+- **Analytics** — Umami
+- **UI** — Tailwind CSS v4, Base UI, `class-variance-authority`, TanStack Form, Zod
+- **Tooling** — pnpm, oxlint + oxfmt, Stylelint, Vitest (unit + Playwright browser), TypeScript
+- **Secrets** — Infisical (no committed `.env`)
+
+## Prerequisites
+
+- Node v24 (see [.tool-versions](.tool-versions))
+- pnpm v11 (see `packageManager` in [package.json](package.json))
+- [Infisical CLI](https://infisical.com/docs/cli/overview) with access to this project's secrets
+
+## Local development
+
+There is no local `.env` — all secrets are pulled from Infisical at runtime. Any command that needs env access has an `i:` variant that wraps it in `infisical run`. Running the plain variant locally will fail with missing-env errors.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+pnpm install
+pnpm i:dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Public site: http://localhost:3000
+- Payload admin: http://localhost:3000/admin
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Commands that touch secrets use the `i:` prefix; see [package.json](package.json) for the full list.
 
-## Learn More
+| Command                              | Description                                |
+| ------------------------------------ | ------------------------------------------ |
+| `pnpm i:dev`                         | Start the dev server (Turbopack)           |
+| `pnpm i:build`                       | Production build                           |
+| `pnpm i:start`                       | Serve the production build                 |
+| `pnpm i:migrate`                     | Run Payload database migrations            |
+| `pnpm i:migrate:create`              | Create a new migration from schema changes |
+| `pnpm generate:types`                | Regenerate `payload-types.ts`              |
+| `pnpm generate:importmap`            | Regenerate the admin import map            |
+| `pnpm i:email`                       | Preview React Email templates (port 3001)  |
+| `pnpm test`                          | Run all Vitest projects                    |
+| `pnpm test:unit`/`pnpm test:browser` | Run a single Vitest project                |
+| `pnpm lint`/`pnpm fmt`               | Lint (oxlint)/format (oxfmt), with `--fix` |
+| `pnpm stylelint`                     | Lint CSS                                   |
+| `pnpm typecheck`                     | `tsc --noEmit`                             |
 
-To learn more about Next.js, take a look at the following resources:
+## Project structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/
+    (site)/      Public-facing site (routes, globals.css)
+    (payload)/   Payload admin + REST/GraphQL API
+  payload/       Payload config, collections, globals, blocks, fields, hooks, migrations
+  components/    React components (blocks, ui, rich-text, footer)
+  services/      Email templates
+  env/           Type-safe env schema (@t3-oss/env-nextjs)
+  utils/         Shared helpers (cn, etc.)
+docs/            Project conventions (e.g. Tailwind)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+**Content model** — collections: clients, faqs, forms, form-submissions, images, mux-video, pages, users. Globals: navigation, footer.
