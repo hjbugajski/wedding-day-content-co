@@ -1,15 +1,5 @@
 version: 2
 
-# Security-only configuration.
-#
-# `open-pull-requests-limit: 0` disables Dependabot *version* updates for the
-# ecosystem (no routine "bump x from a to b" noise). Security updates are not
-# affected by that limit — they keep flowing whenever a GitHub advisory matches
-# a dependency in the lockfile.
-#
-# The `groups` block with `applies-to: security-updates` batches every matching
-# security fix for the ecosystem into a single PR instead of one PR per package.
-
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
