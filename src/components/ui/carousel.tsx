@@ -182,8 +182,10 @@ const Carousel = ({ className, children, ...props }: CarouselProps) => {
 
   return (
     <CarouselContext.Provider value={contextValue}>
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- keyboard navigation belongs on the carousel container per WAI-ARIA APG */}
       <div
         className={cn('relative', className)}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- explicit region role + aria-roledescription is the WAI-ARIA carousel pattern
         role="region"
         aria-roledescription="carousel"
         onKeyDown={handleKeyDown}
@@ -217,6 +219,7 @@ const CarouselContent = ({ className, ...props }: ComponentProps<'div'>) => {
 const CarouselItem = ({ className, ...props }: ComponentProps<'div'>) => (
   <div
     data-carousel-item
+    // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- explicit group role + aria-roledescription is the WAI-ARIA slide pattern; no native tag fits
     role="group"
     aria-roledescription="slide"
     className={cn('min-w-0 shrink-0 grow-0', 'snap-center snap-always sm:snap-start', className)}

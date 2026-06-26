@@ -27,8 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     "next-env.d.ts",
-    "next.config.mjs",
-    "tailwind.config.mjs"
+    "next.config.ts",
+    "stylelint.config.ts"
   ],
   "exclude": ["node_modules"]
 }

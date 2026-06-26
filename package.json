@@ -9,7 +9,7 @@
     "i:build": "infisical run pnpm build",
     "build:clean": "rm -rf .next && rm -rf next-env.d.ts && pnpm build",
     "i:build:clean": "infisical run pnpm build:clean",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "i:dev": "infisical run pnpm dev",
     "email": "email dev --dir src/services/email --port 3001",
     "i:email": "infisical run pnpm email",
