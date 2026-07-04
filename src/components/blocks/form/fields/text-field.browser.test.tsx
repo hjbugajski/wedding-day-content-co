@@ -5,16 +5,15 @@ import { textConfig } from '@/components/blocks/form/configs/text';
 import type { PayloadTextBlock } from '@/payload/payload-types';
 import { FieldHarness } from '@/vitest/field-harness';
 
-const makeMeta = (overrides: Partial<PayloadTextBlock> = {}): PayloadTextBlock =>
-  ({
-    blockType: 'text',
-    id: 't',
-    name: 'v',
-    label: 'First Name',
-    width: 'full',
-    required: true,
-    ...overrides,
-  }) as PayloadTextBlock;
+const makeMeta = (overrides: Partial<PayloadTextBlock> = {}): PayloadTextBlock => ({
+  blockType: 'text',
+  id: 't',
+  name: 'v',
+  label: 'First Name',
+  width: 'full',
+  required: true,
+  ...overrides,
+});
 
 describe('TextField renderer', () => {
   test('types text into the labelled input and submits the value', async () => {

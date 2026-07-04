@@ -66,7 +66,7 @@ const selectField: PayloadSelectBlock = {
     { label: 'Starter', value: 'starter' },
     { label: 'Pro', value: 'pro' },
   ],
-} as PayloadSelectBlock;
+};
 
 const radioField: PayloadRadioBlock = {
   blockType: 'radio',
@@ -79,7 +79,7 @@ const radioField: PayloadRadioBlock = {
     { label: 'Email', value: 'email' },
     { label: 'Phone', value: 'phone' },
   ],
-} as PayloadRadioBlock;
+};
 
 const checkboxField: PayloadCheckboxBlock = {
   blockType: 'checkbox',
@@ -92,7 +92,7 @@ const checkboxField: PayloadCheckboxBlock = {
     { label: 'Photo', value: 'photo' },
     { label: 'Video', value: 'video' },
   ],
-} as PayloadCheckboxBlock;
+};
 
 const makeFormDoc = (fields: PayloadFormsCollection['fields']): PayloadFormsCollection =>
   ({

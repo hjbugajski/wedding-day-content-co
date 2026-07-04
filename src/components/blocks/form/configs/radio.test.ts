@@ -3,19 +3,18 @@ import { describe, expect, it } from 'vitest';
 import { radioConfig } from '@/components/blocks/form/configs/radio';
 import type { PayloadRadioBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadRadioBlock> = {}): PayloadRadioBlock =>
-  ({
-    blockType: 'radio',
-    name: 'tier',
-    label: 'Tier',
-    width: 'full',
-    required: false,
-    options: [
-      { label: 'Essential', value: 'essential' },
-      { label: 'Signature', value: 'signature' },
-    ],
-    ...overrides,
-  }) as PayloadRadioBlock;
+const makeMeta = (overrides: Partial<PayloadRadioBlock> = {}): PayloadRadioBlock => ({
+  blockType: 'radio',
+  name: 'tier',
+  label: 'Tier',
+  width: 'full',
+  required: false,
+  options: [
+    { label: 'Essential', value: 'essential' },
+    { label: 'Signature', value: 'signature' },
+  ],
+  ...overrides,
+});
 
 describe('radioConfig', () => {
   it('defaultValue returns empty string when absent', () => {

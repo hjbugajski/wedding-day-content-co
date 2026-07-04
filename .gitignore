@@ -24,8 +24,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# env files
+.env*
 
 # vercel
 .vercel
@@ -34,7 +34,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.env*
-
 # react-email
 /.react-email
+
+# agents
+.agents/skills
+.claude/skills
+docs/plans
+skills-lock.json

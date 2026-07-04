@@ -50,15 +50,18 @@ export function FormClient({
   );
 
   const { defaultValues, fieldSchemas } = useMemo(() => {
-    return fieldList.reduce(
+    return fieldList.reduce<{
+      defaultValues: Record<string, unknown>;
+      fieldSchemas: Record<string, ReturnType<FieldConfig<FieldMeta>['schema']>>;
+    }>(
       (acc, { meta, config }) => {
         acc.defaultValues[meta.name] = config.defaultValue(meta);
         acc.fieldSchemas[meta.name] = config.schema(meta);
         return acc;
       },
       {
-        defaultValues: {} as Record<string, unknown>,
-        fieldSchemas: {} as Record<string, ReturnType<FieldConfig<FieldMeta>['schema']>>,
+        defaultValues: {},
+        fieldSchemas: {},
       },
     );
   }, [fieldList]);

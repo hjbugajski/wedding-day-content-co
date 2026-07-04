@@ -3,15 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { emailConfig } from '@/components/blocks/form/configs/email';
 import type { PayloadEmailBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadEmailBlock> = {}): PayloadEmailBlock =>
-  ({
-    blockType: 'email',
-    name: 'email',
-    label: 'Email',
-    width: 'half',
-    required: false,
-    ...overrides,
-  }) as PayloadEmailBlock;
+const makeMeta = (overrides: Partial<PayloadEmailBlock> = {}): PayloadEmailBlock => ({
+  blockType: 'email',
+  name: 'email',
+  label: 'Email',
+  width: 'half',
+  required: false,
+  ...overrides,
+});
 
 describe('emailConfig.defaultValue', () => {
   it('returns empty string when defaultValue is absent', () => {
@@ -63,6 +62,6 @@ describe('emailConfig.format', () => {
   });
 
   it('coerces a non-string value to string', () => {
-    expect(emailConfig.format(makeMeta(), 42 as unknown as string)).toBe('42');
+    expect(emailConfig.format(makeMeta(), 42)).toBe('42');
   });
 });

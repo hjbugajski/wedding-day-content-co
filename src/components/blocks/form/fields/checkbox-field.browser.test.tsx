@@ -5,20 +5,19 @@ import { checkboxConfig } from '@/components/blocks/form/configs/checkbox';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 import { FieldHarness } from '@/vitest/field-harness';
 
-const makeMeta = (overrides: Partial<PayloadCheckboxBlock> = {}): PayloadCheckboxBlock =>
-  ({
-    blockType: 'checkbox',
-    id: 'c',
-    name: 'v',
-    label: 'Perks',
-    width: 'full',
-    required: true,
-    options: [
-      { label: 'Photo', value: 'photo' },
-      { label: 'Video', value: 'video' },
-    ],
-    ...overrides,
-  }) as PayloadCheckboxBlock;
+const makeMeta = (overrides: Partial<PayloadCheckboxBlock> = {}): PayloadCheckboxBlock => ({
+  blockType: 'checkbox',
+  id: 'c',
+  name: 'v',
+  label: 'Perks',
+  width: 'full',
+  required: true,
+  options: [
+    { label: 'Photo', value: 'photo' },
+    { label: 'Video', value: 'video' },
+  ],
+  ...overrides,
+});
 
 describe('CheckboxField renderer', () => {
   test('toggles multiple values and submits as an array', async () => {

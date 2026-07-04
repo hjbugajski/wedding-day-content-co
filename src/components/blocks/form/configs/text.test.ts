@@ -3,15 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { textConfig } from '@/components/blocks/form/configs/text';
 import type { PayloadTextBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadTextBlock> = {}): PayloadTextBlock =>
-  ({
-    blockType: 'text',
-    name: 'firstName',
-    label: 'First Name',
-    width: 'half',
-    required: false,
-    ...overrides,
-  }) as PayloadTextBlock;
+const makeMeta = (overrides: Partial<PayloadTextBlock> = {}): PayloadTextBlock => ({
+  blockType: 'text',
+  name: 'firstName',
+  label: 'First Name',
+  width: 'half',
+  required: false,
+  ...overrides,
+});
 
 describe('textConfig.defaultValue', () => {
   it('returns empty string when defaultValue is absent', () => {
@@ -45,6 +44,6 @@ describe('textConfig.format', () => {
   });
 
   it('coerces a non-string value to string', () => {
-    expect(textConfig.format(makeMeta(), 42 as unknown as string)).toBe('42');
+    expect(textConfig.format(makeMeta(), 42)).toBe('42');
   });
 });
