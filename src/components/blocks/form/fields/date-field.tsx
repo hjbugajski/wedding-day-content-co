@@ -100,7 +100,7 @@ export function DateField({ meta }: Props) {
             startMonth={startMonth}
             endMonth={endMonth}
             selected={field.state.value as Date | undefined}
-            onSelect={(date) => field.handleChange(date as FieldValue<'date'>)}
+            onSelect={(date) => field.handleChange(date)}
             disabled={disabled}
             numberOfMonths={1}
           />
@@ -112,7 +112,7 @@ export function DateField({ meta }: Props) {
             startMonth={startMonth}
             endMonth={endMonth}
             selected={field.state.value as Date[] | undefined}
-            onSelect={(dates) => field.handleChange(dates as FieldValue<'date'>)}
+            onSelect={(dates) => field.handleChange(dates)}
             disabled={disabled}
             numberOfMonths={1}
           />
@@ -124,7 +124,7 @@ export function DateField({ meta }: Props) {
             startMonth={startMonth}
             endMonth={endMonth}
             selected={field.state.value as DateRange | undefined}
-            onSelect={(range) => field.handleChange(range as FieldValue<'date'>)}
+            onSelect={(range) => field.handleChange(range)}
             disabled={disabled}
             numberOfMonths={1}
           />

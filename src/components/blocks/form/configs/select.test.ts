@@ -3,19 +3,18 @@ import { describe, expect, it } from 'vitest';
 import { selectConfig } from '@/components/blocks/form/configs/select';
 import type { PayloadSelectBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadSelectBlock> = {}): PayloadSelectBlock =>
-  ({
-    blockType: 'select',
-    name: 'package',
-    label: 'Package',
-    width: 'full',
-    required: false,
-    options: [
-      { label: 'Starter', value: 'starter' },
-      { label: 'Pro', value: 'pro' },
-    ],
-    ...overrides,
-  }) as PayloadSelectBlock;
+const makeMeta = (overrides: Partial<PayloadSelectBlock> = {}): PayloadSelectBlock => ({
+  blockType: 'select',
+  name: 'package',
+  label: 'Package',
+  width: 'full',
+  required: false,
+  options: [
+    { label: 'Starter', value: 'starter' },
+    { label: 'Pro', value: 'pro' },
+  ],
+  ...overrides,
+});
 
 describe('selectConfig', () => {
   it('defaultValue returns empty string when absent', () => {

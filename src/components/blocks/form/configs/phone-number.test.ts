@@ -3,15 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { phoneNumberConfig } from '@/components/blocks/form/configs/phone-number';
 import type { PayloadPhoneNumberBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadPhoneNumberBlock> = {}): PayloadPhoneNumberBlock =>
-  ({
-    blockType: 'phoneNumber',
-    name: 'phone',
-    label: 'Phone',
-    width: 'full',
-    required: false,
-    ...overrides,
-  }) as PayloadPhoneNumberBlock;
+const makeMeta = (overrides: Partial<PayloadPhoneNumberBlock> = {}): PayloadPhoneNumberBlock => ({
+  blockType: 'phoneNumber',
+  name: 'phone',
+  label: 'Phone',
+  width: 'full',
+  required: false,
+  ...overrides,
+});
 
 describe('phoneNumberConfig.defaultValue', () => {
   it('returns empty string when defaultValue is absent', () => {
@@ -67,8 +66,6 @@ describe('phoneNumberConfig.format', () => {
   });
 
   it('coerces a non-string value to string', () => {
-    expect(phoneNumberConfig.format(makeMeta(), 12024561111 as unknown as string)).toBe(
-      '12024561111',
-    );
+    expect(phoneNumberConfig.format(makeMeta(), 12024561111)).toBe('12024561111');
   });
 });

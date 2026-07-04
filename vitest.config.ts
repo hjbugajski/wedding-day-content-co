@@ -56,9 +56,7 @@ export default defineConfig({
           setupFiles: ['./vitest/setup.browser.ts'],
           browser: {
             enabled: true,
-            // Cast: pnpm resolves @vitest/browser-playwright against its own vitest peer,
-            // producing a structurally identical but nominally distinct provider type.
-            provider: playwright() as never,
+            provider: playwright(),
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: 'chromium' }],

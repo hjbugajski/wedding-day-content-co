@@ -3,20 +3,19 @@ import { describe, expect, it } from 'vitest';
 import { checkboxConfig } from '@/components/blocks/form/configs/checkbox';
 import type { PayloadCheckboxBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadCheckboxBlock> = {}): PayloadCheckboxBlock =>
-  ({
-    blockType: 'checkbox',
-    name: 'perks',
-    label: 'Perks',
-    width: 'full',
-    required: false,
-    options: [
-      { label: 'Photo', value: 'photo' },
-      { label: 'Video', value: 'video' },
-      { label: 'Drone', value: 'drone' },
-    ],
-    ...overrides,
-  }) as PayloadCheckboxBlock;
+const makeMeta = (overrides: Partial<PayloadCheckboxBlock> = {}): PayloadCheckboxBlock => ({
+  blockType: 'checkbox',
+  name: 'perks',
+  label: 'Perks',
+  width: 'full',
+  required: false,
+  options: [
+    { label: 'Photo', value: 'photo' },
+    { label: 'Video', value: 'video' },
+    { label: 'Drone', value: 'drone' },
+  ],
+  ...overrides,
+});
 
 describe('checkboxConfig.defaultValue', () => {
   it('returns empty array when defaultValue is absent', () => {
@@ -64,7 +63,7 @@ describe('checkboxConfig.format', () => {
   });
 
   it('returns empty string when value is not an array', () => {
-    expect(checkboxConfig.format(makeMeta(), 'photo' as unknown as string[])).toBe('');
+    expect(checkboxConfig.format(makeMeta(), 'photo')).toBe('');
     expect(checkboxConfig.format(makeMeta(), undefined as unknown as string[])).toBe('');
   });
 });

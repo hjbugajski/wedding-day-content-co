@@ -5,20 +5,19 @@ import { radioConfig } from '@/components/blocks/form/configs/radio';
 import type { PayloadRadioBlock } from '@/payload/payload-types';
 import { FieldHarness } from '@/vitest/field-harness';
 
-const makeMeta = (overrides: Partial<PayloadRadioBlock> = {}): PayloadRadioBlock =>
-  ({
-    blockType: 'radio',
-    id: 'r',
-    name: 'v',
-    label: 'Tier',
-    width: 'full',
-    required: true,
-    options: [
-      { label: 'Essential', value: 'essential' },
-      { label: 'Signature', value: 'signature' },
-    ],
-    ...overrides,
-  }) as PayloadRadioBlock;
+const makeMeta = (overrides: Partial<PayloadRadioBlock> = {}): PayloadRadioBlock => ({
+  blockType: 'radio',
+  id: 'r',
+  name: 'v',
+  label: 'Tier',
+  width: 'full',
+  required: true,
+  options: [
+    { label: 'Essential', value: 'essential' },
+    { label: 'Signature', value: 'signature' },
+  ],
+  ...overrides,
+});
 
 describe('RadioField renderer', () => {
   test('selects one option and submits its value', async () => {

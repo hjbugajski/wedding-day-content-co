@@ -5,20 +5,19 @@ import { selectConfig } from '@/components/blocks/form/configs/select';
 import type { PayloadSelectBlock } from '@/payload/payload-types';
 import { FieldHarness } from '@/vitest/field-harness';
 
-const makeMeta = (overrides: Partial<PayloadSelectBlock> = {}): PayloadSelectBlock =>
-  ({
-    blockType: 'select',
-    id: 's',
-    name: 'v',
-    label: 'Package',
-    width: 'full',
-    required: true,
-    options: [
-      { label: 'Starter', value: 'starter' },
-      { label: 'Pro', value: 'pro' },
-    ],
-    ...overrides,
-  }) as PayloadSelectBlock;
+const makeMeta = (overrides: Partial<PayloadSelectBlock> = {}): PayloadSelectBlock => ({
+  blockType: 'select',
+  id: 's',
+  name: 'v',
+  label: 'Package',
+  width: 'full',
+  required: true,
+  options: [
+    { label: 'Starter', value: 'starter' },
+    { label: 'Pro', value: 'pro' },
+  ],
+  ...overrides,
+});
 
 describe('SelectField renderer', () => {
   test('opens options, selects one, and submits its value', async () => {

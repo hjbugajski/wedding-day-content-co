@@ -3,17 +3,16 @@ import { describe, expect, it } from 'vitest';
 import { dateConfig } from '@/components/blocks/form/configs/date';
 import type { PayloadDateBlock } from '@/payload/payload-types';
 
-const makeMeta = (overrides: Partial<PayloadDateBlock> = {}): PayloadDateBlock =>
-  ({
-    blockType: 'date',
-    name: 'date',
-    label: 'Date',
-    width: 'full',
-    required: false,
-    mode: 'single',
-    allowedDates: 'any',
-    ...overrides,
-  }) as PayloadDateBlock;
+const makeMeta = (overrides: Partial<PayloadDateBlock> = {}): PayloadDateBlock => ({
+  blockType: 'date',
+  name: 'date',
+  label: 'Date',
+  width: 'full',
+  required: false,
+  mode: 'single',
+  allowedDates: 'any',
+  ...overrides,
+});
 
 describe('dateConfig.defaultValue', () => {
   it('single: returns undefined when no default is configured', () => {
