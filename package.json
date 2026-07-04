@@ -25,6 +25,12 @@
     "migrate:dev": "pnpm migrate:clean && pnpm i:migrate:create && pnpm i:migrate",
     "generate:importmap": "infisical run payload generate:importmap",
     "generate:types": "infisical run payload generate:types",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run --project unit",
+    "test:unit:watch": "vitest --project unit",
+    "test:browser": "vitest run --project browser",
+    "test:browser:watch": "vitest --project browser",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
     "lint": "oxlint --type-aware --fix",
@@ -32,12 +38,7 @@
     "stylelint": "stylelint '**/*.css' --fix --ignore-path .gitignore",
     "stylelint:check": "stylelint '**/*.css' --ignore-path .gitignore",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:unit": "vitest run --project unit",
-    "test:unit:watch": "vitest --project unit",
-    "test:browser": "vitest run --project browser",
-    "test:browser:watch": "vitest --project browser"
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -78,11 +79,13 @@
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/browser": "^4.1.9",
     "@vitest/browser-playwright": "^4.1.9",
+    "nano-staged": "^1.0.2",
     "oxfmt": "^0.57.0",
     "oxlint": "^1.72.0",
     "oxlint-tsgolint": "^0.24.0",
     "playwright": "^1.61.1",
     "postcss": "^8.5.16",
+    "simple-git-hooks": "^2.13.1",
     "stylelint": "^17.14.0",
     "stylelint-config-clean-order": "^10.0.0",
     "stylelint-config-standard": "^40.0.0",
@@ -90,6 +93,20 @@
     "typescript": "^6.0.3",
     "vitest": "^4.1.9",
     "vitest-browser-react": "^2.2.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm exec nano-staged"
+  },
+  "nano-staged": {
+    "*.{ts,tsx,js,jsx,mjs,cjs}": [
+      "oxlint --type-aware --fix",
+      "oxfmt"
+    ],
+    "*.css": [
+      "stylelint --type-aware --fix",
+      "oxfmt"
+    ],
+    "*.{json,jsonc,md,yml,yaml}": "oxfmt"
   },
   "packageManager": "pnpm@11.9.0"
 }
