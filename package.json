@@ -106,7 +106,7 @@
       "stylelint --type-aware --fix",
       "oxfmt"
     ],
-    "*.{json,jsonc,md,yml,yaml}": "oxfmt"
+    "*.{json,jsonc,md,yml,yaml}": "oxfmt --no-error-on-unmatched-pattern"
   },
   "packageManager": "pnpm@11.9.0"
 }
