@@ -40,21 +40,23 @@ export type Classes = {
   [nodeType in Exclude<NonNullable<NodeType['type']>, 'block' | 'inlineBlock'>]?: string;
 } & {
   blocks?: {
-    [K in Extract<
-      Extract<
-        NodeType,
-        {
-          type: 'block';
-        }
-      > extends SerializedBlockNode<infer B>
-        ? B extends {
-            blockType: string;
+    [
+      K in Extract<
+        Extract<
+          NodeType,
+          {
+            type: 'block';
           }
-          ? B['blockType']
-          : never
-        : never,
-      string
-    >]?: string;
+        > extends SerializedBlockNode<infer B>
+          ? B extends {
+              blockType: string;
+            }
+            ? B['blockType']
+            : never
+          : never,
+        string
+      >
+    ]?: string;
   };
 };
 
