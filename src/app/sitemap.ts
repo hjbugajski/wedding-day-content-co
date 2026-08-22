@@ -31,7 +31,7 @@ async function getPagesSitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((page) => Boolean(page?.path))
     .map<MetadataRoute.Sitemap[number]>((page) => ({
       url: page?.path === '/home' ? siteUrl : siteUrl + page?.path,
-      lastModified: page.updatedAt || new Date().toISOString(),
+      lastModified: page.updatedAt,
       changeFrequency: 'monthly',
       priority: page?.path === '/home' ? 1 : 0.8,
     }));
