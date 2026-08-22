@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
-import { unstable_cache } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import { Figtree } from 'next/font/google';
 import localFont from 'next/font/local';
 import Script from 'next/script';
@@ -123,16 +123,16 @@ export const metadata: Metadata = {
   },
 };
 
-const fetchGlobal = async (slug: GlobalSlug) => {
+const fetchCachedGlobal = async <T,>(slug: GlobalSlug): Promise<T> => {
+  'use cache';
+  cacheLife('max');
+  cacheTag(`global:${slug}`);
+
   const payload = await getPayload({ config: payloadConfig });
 
-  return payload.findGlobal({ slug });
+  // The entry is shared by every visitor, so it must never contain draft-gated relations.
+  return payload.findGlobal({ slug, overrideAccess: false }) as Promise<T>;
 };
-
-const fetchCachedGlobal = <T,>(slug: GlobalSlug) =>
-  unstable_cache(fetchGlobal, [slug], {
-    tags: [`global:${slug}`],
-  })(slug) as Promise<T>;
 
 export default async function RootLayout({ children }: { children: ReactNode }) {
   const navigation = await fetchCachedGlobal<PayloadNavigationGlobal>('navigation');

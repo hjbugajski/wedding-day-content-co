@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import type { Payload } from 'payload';
 
 import type { PayloadPagesCollection } from '@/payload/payload-types';
@@ -8,11 +8,17 @@ interface RevalidationContext {
   logger?: (message: string) => void;
 }
 
+interface PagesUsingCollection {
+  pages: PayloadPagesCollection[];
+  /** The query threw, so `pages` is empty for want of an answer rather than because none match. */
+  failed: boolean;
+}
+
 export async function findPagesUsingCollection(
   { payload, logger }: RevalidationContext,
   collection: string,
   itemId: string,
-): Promise<PayloadPagesCollection[]> {
+): Promise<PagesUsingCollection> {
   try {
     const pages = await payload.find({
       collection: 'pages',
@@ -33,7 +39,7 @@ export async function findPagesUsingCollection(
 
     logger?.(`Found ${referencingPages.length} pages using ${collection}:${itemId}`);
 
-    return referencingPages as PayloadPagesCollection[];
+    return { pages: referencingPages as PayloadPagesCollection[], failed: false };
   } catch (error) {
     logger?.(
       `Error finding pages using ${collection}:${itemId}: ${
@@ -41,7 +47,7 @@ export async function findPagesUsingCollection(
       }`,
     );
 
-    return [];
+    return { pages: [], failed: true };
   }
 }
 
@@ -100,7 +106,13 @@ export async function revalidatePagesUsingCollection(
   collection: string,
   itemId: string,
 ): Promise<void> {
-  const pages = await findPagesUsingCollection(context, collection, itemId);
+  const { pages, failed } = await findPagesUsingCollection(context, collection, itemId);
+
+  // On a failed lookup we cannot know which pages reference the item, so expire the cache anyway
+  // rather than leave stale content behind.
+  if (pages.length > 0 || failed) {
+    revalidateTag('pages', { expire: 0 });
+  }
 
   for (const page of pages) {
     if (page.path) {

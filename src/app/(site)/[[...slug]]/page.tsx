@@ -1,6 +1,7 @@
-import { cache } from 'react';
+import type { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
+import { cacheLife, cacheTag } from 'next/cache';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { getPayload } from 'payload';
@@ -9,18 +10,18 @@ import config from '@payload-config';
 
 import { LivePreviewListener } from '@/components/live-preview-listener';
 import { RichText } from '@/components/rich-text';
+import type { PayloadPagesCollection } from '@/payload/payload-types';
 import { getServerSideUrl } from '@/payload/utils/get-server-side-url';
 import { cn } from '@/utils/cn';
 
 interface PageProps {
-  params: Promise<{ slug: string[] }>;
+  params: Promise<{ slug?: string[] }>;
 }
 
-const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
-  const segments = slug || ['home'];
-  const draftModePromise = draftMode();
-  const payloadPromise = getPayload({ config });
-  const [{ isEnabled: draft }, payload] = await Promise.all([draftModePromise, payloadPromise]);
+type PageDoc = Pick<PayloadPagesCollection, 'title' | 'description' | 'content' | 'slug'>;
+
+const findPage = async (segments: string[], draft: boolean): Promise<PageDoc | null> => {
+  const payload = await getPayload({ config });
   const result = await payload.find({
     collection: 'pages',
     draft,
@@ -41,7 +42,17 @@ const fetchCachedPage = cache(async ({ slug }: { slug: string[] }) => {
   });
 
   return result.docs?.[0] || null;
-});
+};
+
+const fetchPublishedPage = async (segments: string[]): Promise<PageDoc | null> => {
+  'use cache';
+  cacheLife('max');
+  cacheTag('pages');
+
+  return findPage(segments, false);
+};
+
+const toSegments = (slug: string[] | undefined) => (slug?.length ? slug : ['home']);
 
 export async function generateStaticParams() {
   try {
@@ -56,17 +67,26 @@ export async function generateStaticParams() {
       },
     });
 
-    return pages.docs.map(({ path }) => ({ slug: path?.split('/')?.slice(1) || undefined }));
+    // The home doc lives at `/home` but its canonical URL is `/`, which only prerenders when it is
+    // emitted with no segments. Both are kept so `/home` stays a static route too.
+    return pages.docs.flatMap(({ path }) => {
+      const slug = path?.split('/')?.slice(1) || undefined;
+
+      return slug?.[0] === 'home' ? [{ slug: [] }, { slug }] : [{ slug }];
+    });
   } catch {
     return [{ slug: undefined }];
   }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  'use cache';
+  cacheLife('max');
+
   const { slug } = await params;
-  const page = await fetchCachedPage({ slug });
-  const segments = slug || ['home'];
-  const isHome = !slug || segments[0] === 'home';
+  const segments = toSegments(slug);
+  const page = await fetchPublishedPage(segments);
+  const isHome = segments[0] === 'home';
   const siteUrl = getServerSideUrl();
   const pageUrl = isHome ? siteUrl : `${siteUrl}/${segments.join('/')}`;
 
@@ -110,19 +130,37 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+/**
+ * Cached so the whole page prerenders into the static shell. Reading `draftMode()` inside a cache
+ * scope is allowed: draft requests re-execute every cached function and are never written to the
+ * cache, so editors always see the uncached, access-unrestricted fetch and everyone else is served
+ * the prerendered published render.
+ */
 export default async function Page({ params }: PageProps) {
+  'use cache';
+  cacheLife('max');
+  cacheTag('pages');
+
   const { isEnabled: draft } = await draftMode();
   const { slug } = await params;
-  const page = await fetchCachedPage({ slug });
+  const page = await findPage(toSegments(slug), draft);
 
   if (!page) {
     notFound();
   }
 
   return (
-    <main className={cn('mx-auto w-full max-w-7xl px-6', { 'py-12': page.slug !== 'home' })}>
-      {draft ? <LivePreviewListener /> : null}
+    <PageBody slug={page.slug}>
+      {draft && <LivePreviewListener />}
       <RichText data={page.content} />
+    </PageBody>
+  );
+}
+
+function PageBody({ slug, children }: { slug: PageDoc['slug']; children: ReactNode }) {
+  return (
+    <main className={cn('mx-auto w-full max-w-7xl px-6', { 'py-12': slug !== 'home' })}>
+      {children}
     </main>
   );
 }

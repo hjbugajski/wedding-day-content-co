@@ -1,12 +1,12 @@
 import type { Payload } from 'payload';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { revalidatePath } = vi.hoisted(() => ({ revalidatePath: vi.fn() }));
-
-vi.mock('next/cache', () => ({
-  revalidatePath,
+const { revalidatePath, revalidateTag } = vi.hoisted(() => ({
+  revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),
 }));
+
+vi.mock('next/cache', () => ({ revalidatePath, revalidateTag }));
 
 import {
   findPagesUsingCollection,
@@ -27,6 +27,7 @@ const context = (payload: Payload) => ({ payload, logger: vi.fn() });
 describe('findPagesUsingCollection', () => {
   beforeEach(() => {
     revalidatePath.mockClear();
+    revalidateTag.mockClear();
   });
 
   it('queries pages filtered to published docs and returns those that reference the item', async () => {
@@ -48,20 +49,31 @@ describe('findPagesUsingCollection', () => {
         depth: 0,
       }),
     );
-    expect(result.map((p) => p.path)).toEqual(['/a', '/c']);
+    expect(result.pages.map((p) => p.path)).toEqual(['/a', '/c']);
+    expect(result.failed).toBe(false);
     expect(ctx.logger).toHaveBeenCalledWith('Found 2 pages using authors:author-1');
   });
 
   it('matches references inside arrays of ids', async () => {
     const pages = [{ path: '/a', content: { relationTo: 'tags', value: ['tag-1', 'tag-2'] } }];
     const result = await findPagesUsingCollection(context(makePayload(pages)), 'tags', 'tag-2');
-    expect(result).toHaveLength(1);
+    expect(result.pages).toHaveLength(1);
   });
 
-  it('returns [] and logs when payload.find throws', async () => {
+  it('matches a plain relationship id stored on a block', async () => {
+    const pages = [{ path: '/a', content: [{ blockType: 'hero', video: 'mux-1' }] }];
+    const result = await findPagesUsingCollection(
+      context(makePayload(pages)),
+      'mux-video',
+      'mux-1',
+    );
+    expect(result.pages).toHaveLength(1);
+  });
+
+  it('reports failure and logs when payload.find throws', async () => {
     const ctx = context(makePayload([], { throwOnFind: true }));
     const result = await findPagesUsingCollection(ctx, 'tags', 'x');
-    expect(result).toEqual([]);
+    expect(result).toEqual({ pages: [], failed: true });
     expect(ctx.logger).toHaveBeenCalledWith(expect.stringContaining('Error finding pages'));
   });
 });
@@ -69,6 +81,7 @@ describe('findPagesUsingCollection', () => {
 describe('revalidatePagesUsingCollection', () => {
   beforeEach(() => {
     revalidatePath.mockClear();
+    revalidateTag.mockClear();
   });
 
   it('calls revalidatePath once per page path', async () => {
@@ -80,6 +93,28 @@ describe('revalidatePagesUsingCollection', () => {
 
     expect(revalidatePath).toHaveBeenCalledWith('/a');
     expect(revalidatePath).toHaveBeenCalledWith('/about');
+    expect(revalidateTag).toHaveBeenCalledWith('pages', { expire: 0 });
+  });
+
+  it('expires the pages tag for a mux-video id referenced by a hero block', async () => {
+    const pages = [{ path: '/home', content: [{ blockType: 'hero', video: 'mux-1' }] }];
+    await revalidatePagesUsingCollection(context(makePayload(pages)), 'mux-video', 'mux-1');
+
+    expect(revalidateTag).toHaveBeenCalledWith('pages', { expire: 0 });
+    expect(revalidatePath).toHaveBeenCalledWith('/');
+  });
+
+  it('leaves the pages tag alone when the query succeeds with no referencing pages', async () => {
+    await revalidatePagesUsingCollection(context(makePayload([])), 'authors', 'x');
+
+    expect(revalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('expires the pages tag when the query fails', async () => {
+    const ctx = context(makePayload([], { throwOnFind: true }));
+    await revalidatePagesUsingCollection(ctx, 'authors', 'x');
+
+    expect(revalidateTag).toHaveBeenCalledWith('pages', { expire: 0 });
   });
 
   it('also revalidates "/" when a page path is "/home"', async () => {
