@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import type { DateRange } from 'react-day-picker';
 
@@ -63,23 +63,38 @@ export function DateField({ meta }: Props) {
     [meta.allowedDates],
   );
 
-  const { startMonth, endMonth } = useMemo(() => {
+  /**
+   * Reading the clock during render fails the cacheComponents prerender, so the month range is
+   * computed when the popover opens — the calendar is not rendered before then.
+   */
+  const [{ startMonth, endMonth }, setMonthRange] = useState<{
+    startMonth?: Date;
+    endMonth?: Date;
+  }>({});
+
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      return;
+    }
+
     const now = new Date();
     const tenYearsAgo = new Date(now.getFullYear() - 10, now.getMonth(), 1);
     const tenYearsFromNow = new Date(now.getFullYear() + 10, now.getMonth(), 1);
 
     switch (meta.allowedDates) {
       case 'previous':
-        return { startMonth: tenYearsAgo, endMonth: now };
+        setMonthRange({ startMonth: tenYearsAgo, endMonth: now });
+        break;
       case 'future':
-        return { startMonth: now, endMonth: tenYearsFromNow };
+        setMonthRange({ startMonth: now, endMonth: tenYearsFromNow });
+        break;
       default:
-        return { startMonth: tenYearsAgo, endMonth: tenYearsFromNow };
+        setMonthRange({ startMonth: tenYearsAgo, endMonth: tenYearsFromNow });
     }
-  }, [meta.allowedDates]);
+  };
 
   return (
-    <Popover>
+    <Popover onOpenChange={handleOpenChange}>
       <PopoverTrigger
         render={
           <InputButton
