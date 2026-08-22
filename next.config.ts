@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  turbopack: {},
   headers: () => [
     {
       source: '/(.*)',
