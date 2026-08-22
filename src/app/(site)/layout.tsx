@@ -130,7 +130,8 @@ const fetchCachedGlobal = async <T,>(slug: GlobalSlug): Promise<T> => {
 
   const payload = await getPayload({ config: payloadConfig });
 
-  return payload.findGlobal({ slug }) as Promise<T>;
+  // The entry is shared by every visitor, so it must never contain draft-gated relations.
+  return payload.findGlobal({ slug, overrideAccess: false }) as Promise<T>;
 };
 
 export default async function RootLayout({ children }: { children: ReactNode }) {

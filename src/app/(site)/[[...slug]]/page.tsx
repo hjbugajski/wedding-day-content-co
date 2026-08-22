@@ -1,4 +1,4 @@
-import { type ReactNode, Suspense } from 'react';
+import type { ReactNode } from 'react';
 
 import type { Metadata } from 'next';
 import { cacheLife, cacheTag } from 'next/cache';
@@ -67,7 +67,13 @@ export async function generateStaticParams() {
       },
     });
 
-    return pages.docs.map(({ path }) => ({ slug: path?.split('/')?.slice(1) || undefined }));
+    // The home doc lives at `/home` but its canonical URL is `/`, which only prerenders when it is
+    // emitted with no segments. Both are kept so `/home` stays a static route too.
+    return pages.docs.flatMap(({ path }) => {
+      const slug = path?.split('/')?.slice(1) || undefined;
+
+      return slug?.[0] === 'home' ? [{ slug: [] }, { slug }] : [{ slug }];
+    });
   } catch {
     return [{ slug: undefined }];
   }
@@ -125,27 +131,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 /**
- * The published render is cached, so it prerenders into the static shell and doubles as the
- * fallback for the request-time render. Only editors in draft mode pay for an uncached fetch;
- * for everyone else the streamed render resolves against the same cache entry.
+ * Cached so the whole page prerenders into the static shell. Reading `draftMode()` inside a cache
+ * scope is allowed: draft requests re-execute every cached function and are never written to the
+ * cache, so editors always see the uncached, access-unrestricted fetch and everyone else is served
+ * the prerendered published render.
  */
-export default function Page({ params }: PageProps) {
-  return (
-    <Suspense fallback={<PublishedPage params={params} />}>
-      <ResolvedPage params={params} />
-    </Suspense>
-  );
-}
+export default async function Page({ params }: PageProps) {
+  'use cache';
+  cacheLife('max');
+  cacheTag('pages');
 
-async function ResolvedPage({ params }: PageProps) {
   const { isEnabled: draft } = await draftMode();
-
-  if (!draft) {
-    return <PublishedPage params={params} />;
-  }
-
   const { slug } = await params;
-  const page = await findPage(toSegments(slug), true);
+  const page = await findPage(toSegments(slug), draft);
 
   if (!page) {
     notFound();
@@ -153,22 +151,7 @@ async function ResolvedPage({ params }: PageProps) {
 
   return (
     <PageBody slug={page.slug}>
-      <LivePreviewListener />
-      <RichText data={page.content} />
-    </PageBody>
-  );
-}
-
-async function PublishedPage({ params }: PageProps) {
-  const { slug } = await params;
-  const page = await fetchPublishedPage(toSegments(slug));
-
-  if (!page) {
-    notFound();
-  }
-
-  return (
-    <PageBody slug={page.slug}>
+      {draft && <LivePreviewListener />}
       <RichText data={page.content} />
     </PageBody>
   );
