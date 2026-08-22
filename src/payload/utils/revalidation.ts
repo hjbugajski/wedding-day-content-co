@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import type { Payload } from 'payload';
 
 import type { PayloadPagesCollection } from '@/payload/payload-types';
@@ -101,6 +101,10 @@ export async function revalidatePagesUsingCollection(
   itemId: string,
 ): Promise<void> {
   const pages = await findPagesUsingCollection(context, collection, itemId);
+
+  if (pages.length > 0) {
+    revalidateTag('pages', { expire: 0 });
+  }
 
   for (const page of pages) {
     if (page.path) {

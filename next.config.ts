@@ -8,6 +8,8 @@ const isProductionNode = env.NODE_ENV === 'production';
 const isProductionVercel = env.VERCEL_TARGET_ENV === 'production';
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
+  partialPrefetching: true,
   images: {
     dangerouslyAllowLocalIP: !isProductionNode,
     unoptimized: !isProductionVercel,

@@ -1,15 +1,24 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { cacheLife } from 'next/cache';
 import { ImageResponse } from 'next/og';
 
-export const revalidate = 86400;
+/** Cached as base64 — binary buffers do not survive the cache boundary intact. */
+async function getFonts() {
+  'use cache';
+  cacheLife('max');
 
-export async function GET() {
   const [nightingale, figtree] = await Promise.all([
     readFile(join(process.cwd(), 'public/font/DTNightingale.ttf')),
     readFile(join(process.cwd(), 'public/font/Figtree-Regular.ttf')),
   ]);
+
+  return [nightingale.toString('base64'), figtree.toString('base64')];
+}
+
+export async function GET() {
+  const [nightingale, figtree] = (await getFonts()).map((font) => Buffer.from(font, 'base64'));
 
   return new ImageResponse(
     <div
