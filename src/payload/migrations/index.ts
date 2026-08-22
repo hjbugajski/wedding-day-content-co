@@ -12,6 +12,7 @@ import * as migration_20251116_213521 from './20251116_213521';
 import * as migration_20251117_004412 from './20251117_004412';
 import * as migration_20251117_015913 from './20251117_015913';
 import * as migration_20260621_000000_rekey_payload_secret from './20260621_000000_rekey_payload_secret';
+import * as migration_20260822_173303 from './20260822_173303';
 
 export const migrations = [
   {
@@ -83,5 +84,10 @@ export const migrations = [
     up: migration_20260621_000000_rekey_payload_secret.up,
     down: migration_20260621_000000_rekey_payload_secret.down,
     name: '20260621_000000_rekey_payload_secret',
+  },
+  {
+    up: migration_20260822_173303.up,
+    down: migration_20260822_173303.down,
+    name: '20260822_173303'
   },
 ];
