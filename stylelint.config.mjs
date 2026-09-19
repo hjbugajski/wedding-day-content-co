@@ -6,6 +6,7 @@ export default {
       true,
       { ignoreAtRules: ['custom-variant', 'plugin', 'source', 'theme', 'utility', 'variant'] },
     ],
+    'at-rule-prelude-no-invalid': [true, { ignoreAtRules: ['apply'] }],
     'function-no-unknown': [true, { ignoreFunctions: ['theme'] }],
     'import-notation': null,
     'nesting-selector-no-missing-scoping-root': [
