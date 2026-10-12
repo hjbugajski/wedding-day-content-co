@@ -25,34 +25,34 @@ describe('emailConfig.defaultValue', () => {
 });
 
 describe('emailConfig.schema (required)', () => {
-  const schema = () => emailConfig.schema(makeMeta({ required: true }));
+  const schema = emailConfig.schema(makeMeta({ required: true }));
 
   it('rejects empty string', () => {
-    expect(schema().safeParse('').success).toBe(false);
+    expect(schema.safeParse('').success).toBe(false);
   });
 
   it('rejects a malformed email', () => {
-    expect(schema().safeParse('not-an-email').success).toBe(false);
+    expect(schema.safeParse('not-an-email').success).toBe(false);
   });
 
   it('accepts a valid email', () => {
-    expect(schema().safeParse('ada@example.com').success).toBe(true);
+    expect(schema.safeParse('ada@example.com').success).toBe(true);
   });
 });
 
 describe('emailConfig.schema (optional)', () => {
-  const schema = () => emailConfig.schema(makeMeta({ required: false }));
+  const schema = emailConfig.schema(makeMeta({ required: false }));
 
   it('accepts an empty string', () => {
-    expect(schema().safeParse('').success).toBe(true);
+    expect(schema.safeParse('').success).toBe(true);
   });
 
   it('rejects a malformed email', () => {
-    expect(schema().safeParse('not-an-email').success).toBe(false);
+    expect(schema.safeParse('not-an-email').success).toBe(false);
   });
 
   it('accepts a valid email', () => {
-    expect(schema().safeParse('ada@example.com').success).toBe(true);
+    expect(schema.safeParse('ada@example.com').success).toBe(true);
   });
 });
 
