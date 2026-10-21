@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 
 import type { FieldConfig, FieldMeta } from '@/components/blocks/form/types';
 import { useAppForm } from '@/components/ui/form';
@@ -18,10 +18,10 @@ export function FieldHarness<M extends FieldMeta>({
   config,
   onSubmit,
 }: FieldHarnessProps<M>) {
-  const defaultValueRef = useRef(config.defaultValue(meta));
+  const [defaultValue] = useState(() => config.defaultValue(meta));
 
   const form = useAppForm({
-    defaultValues: { v: defaultValueRef.current as unknown },
+    defaultValues: { v: defaultValue as unknown },
     onSubmit: async ({ value }) => onSubmit?.(value.v),
   });
 
