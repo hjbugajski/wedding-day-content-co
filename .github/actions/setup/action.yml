@@ -1,17 +1,23 @@
 name: Setup
-description: Install pnpm and Node.js, then install dependencies.
+description: Install tools from mise.toml, then install dependencies
 
 runs:
   using: composite
   steps:
-    - name: Install pnpm
-      uses: pnpm/action-setup@v5
+    - name: Install tools
+      uses: jdx/mise-action@v5
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v6
+    - name: Resolve pnpm store path
+      id: pnpm-store
+      shell: bash
+      run: echo "path=$(pnpm store path)" >> "$GITHUB_OUTPUT"
+
+    - name: Cache pnpm store
+      uses: actions/cache@v5
       with:
-        node-version-file: .tool-versions
-        cache: pnpm
+        path: ${{ steps.pnpm-store.outputs.path }}
+        key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: pnpm-${{ runner.os }}-
 
     - name: Install dependencies
       shell: bash
